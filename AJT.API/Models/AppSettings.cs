@@ -1,0 +1,51 @@
+﻿using System.Collections.Generic;
+
+namespace AJT.API.Models
+{
+    public class AppSettings
+    {
+        public PushBulletSettings PushBullet { get; set; }
+        public SlackSettings Slack { get; set; }
+        public AzureSettings Azure { get; set; }
+        public GoogleCustomSearchSettings GoogleCustomSearch { get; set; }
+        public AuthKeySettings AuthKeys { get; set; }
+        public string AdminSafeList { get; set; }
+    }
+
+    public class PushBulletSettings
+    {
+        public string ApiKey { get; set; }
+        public string EncryptionKey { get; set; }
+    }
+    public class SlackSettings
+    {
+        public string ApiToken { get; set; }
+        public string SigningSecret { get; set; }
+        public string VerificationToken { get; set; }
+    }
+
+    public class AzureSettings
+    {
+        public CloudStorageSettings CloudStorage { get; set; }
+
+        public class CloudStorageSettings
+        {
+            public string AccountName { get; set; }
+            public string AccountKey { get; set; }
+            public string StorageTable { get; set; }
+        }
+    }
+
+    public class GoogleCustomSearchSettings
+    {
+        public string ApiKey { get; set; }
+        public string MarvelCx { get; set; }
+        public string DcComicsCx { get; set; }
+    }
+
+    public class AuthKeySettings
+    {
+        public string Default { get; set; }
+        public string AppVeyor { get; set; }
+    }
+}
