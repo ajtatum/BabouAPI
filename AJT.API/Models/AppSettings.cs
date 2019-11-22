@@ -6,7 +6,6 @@ namespace AJT.API.Models
     {
         public PushBulletSettings PushBullet { get; set; }
         public SlackSettings Slack { get; set; }
-        public AzureSettings Azure { get; set; }
         public GoogleCustomSearchSettings GoogleCustomSearch { get; set; }
         public AuthKeySettings AuthKeys { get; set; }
         public string AdminSafeList { get; set; }
@@ -22,18 +21,6 @@ namespace AJT.API.Models
         public string ApiToken { get; set; }
         public string SigningSecret { get; set; }
         public string VerificationToken { get; set; }
-    }
-
-    public class AzureSettings
-    {
-        public CloudStorageSettings CloudStorage { get; set; }
-
-        public class CloudStorageSettings
-        {
-            public string AccountName { get; set; }
-            public string AccountKey { get; set; }
-            public string StorageTable { get; set; }
-        }
     }
 
     public class GoogleCustomSearchSettings
