@@ -90,7 +90,7 @@ namespace AJT.API
                         .Enrich.WithProperty("Application", "AJT API")
                         .Enrich.WithProperty("Environment", hostingContext.HostingEnvironment.EnvironmentName)
                         .Enrich.WithProperty("BuildNumber", hostingContext.Configuration["BuildNumber"])
-                        .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Events)
+                        .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces)
                         .WriteTo.MSSqlServer(hostingContext.Configuration.GetConnectionString("LogsConnection"), tableName: "Logs", columnOptions: columnOptions, autoCreateSqlTable: true, batchPostingLimit: 50, period: new TimeSpan(0, 0, 5))
                         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss.fff} {ThreadId} {EventType:x8} {Level:u3}] {Message:lj}{NewLine}{Exception}", theme: AnsiConsoleTheme.Code);
                 });

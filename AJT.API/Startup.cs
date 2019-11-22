@@ -39,6 +39,8 @@ namespace AJT.API
 
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:InstrumentationKey"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
