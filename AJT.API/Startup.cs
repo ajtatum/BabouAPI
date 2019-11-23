@@ -50,12 +50,15 @@ namespace AJT.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseSerilogRequestLogging();
 
             app.UseAuthorization();
 
