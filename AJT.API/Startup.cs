@@ -1,3 +1,4 @@
+using System;
 using AJT.API.Helpers;
 using AJT.API.Helpers.Filters;
 using AJT.API.Models;
@@ -42,6 +43,13 @@ namespace AJT.API
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:InstrumentationKey"]);
+
+            services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(365);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
