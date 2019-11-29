@@ -10,6 +10,12 @@ namespace AJT.API.Models
         public AuthKeySettings AuthKeys { get; set; }
         public string BuildNumber { get; set; }
         public string AdminSafeList { get; set; }
+        public ApplicationInsightsSettings ApplicationInsights { get; set; }
+    }
+
+    public class ApplicationInsightsSettings
+    {
+        public string InstrumentationKey { get; set; }
     }
 
     public class PushBulletSettings
