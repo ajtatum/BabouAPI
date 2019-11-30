@@ -36,12 +36,14 @@ namespace AJT.API.Helpers.Filters
 
             if (!authKeys.Contains(authKey))
             {
-                _logger.LogWarning("AuthKeyFilter: Attempt to access {Path} denied by {IPAddress} located at {City}, {State}, {Country}.", context.HttpContext.Request.Path, remoteIp, ipAddressDetails.City, ipAddressDetails.RegionCode, ipAddressDetails.CountryCode);
+                _logger.LogWarning("AuthKeyFilter: Attempt to access {Path} denied by {IPAddress} located at {City}, {State}, {Country}. Tried using AuthKey: {AuthKey}", 
+                    context.HttpContext.Request.Path, remoteIp, ipAddressDetails.City, ipAddressDetails.RegionCode, ipAddressDetails.CountryCode, authKey);
                 context.Result = new UnauthorizedResult();
                 return;
             }
 
-            _logger.LogInformation("AuthKeyFilter: {Path} is being accessed by {IpAddress} located at {City}, {State}, {Country}.", context.HttpContext.Request.Path, remoteIp, ipAddressDetails.City, ipAddressDetails.RegionCode, ipAddressDetails.CountryCode);
+            _logger.LogInformation("AuthKeyFilter: {Path} is being accessed by {IpAddress} located at {City}, {State}, {Country}. Using AuthKey: {AuthKey}", 
+                context.HttpContext.Request.Path, remoteIp, ipAddressDetails.City, ipAddressDetails.RegionCode, ipAddressDetails.CountryCode, authKey);
 
             base.OnActionExecuting(context);
         }
