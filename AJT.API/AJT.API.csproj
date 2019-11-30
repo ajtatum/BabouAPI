@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Helpers\AuthKeyAuthorize.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BabouExtensions" Version="1.2.28" />
     <PackageReference Include="IpStack" Version="1.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.2" />

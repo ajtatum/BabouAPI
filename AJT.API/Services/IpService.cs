@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AJT.API.Models;
+using AJT.API.Services.Interfaces;
+using IpStack;
+using IpStack.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace AJT.API.Services
 {
-    public class IpService
+    public class IpService : IIpService
     {
         private readonly IHttpContextAccessor _accessor;
+        private readonly AppSettings _appSettings;
 
-        public IpService(IHttpContextAccessor accessor)
+        public IpService(IHttpContextAccessor accessor, IOptionsMonitor<AppSettings> appSettings)
         {
             _accessor = accessor;
+            _appSettings = appSettings.CurrentValue;
         }
 
         public string GetRemoteIpV4()
@@ -27,6 +30,15 @@ namespace AJT.API.Services
         public string GetRemoteIp()
         {
             return _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+        }
+
+        public IpAddressDetails GetIpAddressDetails(string ipAddress)
+        {
+            var client = new IpStackClient(_appSettings.IpStackApiKey, true);
+
+            var ipAddressDetails = client.GetIpAddressDetails(ipAddress);
+
+            return ipAddressDetails;
         }
 
     }

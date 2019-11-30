@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
-using AJT.API.Helpers;
+using AJT.API.Helpers.Filters;
 using AJT.API.Models;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -29,11 +27,13 @@ namespace AJT.API.Controllers
             _appSettings = appSettings.CurrentValue;
         }
 
-        [ServiceFilter(typeof(AuthKeyAuthorize))]
+        [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost]
         [Produces("application/json")]
         public async Task<IActionResult> SendAppVeyorMessage()
         {
+            var requestBody = await Request.GetRawBodyStringAsync();
+
             try
             {
                 var pushBulletApiKey = _appSettings.PushBullet.ApiKey;
@@ -44,8 +44,6 @@ namespace AJT.API.Controllers
 
                 if (pushBulletEncryptionKey.IsNullOrEmpty())
                     return new BadRequestObjectResult("PushBulletEncryptionKey cannot be found");
-
-                var requestBody = await Request.GetRawBodyStringAsync();
 
                 var appVeyor = JsonConvert.DeserializeObject<AppVeyorCustom>(requestBody);
 
@@ -72,7 +70,7 @@ namespace AJT.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error sending PushBullet message");
+                _logger.LogError(ex, "Error sending PushBullet message. Request Body: {RequestBody}", requestBody);
                 return new BadRequestObjectResult(ex.Message);
             }
         }

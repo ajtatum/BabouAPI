@@ -3,6 +3,7 @@ using AJT.API.Helpers;
 using AJT.API.Helpers.Filters;
 using AJT.API.Models;
 using AJT.API.Services;
+using AJT.API.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -24,18 +25,19 @@ namespace AJT.API
 
         public static IConfiguration Configuration { get; set; }
 
-        public static IConfigurationRoot IConfigurationRoot => (IConfigurationRoot)Configuration;
+        public static IConfigurationRoot ConfigurationRoot => (IConfigurationRoot)Configuration;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddOptions();
             services.Configure<AppSettings>(Configuration);
-            services.AddScoped<AuthKeyAuthorize>();
-            services.AddScoped<ClientIpCheckFilter>();
 
-            services.AddSingleton<SlackService>();
+            services.AddScoped<ClientIpFilter>();
+            services.AddScoped<AuthKeyFilter>();
+            services.AddScoped<IIpService, IpService>();
+
+            services.AddSingleton<ISlackService, SlackService>();
 
             services.AddHostedService<SlackBackgroundService>();
 

@@ -1,12 +1,8 @@
-﻿using System.IO;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AJT.API.Helpers;
 using AJT.API.Models;
-using AJT.API.Services;
+using AJT.API.Services.Interfaces;
 using BabouExtensions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,9 +16,9 @@ namespace AJT.API.Controllers
     {
         private readonly ILogger<SlackController> _logger;
         private readonly AppSettings _appSettings;
-        private readonly SlackService _slackService;
+        private readonly ISlackService _slackService;
 
-        public SlackController(ILogger<SlackController> logger, IOptionsMonitor<AppSettings> appSettings, SlackService slackService)
+        public SlackController(ILogger<SlackController> logger, IOptionsMonitor<AppSettings> appSettings, ISlackService slackService)
         {
             _logger = logger;
             _appSettings = appSettings.CurrentValue;

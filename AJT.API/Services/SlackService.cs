@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AJT.API.Models;
+using AJT.API.Services.Interfaces;
 using BabouExtensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -16,7 +17,7 @@ using static SlackBotNet.MatchFactory;
 
 namespace AJT.API.Services
 {
-    public class SlackService
+    public class SlackService : ISlackService
     {
         private readonly ILogger<SlackService> _logger;
         private readonly AppSettings _appSettings;

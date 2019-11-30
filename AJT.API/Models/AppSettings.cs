@@ -8,6 +8,7 @@ namespace AJT.API.Models
         public SlackSettings Slack { get; set; }
         public GoogleCustomSearchSettings GoogleCustomSearch { get; set; }
         public AuthKeySettings AuthKeys { get; set; }
+        public string IpStackApiKey { get; set; }
         public string BuildNumber { get; set; }
         public string AdminSafeList { get; set; }
         public ApplicationInsightsSettings ApplicationInsights { get; set; }

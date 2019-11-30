@@ -1,16 +1,4 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iis": {
-      "applicationUrl": "http://localhost/AJT.Jarvis",
-      "sslPort": 0
-    },
-    "iisExpress": {
-      "applicationUrl": "https://localhost:50866",
-      "sslPort": 44379
-    }
-  },
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "IIS Express": {
