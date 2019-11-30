@@ -4,7 +4,6 @@ using AJT.API.Services.Interfaces;
 using BabouExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -16,7 +15,7 @@ namespace AJT.API.Helpers.Filters
         private readonly AppSettings _appSettings;
         private readonly IIpService _ipService;
 
-        public AuthKeyFilter(ILogger<AuthKeyFilter> logger, IOptionsMonitor<AppSettings> appSettings, IIpService ipService, IConfiguration configuration)
+        public AuthKeyFilter(ILogger<AuthKeyFilter> logger, IOptionsMonitor<AppSettings> appSettings, IIpService ipService)
         {
             _logger = logger;
             _appSettings = appSettings.CurrentValue;
