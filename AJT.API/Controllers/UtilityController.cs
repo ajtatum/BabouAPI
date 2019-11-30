@@ -1,8 +1,10 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using AJT.API.Helpers;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -14,15 +16,21 @@ namespace AJT.API.Controllers
     public class UtilityController : ControllerBase
     {
         private readonly ILogger<UtilityController> _logger;
+        private readonly IHttpContextAccessor _accessor;
 
-        public UtilityController(ILogger<UtilityController> logger)
+        public UtilityController(ILogger<UtilityController> logger, IHttpContextAccessor accessor)
         {
             _logger = logger;
+            _accessor = accessor;
         }
 
+        /// <summary>
+        /// Converts a string of integers into a CSV. Returns distinct values.
+        /// </summary>
+        /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyAuthorize))]
         [HttpGet]
-        public async Task<IActionResult> ConvertIntToList()
+        public async Task<IActionResult> ConvertIntToCsv()
         {
             _logger.LogInformation("ConvertIntToList processed a request.");
 
@@ -38,9 +46,13 @@ namespace AJT.API.Controllers
             return new BadRequestObjectResult($"{requestBody}");
         }
 
+        /// <summary>
+        /// Converts a string into a CSV where each item is surrounded by a quote. Returns distinct values.
+        /// </summary>
+        /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyAuthorize))]
         [HttpGet]
-        public async Task<IActionResult> ConvertStringToList()
+        public async Task<IActionResult> ConvertStringToCsv()
         {
             _logger.LogInformation("ConvertStringToList processed a request.");
 
@@ -60,6 +72,32 @@ namespace AJT.API.Controllers
             return new BadRequestObjectResult($"{requestBody}");
         }
 
+        /// <summary>
+        /// Takes a list of strings or integers and returns distinct values in new lines.
+        /// </summary>
+        /// <returns></returns>
+        [ServiceFilter(typeof(AuthKeyAuthorize))]
+        [HttpGet]
+        public async Task<IActionResult> ConvertToLines()
+        {
+            _logger.LogInformation("ConvertToLines processed a request.");
+
+            var requestBody = await Request.GetRawBodyStringAsync();
+
+            if (requestBody.TryGetList(',', out var cleanString))
+            {
+                var stringReturn = string.Join(Environment.NewLine, cleanString);
+
+                return new OkObjectResult($"{stringReturn}");
+            }
+
+            return new BadRequestObjectResult($"{requestBody}");
+        }
+
+        /// <summary>
+        /// Encrypts a string using the header values OriginalValue and EncryptionKey
+        /// </summary>
+        /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyAuthorize))]
         [HttpGet]
         public IActionResult Encrypt()
@@ -72,6 +110,10 @@ namespace AJT.API.Controllers
             return new OkObjectResult(originalValue.Encrypt(encryptionKey));
         }
 
+        /// <summary>
+        /// Decrypts a string using the header values OriginalValue and DecryptionKey
+        /// </summary>
+        /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyAuthorize))]
         [HttpGet]
         public IActionResult Decrypt()
