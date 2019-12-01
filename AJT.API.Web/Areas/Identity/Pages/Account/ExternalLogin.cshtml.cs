@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -119,10 +120,13 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                var apiAuthKey = Guid.NewGuid().ToString().Replace("-", string.Empty);
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, ApiAuthKey = apiAuthKey};
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddClaimAsync(user, new Claim("ApiAuthKey", apiAuthKey));
+
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {

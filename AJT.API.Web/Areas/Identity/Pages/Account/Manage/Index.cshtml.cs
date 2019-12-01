@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using AJT.API.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using AJT.API.Web.Helpers.ExtensionMethods;
 
 namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -36,6 +38,10 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            
+            [Required]
+            [Display (Name = "Api Key")]
+            public string ApiKey { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -43,11 +49,16 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
+            var getClaims = await _userManager.GetClaimsAsync(user);
+
+            var apiAuthKey = getClaims.FirstOrDefault(x => x.Type == "ApiAuthKey")?.Value;
+
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                ApiKey = apiAuthKey
             };
         }
 

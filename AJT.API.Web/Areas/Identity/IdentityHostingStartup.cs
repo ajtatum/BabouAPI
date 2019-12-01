@@ -1,7 +1,11 @@
 ﻿using System;
 using AJT.API.Web.Data;
+using AJT.API.Web.Helpers.Identity;
 using AJT.API.Web.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -42,19 +46,42 @@ namespace AJT.API.Web.Areas.Identity
                     })
                     .AddDefaultUI()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
+                    //.AddClaimsPrincipalFactory<AjtApiClaimsPrincipalFactory>()
                     .AddDefaultTokenProviders();
 
-                services.ConfigureApplicationCookie(options =>
-                {
-                    // Cookie settings
-                    options.Cookie.HttpOnly = true;
-                    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+                //services.ConfigureApplicationCookie(options =>
+                //{
+                //    options.Cookie.HttpOnly = true;
+                //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                //    options.Cookie.Name = "AjtApiApplication";
+                //    options.ExpireTimeSpan = TimeSpan.FromDays(7);
 
-                    options.LoginPath = $"/Identity/Account/Login";
-                    options.LogoutPath = $"/Identity/Account/Logout";
-                    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
-                    options.SlidingExpiration = true;
-                });
+                //    options.LoginPath = $"/Identity/Account/Login";
+                //    options.LogoutPath = $"/Identity/Account/Logout";
+                //    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+                //    options.SlidingExpiration = true;
+                //    options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                //});
+
+                services.AddAuthentication()
+                    .AddCookie(options =>
+                    {
+                        options.Cookie.HttpOnly = true;
+                        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                        options.Cookie.Name = "AjtApiApplication";
+                        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+
+                        options.LoginPath = $"/Identity/Account/Login";
+                        options.LogoutPath = $"/Identity/Account/Logout";
+                        options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+                        options.SlidingExpiration = true;
+                        options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                    })
+                    .AddGoogle(options =>
+                    {
+                        options.ClientId = context.Configuration["Authentication:Google:ClientId"];
+                        options.ClientSecret = context.Configuration["Authentication:Google:ClientSecret"];
+                    });
             });
         }
     }

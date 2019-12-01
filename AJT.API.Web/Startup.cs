@@ -1,16 +1,21 @@
 using System;
 using AJT.API.Models;
+using AJT.API.Web.Helpers.ExtensionMethods;
 using AJT.API.Web.Helpers.Filters;
 using AJT.API.Web.Services;
 using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace AJT.API.Web
 {
@@ -28,6 +33,13 @@ namespace AJT.API.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.Secure = CookieSecurePolicy.Always;
+            });
+
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
@@ -40,6 +52,7 @@ namespace AJT.API.Web
             services.AddScoped<ClientIpFilter>();
             services.AddScoped<AuthKeyFilter>();
             services.AddScoped<IIpService, IpService>();
+            services.AddTransient<IEmailSender, EmailService>();
 
             services.AddSingleton<ISlackService, SlackService>();
 
@@ -61,10 +74,13 @@ namespace AJT.API.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            UserManagerExtensions.Configure(app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseBrowserLink();
             }
             else
             {
@@ -72,10 +88,21 @@ namespace AJT.API.Web
                 app.UseHsts();
             }
 
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
+            app.UseCookiePolicy();
+
+            // forwarded Header middleware
+            var fordwardedHeaderOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+            fordwardedHeaderOptions.KnownNetworks.Clear();
+            fordwardedHeaderOptions.KnownProxies.Clear();
+
+            app.UseForwardedHeaders(fordwardedHeaderOptions);
 
             app.UseAuthentication();
             app.UseAuthorization();
