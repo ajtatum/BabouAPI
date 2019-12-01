@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace AJT.API.Models
+﻿namespace AJT.API.Models
 {
     public class AppSettings
     {

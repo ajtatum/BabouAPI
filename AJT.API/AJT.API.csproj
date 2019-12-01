@@ -42,4 +42,8 @@
     <Folder Include="Connected Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AJT.API.Models\AJT.API.Models.csproj" />
+  </ItemGroup>
+
 </Project>
