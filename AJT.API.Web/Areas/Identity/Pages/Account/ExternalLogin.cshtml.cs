@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using AJT.API.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using AJT.API.Web.Models;
 using Microsoft.AspNetCore.Identity;
@@ -125,7 +126,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddClaimAsync(user, new Claim("ApiAuthKey", apiAuthKey));
+                    await _userManager.AddToRoleAsync(user, Constants.Roles.Member);
 
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)

@@ -1,13 +1,15 @@
 using System;
-using AJT.API.Models;
+using System.Threading.Tasks;
 using AJT.API.Web.Helpers.ExtensionMethods;
 using AJT.API.Web.Helpers.Filters;
+using AJT.API.Web.Models;
 using AJT.API.Web.Services;
 using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -30,7 +32,6 @@ namespace AJT.API.Web
 
         public static IConfigurationRoot ConfigurationRoot => (IConfigurationRoot)Configuration;
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -71,8 +72,26 @@ namespace AJT.API.Web
             });
         }
 
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            //adding custom roles
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            string[] roleNames = { "Admin", "Member" };
+
+            foreach (var roleName in roleNames)
+            {
+                //creating the roles and seeding them to the database
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             UserManagerExtensions.Configure(app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());
 
@@ -112,6 +131,8 @@ namespace AJT.API.Web
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
+
+            //CreateRoles(serviceProvider).Wait();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using AJT.API.Models;
+using AJT.API.Web.Models;
 
 namespace AJT.API.Web.Services.Interfaces
 {

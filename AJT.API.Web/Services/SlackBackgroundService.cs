@@ -17,10 +17,15 @@ namespace AJT.API.Web.Services
         }
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using var scope = _serviceProvider.CreateScope();
-            var slackService = scope.ServiceProvider.GetRequiredService<ISlackService>();
+            await Task.Run(() =>
+            {
+                using var scope = _serviceProvider.CreateScope();
+                var slackService = scope.ServiceProvider.GetRequiredService<ISlackService>();
 
-            slackService.SendBotMessage();
+                slackService.SendBotMessage();
+                return Task.CompletedTask;
+
+            }, cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

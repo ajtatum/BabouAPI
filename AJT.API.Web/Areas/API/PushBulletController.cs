@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AJT.API.Models;
 using AJT.API.Web.Helpers.Filters;
+using AJT.API.Web.Models;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

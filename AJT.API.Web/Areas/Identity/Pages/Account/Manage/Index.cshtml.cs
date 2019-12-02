@@ -25,8 +25,6 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             _signInManager = signInManager;
         }
 
-        public string Username { get; set; }
-
         [TempData]
         public string StatusMessage { get; set; }
 
@@ -35,6 +33,8 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            public string Username { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -48,15 +48,11 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
-            var getClaims = await _userManager.GetClaimsAsync(user);
-
-            var apiAuthKey = getClaims.FirstOrDefault(x => x.Type == "ApiAuthKey")?.Value;
-
-            Username = userName;
+            var apiAuthKey = await _userManager.GetApiAuthKeyAsync();
 
             Input = new InputModel
             {
+                Username = userName,
                 PhoneNumber = phoneNumber,
                 ApiKey = apiAuthKey
             };

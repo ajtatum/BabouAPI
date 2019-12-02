@@ -1,4 +1,4 @@
-﻿using AJT.API.Models;
+﻿using AJT.API.Web.Models;
 using AJT.API.Web.Services.Interfaces;
 using IpStack;
 using IpStack.Models;

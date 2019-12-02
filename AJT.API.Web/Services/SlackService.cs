@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AJT.API.Models;
+using AJT.API.Web.Models;
 using AJT.API.Web.Services.Interfaces;
 using BabouExtensions;
 using Microsoft.Extensions.Logging;
@@ -38,6 +38,12 @@ namespace AJT.API.Web.Services
             {
                 _logger.LogInformation("StaLeeBot matched hello. {@Conversation}", conv);
                 await conv.PostMessage($"Hi {conv.From.Username}!");
+            });
+
+            bot.When(Matches.Text("test"), HubType.DirectMessage | HubType.Channel | HubType.Group, async conv =>
+            {
+                _logger.LogInformation("StaLeeBot matched test. {@Conversation}", conv);
+                await conv.PostMessage($"It's working {conv.From.Username}!");
             });
         }
 

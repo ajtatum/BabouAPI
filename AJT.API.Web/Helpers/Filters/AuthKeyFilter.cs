@@ -1,24 +1,23 @@
 ﻿using System.Linq;
-using AJT.API.Models;
+using AJT.API.Web.Data;
 using AJT.API.Web.Services.Interfaces;
 using BabouExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace AJT.API.Web.Helpers.Filters
 {
     public class AuthKeyFilter : ActionFilterAttribute
     {
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<AuthKeyFilter> _logger;
-        private readonly AppSettings _appSettings;
         private readonly IIpService _ipService;
 
-        public AuthKeyFilter(ILogger<AuthKeyFilter> logger, IOptionsMonitor<AppSettings> appSettings, IIpService ipService)
+        public AuthKeyFilter(ApplicationDbContext context, ILogger<AuthKeyFilter> logger, IIpService ipService)
         {
+            _context = context;
             _logger = logger;
-            _appSettings = appSettings.CurrentValue;
             _ipService = ipService;
         }
 
@@ -31,7 +30,7 @@ namespace AJT.API.Web.Helpers.Filters
             var authKeyHeader = context.HttpContext.Request.Headers["AuthKey"];
 
             var authKey = !authKeyQueryString.IsEmpty() ? authKeyQueryString.ToString() : authKeyHeader.ToString();
-            var authKeys = new[] { _appSettings.AuthKeys.Default, _appSettings.AuthKeys.AppVeyor };
+            var authKeys = _context.Users.Select(x => x.ApiAuthKey).ToList();
 
             if (!authKeys.Contains(authKey))
             {
@@ -41,8 +40,10 @@ namespace AJT.API.Web.Helpers.Filters
                 return;
             }
 
-            _logger.LogInformation("AuthKeyFilter: {Path} is being accessed by {IpAddress} located at {City}, {State}, {Country}. Using AuthKey: {AuthKey}", 
-                context.HttpContext.Request.Path, remoteIp, ipAddressDetails.City, ipAddressDetails.RegionCode, ipAddressDetails.CountryCode, authKey);
+            var authKeyUser = _context.Users.FirstOrDefault(x => x.ApiAuthKey == authKey)?.UserName;
+
+            _logger.LogInformation("AuthKeyFilter: {Path} is being accessed by {IpAddress} located at {City}, {State}, {Country}. Using AuthKey: {AuthKey} by {AuthKeyUser}", 
+                context.HttpContext.Request.Path, remoteIp, ipAddressDetails.City, ipAddressDetails.RegionCode, ipAddressDetails.CountryCode, authKey, authKeyUser);
 
             base.OnActionExecuting(context);
         }

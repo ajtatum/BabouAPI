@@ -1,9 +1,7 @@
 ﻿using System;
 using AJT.API.Web.Data;
-using AJT.API.Web.Helpers.Identity;
 using AJT.API.Web.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -46,22 +44,7 @@ namespace AJT.API.Web.Areas.Identity
                     })
                     .AddDefaultUI()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
-                    //.AddClaimsPrincipalFactory<AjtApiClaimsPrincipalFactory>()
                     .AddDefaultTokenProviders();
-
-                //services.ConfigureApplicationCookie(options =>
-                //{
-                //    options.Cookie.HttpOnly = true;
-                //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                //    options.Cookie.Name = "AjtApiApplication";
-                //    options.ExpireTimeSpan = TimeSpan.FromDays(7);
-
-                //    options.LoginPath = $"/Identity/Account/Login";
-                //    options.LogoutPath = $"/Identity/Account/Logout";
-                //    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
-                //    options.SlidingExpiration = true;
-                //    options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-                //});
 
                 services.AddAuthentication()
                     .AddCookie(options =>

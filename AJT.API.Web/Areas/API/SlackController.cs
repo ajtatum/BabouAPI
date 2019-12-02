@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using AJT.API.Models;
 using AJT.API.Web.Helpers;
+using AJT.API.Web.Models;
 using AJT.API.Web.Services.Interfaces;
 using BabouExtensions;
 using Microsoft.AspNetCore.Http;

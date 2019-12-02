@@ -20,12 +20,12 @@ namespace AJT.API.Web.Helpers.ExtensionMethods
 
         public static HttpContext Current => _httpContextAccessor.HttpContext;
 
-        public static ApplicationUser FindByApiAuthKey(this UserManager<ApplicationUser> um, string apiAuthKey)
+        public static ApplicationUser FindByApiAuthKeyAsync(this UserManager<ApplicationUser> um, string apiAuthKey)
         {
             return um?.Users?.FirstOrDefault(x=>x.ApiAuthKey == apiAuthKey);
         }
 
-        public static async Task<string> GetApiAuthKey(this UserManager<ApplicationUser> um)
+        public static async Task<string> GetApiAuthKeyAsync(this UserManager<ApplicationUser> um)
         {
             var user = await um?.GetUserAsync(Current.User);
             return user?.ApiAuthKey;

@@ -1,5 +1,5 @@
-﻿using AJT.API.Models;
-using AJT.API.Web.Helpers.Filters;
+﻿using AJT.API.Web.Helpers.Filters;
+using AJT.API.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

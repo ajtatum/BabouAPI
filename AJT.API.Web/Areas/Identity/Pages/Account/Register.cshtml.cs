@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using AJT.API.Web.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using AJT.API.Web.Models;
@@ -81,7 +82,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddClaimAsync(user, new Claim("ApiAuthKey", apiAuthKey));
+                    await _userManager.AddToRoleAsync(user, Constants.Roles.Member);
 
                     _logger.LogInformation("User created a new account with password.");
 

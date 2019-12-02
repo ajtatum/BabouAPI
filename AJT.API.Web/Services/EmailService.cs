@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using AJT.API.Models;
+using AJT.API.Web.Models;
 using FluentEmail.Core;
 using FluentEmail.Mailgun;
 using Microsoft.AspNetCore.Identity.UI.Services;
