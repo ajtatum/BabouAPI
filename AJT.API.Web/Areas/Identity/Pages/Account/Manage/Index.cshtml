@@ -13,7 +13,7 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Input.Username"></label>
-                <input asp-for="Input.Username" class="form-control" disabled />
+                <input asp-for="Input.Username" class="form-control" />
                 <span asp-validation-for="Input.Username" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -26,7 +26,7 @@
                 <input asp-for="Input.ApiKey" class="form-control" readonly="readonly" />
                 <span asp-validation-for="Input.ApiKey" class="text-danger"></span>
             </div>
-            <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
+            <button id="update-profile-button" type="submit" class="btn btn-dark">Save</button>
         </form>
     </div>
 </div>

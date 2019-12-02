@@ -33,6 +33,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [Required]
             public string Username { get; set; }
 
             [Phone]
@@ -83,6 +84,18 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
+
+            var username = await _userManager.GetUserNameAsync(user);
+            if (Input.Username != username)
+            {
+                var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.Username);
+                if (!setUserNameResult.Succeeded)
+                {
+                    StatusMessage = "Error: That username has already been taken.";
+                    return RedirectToPage();
+                }
+            }
+
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
