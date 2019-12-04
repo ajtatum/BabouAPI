@@ -42,10 +42,12 @@ namespace AJT.API.Web
             });
 
             services.AddMvc()
+                .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddRazorPages()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddRazorRuntimeCompilation();
 
             services.Configure<AppSettings>(Configuration);
@@ -107,12 +109,6 @@ namespace AJT.API.Web
                 app.UseHsts();
             }
 
-            app.UseSerilogRequestLogging();
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseRouting();
-            app.UseCookiePolicy();
-
             // forwarded Header middleware
             var fordwardedHeaderOptions = new ForwardedHeadersOptions
             {
@@ -122,6 +118,12 @@ namespace AJT.API.Web
             fordwardedHeaderOptions.KnownProxies.Clear();
 
             app.UseForwardedHeaders(fordwardedHeaderOptions);
+
+            app.UseSerilogRequestLogging();
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
             app.UseAuthorization();

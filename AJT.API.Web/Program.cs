@@ -53,8 +53,6 @@ namespace AJT.API.Web
                             new KeyVaultClient.AuthenticationCallback(
                                 azureServiceTokenProvider.KeyVaultTokenCallback));
 
-                        
-
                         configApp.AddAzureKeyVault(new AzureKeyVaultConfigurationOptions()
                         {
                             Client = keyVaultClient,
