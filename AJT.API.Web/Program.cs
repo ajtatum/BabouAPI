@@ -57,7 +57,7 @@ namespace AJT.API.Web
                         {
                             Client = keyVaultClient,
                             Manager = new DefaultKeyVaultSecretManager(),
-                            Vault = $"https://{hostContext.Configuration["AzureKeyVaultName"]}.vault.azure.net/",
+                            Vault = $"https://{Environment.GetEnvironmentVariable("AzureKeyVaultName")}.vault.azure.net/",
                             ReloadInterval = TimeSpan.FromMinutes(30)
                         });
                     }
