@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AJT.API.Web.Helpers.Filters;
@@ -19,6 +20,8 @@ namespace AJT.API.Web.Areas.API
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpGet("{surroundWithQuotes:bool=false}")]
+        [Consumes("text/plain")]
+        [Produces("text/plain")]
         public async Task<IActionResult> ConvertToCsv([Optional] bool surroundWithQuotes)
         {
             var requestBody = await Request.GetRawBodyStringAsync();
@@ -27,7 +30,7 @@ namespace AJT.API.Web.Areas.API
             {
                 var returnValue = string.Empty;
 
-                if(surroundWithQuotes == false)
+                if (surroundWithQuotes == false)
                     returnValue = string.Join(',', cleanString);
                 else
                 {
@@ -48,6 +51,8 @@ namespace AJT.API.Web.Areas.API
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpGet]
+        [Consumes("text/plain")]
+        [Produces("text/plain")]
         public async Task<IActionResult> ConvertToLines()
         {
             var requestBody = await Request.GetRawBodyStringAsync();
@@ -65,29 +70,27 @@ namespace AJT.API.Web.Areas.API
         /// <summary>
         /// Encrypts a string using the header values OriginalValue and EncryptionKey
         /// </summary>
+        /// <param name="originalString">The string you wish to encrypt.</param>
+        /// <param name="encryptionKey">Your encryption key.</param>
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpGet]
-        public IActionResult Encrypt()
+        public IActionResult Encrypt([Required][FromHeader] string originalString, [Required][FromHeader] string encryptionKey)
         {
-            var originalValue = Request.Headers["OriginalValue"].ToString();
-            var encryptionKey = Request.Headers["EncryptionKey"].ToString();
-
-            return new OkObjectResult(originalValue.Encrypt(encryptionKey));
+            return new OkObjectResult(originalString.Encrypt(encryptionKey));
         }
 
         /// <summary>
         /// Decrypts a string using the header values OriginalValue and DecryptionKey
         /// </summary>
+        /// <param name="encryptedString">The string you wish to encrypt.</param>
+        /// <param name="decryptionKey">Your key you use to decrypt the encrypted string..</param>
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpGet]
-        public IActionResult Decrypt()
+        public IActionResult Decrypt([Required][FromHeader]string encryptedString, [Required][FromHeader] string decryptionKey)
         {
-            var originalValue = Request.Headers["OriginalValue"].ToString();
-            var decryptionKey = Request.Headers["DecryptionKey"].ToString();
-
-            return new OkObjectResult(originalValue.Decrypt(decryptionKey));
+            return new OkObjectResult(encryptedString.Decrypt(decryptionKey));
         }
     }
 }

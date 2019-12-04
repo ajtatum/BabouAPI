@@ -12,6 +12,7 @@ namespace AJT.API.Web.Areas.API
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class SlackController : ControllerBase
     {
         private readonly ILogger<SlackController> _logger;

@@ -9,6 +9,7 @@ namespace AJT.API.Web.Areas.API
     [Route("api/[controller]/[action]")]
     [ApiController]
     [AllowAnonymous]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class TaterController : ControllerBase
     {
         private readonly AppSettings _appSettings;

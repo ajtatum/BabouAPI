@@ -20,7 +20,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Serilog;
+
 
 namespace AJT.API.Web
 {
@@ -77,6 +79,28 @@ namespace AJT.API.Web
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "AJT API", Version = "v1"});
+                c.AddSecurityDefinition("AuthKey", new OpenApiSecurityScheme()
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Header,
+                    Name = "AuthKey",
+                    Description = "The AuthKey you're provided when you register.",
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "AuthKey" }
+                        },
+                        new string[] { }
+                    }
+                });
+            });
+
             services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:InstrumentationKey"]);
 
             services.AddHsts(options =>
@@ -87,25 +111,6 @@ namespace AJT.API.Web
             });
         }
 
-        private async Task CreateRoles(IServiceProvider serviceProvider)
-        {
-            //adding custom roles
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            string[] roleNames = { "Admin", "Member" };
-
-            foreach (var roleName in roleNames)
-            {
-                //creating the roles and seeding them to the database
-                var roleExist = await roleManager.RoleExistsAsync(roleName);
-                if (!roleExist)
-                {
-                    await roleManager.CreateAsync(new IdentityRole(roleName));
-                }
-            }
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             UserManagerExtensions.Configure(app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());
@@ -132,6 +137,12 @@ namespace AJT.API.Web
 
             app.UseForwardedHeaders(fordwardedHeaderOptions);
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "AJT API V1");
+            });
+
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -146,8 +157,6 @@ namespace AJT.API.Web
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
-
-            //CreateRoles(serviceProvider).Wait();
         }
     }
 }

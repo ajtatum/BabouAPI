@@ -1,4 +1,6 @@
-﻿using AJT.API.Web.Services.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using AJT.API.Web.Helpers.Filters;
+using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,9 +25,19 @@ namespace AJT.API.Web.Areas.API
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(AuthKeyFilter))]
         public IActionResult GetIpAddressDetails()
         {
             var ipAddress = _ipService.GetRemoteIp();
+            var ipAddressDetails = _ipService.GetIpAddressDetails(ipAddress);
+
+            return new OkObjectResult(ipAddressDetails);
+        }
+
+        [HttpGet]
+        [ServiceFilter(typeof(AuthKeyFilter))]
+        public IActionResult GetIpAddressDetails([Required] string ipAddress)
+        {
             var ipAddressDetails = _ipService.GetIpAddressDetails(ipAddress);
 
             return new OkObjectResult(ipAddressDetails);

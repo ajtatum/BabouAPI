@@ -30,6 +30,7 @@ namespace AJT.API.Web.Areas.API
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost]
         [Produces("application/json")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> SendAppVeyorMessage()
         {
             var requestBody = await Request.GetRawBodyStringAsync();
