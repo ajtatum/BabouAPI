@@ -91,7 +91,7 @@ namespace AJT.API.Web
                         .ReadFrom.Configuration(hostingContext.Configuration)
                         .Enrich.FromLogContext()
                         .Enrich.WithExceptionDetails()
-                        .Enrich.WithProperty("Application", "AJT API Web")
+                        .Enrich.WithProperty("Application", "AJT API Web App")
                         .Enrich.WithProperty("Environment", hostingContext.HostingEnvironment.EnvironmentName)
                         .Enrich.WithProperty("BuildNumber", hostingContext.Configuration["BuildNumber"])
                         .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces)

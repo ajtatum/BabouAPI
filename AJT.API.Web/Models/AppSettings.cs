@@ -3,6 +3,7 @@
     public class AppSettings
     {
         public string AdminSafeList { get; set; }
+        public AzureSettings Azure { get; set; }
         public ApplicationInsightsSettings ApplicationInsights { get; set; }
         public AuthenticationSettings Authentication { get; set; }
         public string BuildNumber { get; set; }
@@ -11,6 +12,25 @@
         public string IpStackApiKey { get; set; }
         public PushBulletSettings PushBullet { get; set; }
         public SlackSettings Slack { get; set; }
+    }
+
+    public class AzureSettings
+    {
+        public KeyVaultSettings KeyVault { get; set; }
+        public StorageSettings Storage { get; set; }
+
+        public class KeyVaultSettings
+        {
+            public string ClientId { get; set; }
+            public string ClientSecret { get; set; }
+            public string EncryptionKey { get; set; }
+        }
+
+        public class StorageSettings
+        {
+            public string ConnectionString { get; set; }
+            public string DataProtectionContainer { get; set; }
+        }
     }
 
     public class ApplicationInsightsSettings
