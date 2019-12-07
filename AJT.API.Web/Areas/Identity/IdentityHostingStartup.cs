@@ -64,6 +64,11 @@ namespace AJT.API.Web.Areas.Identity
                     {
                         options.ClientId = context.Configuration["Authentication:Google:ClientId"];
                         options.ClientSecret = context.Configuration["Authentication:Google:ClientSecret"];
+                    })
+                    .AddFacebook(options =>
+                    {
+                        options.AppId = context.Configuration["Authentication:Facebook:AppId"];
+                        options.AppSecret = context.Configuration["Authentication:Facebook:AppSecret"];
                     });
             });
         }
