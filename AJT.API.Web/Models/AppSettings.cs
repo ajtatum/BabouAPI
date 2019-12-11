@@ -69,6 +69,7 @@
         public string Domain { get; set; }
         public string FromSenderName { get; set; }
         public string FromUserName { get; set; }
+        public string ToEmail { get; set; }
     }
 
     public class GoogleCustomSearchSettings
