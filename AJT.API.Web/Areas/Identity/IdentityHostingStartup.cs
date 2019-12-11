@@ -69,6 +69,16 @@ namespace AJT.API.Web.Areas.Identity
                     {
                         options.AppId = context.Configuration["Authentication:Facebook:AppId"];
                         options.AppSecret = context.Configuration["Authentication:Facebook:AppSecret"];
+                    })
+                    .AddMicrosoftAccount(options =>
+                    {
+                        options.ClientId = context.Configuration["Authentication:Microsoft:ClientId"];
+                        options.ClientSecret = context.Configuration["Authentication:Microsoft:ClientSecret"];
+                    })
+                    .AddTwitter(options =>
+                    {
+                        options.ConsumerKey = context.Configuration["Authentication:Twitter:ConsumerApiKey"];
+                        options.ConsumerSecret = context.Configuration["Authentication:Twitter:ConsumerSecret"];
                     });
             });
         }

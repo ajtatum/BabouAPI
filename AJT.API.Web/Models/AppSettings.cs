@@ -42,7 +42,8 @@
     {
         public AuthFacebook Facebook { get; set; }
         public AuthGoogle Google { get; set; }
-        public MicrosoftAuth Microsoft { get; set; }
+        public AuthMicrosoft Microsoft { get; set; }
+        public AuthTwitter Twitter { get; set; }
 
         public class AuthFacebook
         {
@@ -56,11 +57,17 @@
             public string ClientSecret { get; set; }
         }
 
-        public class MicrosoftAuth
+        public class AuthMicrosoft
         {
             public string ClientId { get; set; }
             public string ClientSecret { get; set; }
         }
+        public class AuthTwitter
+        {
+            public string ConsumerApiKey { get; set; }
+            public string ConsumerSecret { get; set; }
+        }
+
     }
 
     public class EmailSenderSettings
