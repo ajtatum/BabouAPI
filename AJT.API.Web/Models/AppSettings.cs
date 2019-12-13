@@ -23,7 +23,13 @@
         {
             public string ClientId { get; set; }
             public string ClientSecret { get; set; }
-            public string EncryptionKey { get; set; }
+            public string DataProtectionSecret { get; set; }
+            public EncryptionKeySettings EncryptionKeys { get; set; }
+
+            public class EncryptionKeySettings
+            {
+                public string DataProtectionKey { get; set; }
+            }
         }
 
         public class StorageSettings

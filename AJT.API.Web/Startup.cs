@@ -45,7 +45,7 @@ namespace AJT.API.Web
             services.AddDataProtection()
                 .SetApplicationName("AJT API Web App")
                 .PersistKeysToAzureBlobStorage(container, $"{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}/dataprotectionkeys.xml")
-                .ProtectKeysWithAzureKeyVault(Configuration["Azure:KeyVault:EncryptionKey"], Configuration["Azure:KeyVault:ClientId"], Configuration["Azure:KeyVault:ClientSecret"]);
+                .ProtectKeysWithAzureKeyVault(Configuration["Azure:KeyVault:EncryptionKeys:DataProtectionKey"], Configuration["Azure:KeyVault:ClientId"], Configuration["Azure:KeyVault:ClientSecret"]);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -69,6 +69,7 @@ namespace AJT.API.Web
             services.AddScoped<AuthKeyFilter>();
             services.AddScoped<IIpService, IpService>();
             services.AddScoped<ISendNewUserNotificationService, SendNewUserNotificationService>();
+            services.AddScoped<ICipherService, CipherService>();
             services.AddTransient<IEmailSender, EmailService>();
 
             services.AddSingleton<ISlackService, SlackService>();
