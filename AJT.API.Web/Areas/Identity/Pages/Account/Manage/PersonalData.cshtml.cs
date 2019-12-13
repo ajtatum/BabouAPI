@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using AJT.API.Web.Models;
+using AJT.API.Web.Models.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

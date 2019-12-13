@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AJT.API.Web.Models;
+using AJT.API.Web.Models.Database;
 using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;

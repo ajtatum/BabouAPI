@@ -1,6 +1,6 @@
 ﻿using System;
 using AJT.API.Web.Data;
-using AJT.API.Web.Models;
+using AJT.API.Web.Models.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

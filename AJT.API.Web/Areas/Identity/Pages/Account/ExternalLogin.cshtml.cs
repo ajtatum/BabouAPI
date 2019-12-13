@@ -6,7 +6,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AJT.API.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using AJT.API.Web.Models;
+using AJT.API.Web.Models.Database;
 using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AJT.API.Web.Helpers.ExtensionMethods;
 using AJT.API.Web.Helpers.Filters;
 using AJT.API.Web.Models;
+using AJT.API.Web.Models.Database;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,11 +24,13 @@ namespace AJT.API.Web.Areas.API
     {
         private readonly ILogger<PushBulletController> _logger;
         private readonly AppSettings _appSettings;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PushBulletController(ILogger<PushBulletController> logger, IOptionsMonitor<AppSettings> appSettings)
+        public PushBulletController(ILogger<PushBulletController> logger, IOptionsMonitor<AppSettings> appSettings, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _appSettings = appSettings.CurrentValue;
+            _userManager = userManager;
         }
 
         [ServiceFilter(typeof(AuthKeyFilter))]
@@ -32,7 +38,12 @@ namespace AJT.API.Web.Areas.API
         [Produces("application/json")]
         public async Task<IActionResult> SendAppVeyorMessage()
         {
-            var requestBody = await Request.GetRawBodyStringAsync();
+            Request.EnableBuffering();
+            var requestBody = await Request.GetRawBodyStringAsyncWithOptions(null, null, true);
+            var userAuthKey = Request.Headers["AuthKey"].ToString();
+
+            var user = _userManager.FindByApiAuthKeyAsync(userAuthKey);
+            _logger.LogInformation("Found user {User}", user.UserName);
 
             try
             {

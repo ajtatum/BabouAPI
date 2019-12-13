@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AJT.API.Web.Helpers.ExtensionMethods;
 using AJT.API.Web.Helpers.Filters;
 using AJT.API.Web.Models;
+using AJT.API.Web.Models.Database;
 using AJT.API.Web.Services;
 using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;

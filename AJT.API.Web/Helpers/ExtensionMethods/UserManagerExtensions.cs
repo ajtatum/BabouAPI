@@ -1,11 +1,8 @@
 ﻿using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
 using System.Threading.Tasks;
-using AJT.API.Web.Models;
+using AJT.API.Web.Models.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AJT.API.Web.Helpers.ExtensionMethods
 {

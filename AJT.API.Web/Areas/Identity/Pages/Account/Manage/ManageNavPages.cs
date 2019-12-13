@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
@@ -11,6 +8,8 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
         public static string Index => "Index";
 
         public static string Email => "Email";
+
+        public static string PushBullet => "PushBullet";
 
         public static string ChangePassword => "ChangePassword";
 
@@ -23,6 +22,8 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
+
+        public static string PushBulletNavClass(ViewContext viewContext) => PageNavClass(viewContext, PushBullet);
 
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
 

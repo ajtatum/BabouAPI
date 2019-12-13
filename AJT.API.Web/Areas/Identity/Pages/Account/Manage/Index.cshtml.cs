@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
-using AJT.API.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using AJT.API.Web.Helpers.ExtensionMethods;
+using AJT.API.Web.Models.Database;
 
 namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 {
