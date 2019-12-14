@@ -10,7 +10,6 @@
         public EmailSenderSettings EmailSender { get; set; }
         public GoogleCustomSearchSettings GoogleCustomSearch { get; set; }
         public string IpStackApiKey { get; set; }
-        public PushBulletSettings PushBullet { get; set; }
         public SlackSettings Slack { get; set; }
     }
 
@@ -85,12 +84,6 @@
         public string ApiKey { get; set; }
         public string DcComicsCx { get; set; }
         public string MarvelCx { get; set; }
-    }
-
-    public class PushBulletSettings
-    {
-        public string ApiKey { get; set; }
-        public string EncryptionKey { get; set; }
     }
 
     public class SlackSettings
