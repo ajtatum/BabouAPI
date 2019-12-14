@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AJT.API.Web.Models.Database
 {
@@ -23,8 +19,8 @@ namespace AJT.API.Web.Models.Database
         [Required]
         public string ApplicationSettings { get; set; }
 
-        public ApplicationService ApplicationService { get; set; }
+        public virtual ApplicationService ApplicationService { get; set; }
 
-        public ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }

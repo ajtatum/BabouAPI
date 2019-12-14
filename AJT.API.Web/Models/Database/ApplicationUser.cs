@@ -7,10 +7,17 @@ namespace AJT.API.Web.Models.Database
 {
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+            ApplicationUserServices = new List<ApplicationUserService>();
+            ShortenedUrls = new List<ShortenedUrl>();
+        }
+
         [Column(TypeName = "varchar(50)")]
         [StringLength(50)]
         public string ApiAuthKey { get; set; }
 
         public List<ApplicationUserService> ApplicationUserServices { get; set; }
+        public List<ShortenedUrl> ShortenedUrls { get; set; }
     }
 }

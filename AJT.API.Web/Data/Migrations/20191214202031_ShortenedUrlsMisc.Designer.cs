@@ -4,14 +4,16 @@ using AJT.API.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AJT.API.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191214202031_ShortenedUrlsMisc")]
+    partial class ShortenedUrlsMisc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,10 +150,6 @@ namespace AJT.API.Web.Data.Migrations
                     b.Property<string>("LongUrl")
                         .IsRequired()
                         .HasColumnType("varchar(500)");
-
-                    b.Property<string>("ShortUrl")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 

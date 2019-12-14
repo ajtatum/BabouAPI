@@ -12,6 +12,12 @@
         <Compile Remove="Data\Migrations\20191213051931_AppUserServices2.Designer.cs" />
         <Compile Remove="Data\Migrations\20191213052559_AppUserServices2.cs" />
         <Compile Remove="Data\Migrations\20191213052559_AppUserServices2.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191214193715_ShortenedUrl.cs" />
+        <Compile Remove="Data\Migrations\20191214193715_ShortenedUrl.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191214194958_ShortenedUrls.cs" />
+        <Compile Remove="Data\Migrations\20191214194958_ShortenedUrls.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191214201621_ShortenedUrlsMisc.cs" />
+        <Compile Remove="Data\Migrations\20191214201621_ShortenedUrlsMisc.Designer.cs" />
     </ItemGroup>
 
     <ItemGroup>
