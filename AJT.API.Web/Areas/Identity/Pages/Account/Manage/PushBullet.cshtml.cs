@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using AJT.API.Web.Data;
 using AJT.API.Web.Models.Database;
 using AJT.API.Web.Models.Services;
 using AJT.API.Web.Services.Interfaces;
@@ -8,22 +7,21 @@ using BabouExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 {
     public class PushBulletModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICipherService _cipherService;
+        private readonly IPushBulletAppService _pushBulletAppService;
 
-        public PushBulletModel(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ICipherService cipherService)
+        public PushBulletModel(UserManager<ApplicationUser> userManager, ICipherService cipherService, IPushBulletAppService pushBulletAppService)
         {
-            _context = context;
             _userManager = userManager;
             _cipherService = cipherService;
+            _pushBulletAppService = pushBulletAppService;
         }
         
         [TempData]
@@ -48,11 +46,9 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user)
         {
-            var pushBulletService = await _context.ApplicationUserServices.FirstOrDefaultAsync(x => x.ApplicationUserId == user.Id && x.ApplicationServiceId == 1);
+            var pushBulletService = await _pushBulletAppService.GetPushBulletServiceByUserId(user.Id);
 
-            var pushBulletSettings = pushBulletService != null
-                ? JsonConvert.DeserializeObject<PushBulletSettings>(pushBulletService.ApplicationSettings)
-                : new PushBulletSettings() {ApiKey = string.Empty, EncryptionKey = string.Empty};
+            var pushBulletSettings = _pushBulletAppService.GetPushBulletSettingsByApplication(pushBulletService);
 
             Input = new InputModel
             {
@@ -119,33 +115,15 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
                 };
 
                 var pushBulletSettingsString = JsonConvert.SerializeObject(pushBulletSettings);
-                var pushBulletService = await _context.ApplicationUserServices.FirstOrDefaultAsync(x => x.ApplicationUserId == user.Id && x.ApplicationServiceId == 1);
-                if (pushBulletService == null)
-                {
-                    pushBulletService = new ApplicationUserService()
-                    {
-                        ApplicationUserId = user.Id,
-                        ApplicationServiceId = 1,
-                        ApplicationSettings = pushBulletSettingsString
-                    };
-                    _context.Add(pushBulletService);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    pushBulletService.ApplicationSettings = pushBulletSettingsString;
-                    await _context.SaveChangesAsync();
-                }
+                var success = await _pushBulletAppService.AddOrUpdatePushBulletSettings(user.Id, pushBulletSettingsString);
                 
-                StatusMessage = "Your PushBullet Settings have been encrypted and updated!";
+                StatusMessage = success ? "Your PushBullet Settings have been encrypted and updated!" : "Error: Unable to save your settings at this time.";
             }
             else
             {
-                var pushBulletService = await _context.ApplicationUserServices.FirstOrDefaultAsync(x => x.ApplicationUserId == user.Id && x.ApplicationServiceId == 1);
-                _context.Remove(pushBulletService);
-                await _context.SaveChangesAsync();
+                var success = await _pushBulletAppService.RemovePushBulletService(user.Id);
 
-                StatusMessage = "Your PushBullet integration has been removed.";
+                StatusMessage = success ? "Your PushBullet integration has been removed." : "Error: Unable to remove PushBullet integration at this time.";
             }
 
             return RedirectToPage();

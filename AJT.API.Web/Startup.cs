@@ -71,6 +71,7 @@ namespace AJT.API.Web
             services.AddScoped<IIpService, IpService>();
             services.AddScoped<ISendNewUserNotificationService, SendNewUserNotificationService>();
             services.AddScoped<ICipherService, CipherService>();
+            services.AddScoped<IPushBulletAppService, PushBulletAppService>();
             services.AddTransient<IEmailSender, EmailService>();
 
             services.AddSingleton<ISlackService, SlackService>();
