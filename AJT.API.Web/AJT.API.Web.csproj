@@ -18,6 +18,8 @@
         <Compile Remove="Data\Migrations\20191214194958_ShortenedUrls.Designer.cs" />
         <Compile Remove="Data\Migrations\20191214201621_ShortenedUrlsMisc.cs" />
         <Compile Remove="Data\Migrations\20191214201621_ShortenedUrlsMisc.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191215035722_RidOfCascade.cs" />
+        <Compile Remove="Data\Migrations\20191215035722_RidOfCascade.Designer.cs" />
     </ItemGroup>
 
     <ItemGroup>

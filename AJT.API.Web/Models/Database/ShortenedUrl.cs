@@ -28,6 +28,8 @@ namespace AJT.API.Web.Models.Database
         [Required]
         public DateTime CreatedOn { get; set; }
 
+        public DateTime? ModifiedOn { get; set; }
+
         [Required]
         [Column(TypeName = "varchar(100)")]
         public string ShortUrl { get; set; }

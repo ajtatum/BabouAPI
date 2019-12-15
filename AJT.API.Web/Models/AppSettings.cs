@@ -6,6 +6,7 @@
         public AzureSettings Azure { get; set; }
         public ApplicationInsightsSettings ApplicationInsights { get; set; }
         public AuthenticationSettings Authentication { get; set; }
+        public string BaseShortenedUrl { get; set; }
         public string BuildNumber { get; set; }
         public EmailSenderSettings EmailSender { get; set; }
         public GoogleCustomSearchSettings GoogleCustomSearch { get; set; }

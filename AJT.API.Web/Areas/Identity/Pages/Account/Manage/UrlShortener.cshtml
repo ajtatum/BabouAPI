@@ -1,0 +1,60 @@
+﻿@page
+@using AJT.API.Web.Models.Database
+@model UrlShortenerModel
+@{
+    ViewData["Title"] = "Manage Url Shoreners";
+    ViewData["ActivePage"] = ManageNavPages.UrlShortener;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<h5>Create a new Short Url</h5>
+<div class="row">
+    <div class="col-md-12">
+        <form id="shortenurl-form" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ShortenedUrl.LongUrl"></label>
+                <input asp-for="ShortenedUrl.LongUrl" class="form-control" />
+                <span asp-validation-for="ShortenedUrl.LongUrl" class="text-danger"></span>
+            </div>
+            <button id="add-shortened-url-button" type="submit" class="btn btn-dark">Add Shortened Url</button>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<h5>Existing Shortened Urls</h5>
+@foreach (var shortenedUrl in Model.ShortenedUrls)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <form id="shortenurl-form-@shortenedUrl.Id" method="post" asp-route-id="@shortenedUrl.Id">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-row">
+                    <div class="col-5">
+                        <input asp-for="@shortenedUrl.LongUrl" class="form-control" />
+                        <span asp-validation-for="@shortenedUrl.LongUrl" class="text-danger"></span>
+                    </div>
+                    <div class="col-5">
+                        <input asp-for="@shortenedUrl.ShortUrl" class="form-control" readonly="readonly" />
+                        <span asp-validation-for="@shortenedUrl.ShortUrl" class="text-danger"></span>
+                    </div>
+                    <div class="col-1">
+                        <button id="save-shorten-url-button-@shortenedUrl.Id" type="submit" class="btn btn-dark" asp-page-handler="Update" asp-route-id="@shortenedUrl.Id"><i class="fa fa-save" title="Save"></i></button>
+                    </div>
+                    <div class="col-1">
+                        <button id="delete-shorten-url-button-@shortenedUrl.Id" type="submit" class="btn btn-dark" asp-page-handler="Delete" asp-route-id="@shortenedUrl.Id"><i class="fa fa-trash" title="Delete"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

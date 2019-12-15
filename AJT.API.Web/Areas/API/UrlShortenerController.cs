@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 using AJT.API.Web.Data;
 using AJT.API.Web.Helpers.Filters;
 using AJT.API.Web.Models.Database;
+using AJT.API.Web.Services.Interfaces;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,10 +24,14 @@ namespace AJT.API.Web.Areas.API
     public class UrlShortenerController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUrlShortenerService _urlShortenerService;
+        private readonly ILogger<UrlShortenerController> _logger;
 
-        public UrlShortenerController(ApplicationDbContext context)
+        public UrlShortenerController(ApplicationDbContext context, IUrlShortenerService urlShortenerService, ILogger<UrlShortenerController> logger)
         {
             _context = context;
+            _urlShortenerService = urlShortenerService;
+            _logger = logger;
         }
 
         [ServiceFilter(typeof(AuthKeyFilter))]
@@ -45,30 +51,13 @@ namespace AJT.API.Web.Areas.API
                     return new BadRequestObjectResult($"The token {token} has already been reserved.");
             }
 
-            var shortenUrl = new ShortenedUrl()
-            {
-                Id = token ?? GenerateToken(),
-                LongUrl = longUrl,
-                CreatedBy = applicationUser.Id,
-                CreatedOn = DateTime.Now,
-            };
-            shortenUrl.ShortUrl = $"https://api.ajt.io/go/{shortenUrl.Id}";
-            _context.Add(shortenUrl);
-            await _context.SaveChangesAsync();
+            var shortenedUrl = token != null 
+                ? await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, token) 
+                : await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl);
 
-            return new OkObjectResult(shortenUrl.ShortUrl);
-        }
+            _logger.LogInformation("UrlShortenerController: New Shortened Url Created for {LongUrl} as {ShortUrl}", shortenedUrl.LongUrl, shortenedUrl.ShortUrl);
 
-        private string GenerateToken()
-        {
-            var urlSafe = string.Empty;
-            Enumerable.Range(48, 75)
-                .Where(i => i < 58 || i > 64 && i < 91 || i > 96)
-                .OrderBy(o => new Random().Next())
-                .ToList()
-                .ForEach(i => urlSafe += Convert.ToChar(i));
-
-            return urlSafe.Substring(new Random().Next(0, urlSafe.Length), new Random().Next(2, 8));;
+            return new OkObjectResult(shortenedUrl.ShortUrl);
         }
     }
 }
