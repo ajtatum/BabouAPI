@@ -11,6 +11,7 @@ namespace AJT.API.Web.Services.Interfaces
         Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string token);
         Task<ShortenedUrl> UpdateById(string id, string longUrl);
         Task<ShortenedUrl> DeleteById(string id);
+        Task<bool> CheckIfTokenIsAvailable(string token);
 
         /// <summary>
         /// Gets the Short Url from the token.

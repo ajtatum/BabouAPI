@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AJT.API.Web.Data;
 using AJT.API.Web.Models;
@@ -108,12 +109,25 @@ namespace AJT.API.Web.Services
             return shortenedUrl;
         }
 
+        public async Task<bool> CheckIfTokenIsAvailable(string token)
+        {
+            if (token.IsNullOrWhiteSpace())
+                throw new ArgumentNullException(nameof(token), "Token cannot be null or empty.");
+
+            const string regexOnlyAlphaNumericWithSpecial = @"^[a-zA-Z0-9-_+]{2,50}$";
+            if (!Regex.IsMatch(token, regexOnlyAlphaNumericWithSpecial))
+                throw new ArgumentException("Tokens can only contain alphanumeric, dashes, underscores, or plus signs. Must be between 2 and 50 characters long.");
+
+            var tokenTaken = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Id == token);
+            return tokenTaken == null;
+        }
+
         /// <summary>
-            /// Gets the Short Url from the token.
-            /// </summary>
-            /// <param name="token"></param>
-            /// <returns></returns>
-            public string GetShortUrl(string token)
+        /// Gets the Short Url from the token.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public string GetShortUrl(string token)
         {
             return $"{_appSettings.BaseShortenedUrl}{token}";
         }

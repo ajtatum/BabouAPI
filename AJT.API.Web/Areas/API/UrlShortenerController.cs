@@ -41,19 +41,24 @@ namespace AJT.API.Web.Areas.API
             var userAuthKey = Request.Headers["AuthKey"].ToString();
             var applicationUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.ApiAuthKey == userAuthKey);
 
-            if (token.IsNullOrWhiteSpace())
-                token = null;
+            var tokenTaken = true;
 
-            if (token != null)
+            if (!token.IsNullOrWhiteSpace())
             {
-                var tokenTaken = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Id == token);
-                if (tokenTaken != null)
-                    return new BadRequestObjectResult($"The token {token} has already been reserved.");
+                try
+                {
+                    tokenTaken = await _urlShortenerService.CheckIfTokenIsAvailable(token);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "UrlShortenerController: Error while trying to create custom token.");
+                    return new BadRequestObjectResult(ex.Message);
+                }
             }
 
-            var shortenedUrl = token != null 
-                ? await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, token) 
-                : await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl);
+            var shortenedUrl = tokenTaken
+                ? await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl)
+                : await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, token);
 
             _logger.LogInformation("UrlShortenerController: New Shortened Url Created for {LongUrl} as {ShortUrl}", shortenedUrl.LongUrl, shortenedUrl.ShortUrl);
 

@@ -15,10 +15,15 @@ namespace AJT.API.Web.Models.Database
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(TypeName = "varchar(50)")]
+        [Display(Name = "Token")]
+        [Required]
+        [RegularExpression("^[a-zA-Z0-9-_+]{2,50}$", ErrorMessage = "Tokens can only contain alphanumeric, dashes, underscores, or plus signs. Must be between 2 and 50 characters long.")]
         public string Id { get; set; }
 
         [Required]
         [Column(TypeName = "varchar(500)")]
+        [Url(ErrorMessage = "Please enter a valid URL.")]
+        [Display(Name = "Long Url")]
         public string LongUrl { get; set; }
 
         [Required]
@@ -32,6 +37,8 @@ namespace AJT.API.Web.Models.Database
 
         [Required]
         [Column(TypeName = "varchar(100)")]
+        [Url]
+        [Display(Name = "Short Url")]
         public string ShortUrl { get; set; }
 
         public List<ShortenedUrlClick> ShortenedUrlClicks { get; set; }

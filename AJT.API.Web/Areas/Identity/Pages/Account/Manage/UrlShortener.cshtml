@@ -1,5 +1,4 @@
 ﻿@page
-@using AJT.API.Web.Models.Database
 @model UrlShortenerModel
 @{
     ViewData["Title"] = "Manage Url Shoreners";
@@ -9,52 +8,113 @@
 <h4>@ViewData["Title"]</h4>
 <partial name="_StatusMessage" model="Model.StatusMessage" />
 
-<h5>Create a new Short Url</h5>
+<h5>Create a Short Url</h5>
 <div class="row">
     <div class="col-md-12">
         <form id="shortenurl-form" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ShortenedUrl.LongUrl"></label>
-                <input asp-for="ShortenedUrl.LongUrl" class="form-control" />
-                <span asp-validation-for="ShortenedUrl.LongUrl" class="text-danger"></span>
+            <div class="form-row">
+                <div class="col-5">
+                    <input asp-for="ShortenedUrl.LongUrl" class="form-control" placeholder="Long Url" />
+                    <span asp-validation-for="ShortenedUrl.LongUrl" class="text-danger"></span>
+                </div>
+                <div class="col-5">
+                    <input asp-for="ShortenedUrl.Id" class="form-control" />
+                    <small id="tokenHelp" class="form-text text-muted">The token is what will be appended to the short url.</small>
+                    <span asp-validation-for="ShortenedUrl.Id" class="text-danger"></span>
+                </div>
+                <div class="col-1 text-center">
+                    <button id="regenerate-shorten-token-button" type="submit" class="btn btn-dark" asp-page-handler="RegenerateToken"><i class="fa fa-recycle" title="Regenerate Token"></i></button>
+                </div>
+                <div class="col-1 text-center">
+                    <input asp-for="ShortenedUrl.CreatedBy" type="hidden" />
+                    <input asp-for="ShortenedUrl.ShortUrl" type="hidden" />
+                    <button id="add-shortened-url-button" type="submit" class="btn btn-dark"><i class="fa fa-save" title="Add Short Url"></i></button>
+                </div>
             </div>
-            <button id="add-shortened-url-button" type="submit" class="btn btn-dark">Add Shortened Url</button>
         </form>
     </div>
 </div>
 
-<hr />
-
-<h5>Existing Shortened Urls</h5>
-@foreach (var shortenedUrl in Model.ShortenedUrls)
+@if (Model.ShortenedUrls.Any())
 {
-    <div class="row">
-        <div class="col-md-12">
-            <form id="shortenurl-form-@shortenedUrl.Id" method="post" asp-route-id="@shortenedUrl.Id">
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-row">
-                    <div class="col-5">
-                        <input asp-for="@shortenedUrl.LongUrl" class="form-control" />
-                        <span asp-validation-for="@shortenedUrl.LongUrl" class="text-danger"></span>
+    <hr />
+
+    <h5>Existing Shortened Urls</h5>
+    @foreach (var shortenedUrl in Model.ShortenedUrls)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <form id="shortenurl-form-@shortenedUrl.Id" method="post" asp-route-id="@shortenedUrl.Id">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-row">
+                        <div class="col-5">
+                            <input asp-for="@shortenedUrl.LongUrl" class="form-control" />
+                            <span asp-validation-for="@shortenedUrl.LongUrl" class="text-danger"></span>
+                        </div>
+                        <div class="col-4">
+                            <input asp-for="@shortenedUrl.ShortUrl" class="form-control" readonly="readonly" />
+                            <span asp-validation-for="@shortenedUrl.ShortUrl" class="text-danger"></span>
+                        </div>
+                        <div class="col-1 text-center">
+                            <a id="stats-shorten-url-button-@shortenedUrl.Id" class="btn btn-dark btn-view-stats" href="#"><i class="fa fa-table" title="View Stats"></i></a>
+                        </div>
+                        <div class="col-1 text-center">
+                            <button id="save-shorten-url-button-@shortenedUrl.Id" type="submit" class="btn btn-dark" asp-page-handler="Update" asp-route-id="@shortenedUrl.Id"><i class="fa fa-save" title="Save"></i></button>
+                        </div>
+                        <div class="col-1 text-center">
+                            <button id="delete-shorten-url-button-@shortenedUrl.Id" type="submit" class="btn btn-dark" asp-page-handler="Delete" asp-route-id="@shortenedUrl.Id"><i class="fa fa-trash" title="Delete"></i></button>
+                        </div>
                     </div>
-                    <div class="col-5">
-                        <input asp-for="@shortenedUrl.ShortUrl" class="form-control" readonly="readonly" />
-                        <span asp-validation-for="@shortenedUrl.ShortUrl" class="text-danger"></span>
+                    <div class="form-row view-stats-div" id="div-shorten-url-stats-for-@shortenedUrl.Id" style="display: none;">
+                        <div class="col-3" style="padding-left: 10px;">
+                            <b>Total Hits: @shortenedUrl.ShortenedUrlClicks.Count()</b>
+                        </div>
+                        <div class="col-9">
+                            @{
+                                var topReferrers = shortenedUrl.ShortenedUrlClicks
+                                    .Where(x => !string.IsNullOrEmpty(x.Referrer))
+                                    .GroupBy(x => x.Referrer)
+                                    .Select(x => new
+                                    {
+                                        Referrer = x.Key,
+                                        TotalClicks = x.Key.Count()
+                                    })
+                                    .OrderByDescending(x => x.TotalClicks)
+                                    .ToList();
+                            }
+
+                            @foreach (var topReferrer in topReferrers)
+                            {
+                                <ul>
+                                    <li>@topReferrer.Referrer (Clicks: @topReferrer.TotalClicks)</li>
+                                </ul>
+                            }
+                        </div>
                     </div>
-                    <div class="col-1">
-                        <button id="save-shorten-url-button-@shortenedUrl.Id" type="submit" class="btn btn-dark" asp-page-handler="Update" asp-route-id="@shortenedUrl.Id"><i class="fa fa-save" title="Save"></i></button>
-                    </div>
-                    <div class="col-1">
-                        <button id="delete-shorten-url-button-@shortenedUrl.Id" type="submit" class="btn btn-dark" asp-page-handler="Delete" asp-route-id="@shortenedUrl.Id"><i class="fa fa-trash" title="Delete"></i></button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
+    }
 }
 
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    
+    <script type="text/javascript">
+        $(".btn-view-stats").click(function() {
+            var btnId = this.id;
+
+            var shortenUrlId = btnId.replace("stats-shorten-url-button-", "");
+
+            var divStats = "div-shorten-url-stats-for-" + shortenUrlId;
+
+            $("#" + divStats).toggle();
+        });
+
+        $(document).ready(function() {
+            $(".view-stats-div").hide();
+        });
+    </script>
 }

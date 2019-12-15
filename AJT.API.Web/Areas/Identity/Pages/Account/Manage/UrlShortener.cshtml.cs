@@ -23,10 +23,15 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             _logger = logger;
             _urlShortenerService = urlShortenerService;
         }
+        [TempData]
+        public string LongUrl { get; set; }
+
+        public string Token { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
 
+        [BindProperty]
         public List<ShortenedUrl> ShortenedUrls { get; set; }
 
         [BindProperty]
@@ -35,6 +40,16 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(ApplicationUser user)
         {
             ShortenedUrls = await _urlShortenerService.GetShortenedUrlsByUserId(user.Id);
+
+            Token = await _urlShortenerService.GetToken();
+
+            ShortenedUrl = new ShortenedUrl()
+            {
+                Id = Token,
+                LongUrl = LongUrl,
+                ShortUrl = _urlShortenerService.GetShortUrl(Token),
+                CreatedBy = user.ApiAuthKey
+            };
         }
 
         public async Task<IActionResult> OnGet()
@@ -57,11 +72,36 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Error: Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var shortenedUrl = await _urlShortenerService.CreateByUserId(user.Id, ShortenedUrl.LongUrl);
-            _logger.LogInformation("UrlShortenerModel: New Shortened Url Created for {LongUrl} as {ShortUrl}", shortenedUrl.LongUrl, shortenedUrl.ShortUrl);
+            if (Token != ShortenedUrl.Id)
+            {
+                //user wants their own token
+                try
+                {
+                    var userTokenAvailable = await _urlShortenerService.CheckIfTokenIsAvailable(ShortenedUrl.Id);
+                    if (userTokenAvailable)
+                        Token = ShortenedUrl.Id;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "UrlShortenerModel: Error while trying to create custom token.");
+                    StatusMessage = $"Error: {ex.Message}";
+                    return Page();
+                }
+            }
 
-            StatusMessage = $"The short url {shortenedUrl.ShortUrl} has been created!";
-            return RedirectToPage();
+            if (ModelState.IsValid)
+            {
+                var shortenedUrl = await _urlShortenerService.CreateByUserId(user.Id, ShortenedUrl.LongUrl, Token);
+                _logger.LogInformation("UrlShortenerModel: New Shortened Url Created for {LongUrl} as {ShortUrl}", shortenedUrl.LongUrl, shortenedUrl.ShortUrl);
+
+                StatusMessage = $"The short url {shortenedUrl.ShortUrl} has been created!";
+                return RedirectToPage();
+            }
+            else
+            {
+                StatusMessage = "Error: Please review the errors below.";
+                return Page();
+            }
         }
 
         public async Task<IActionResult> OnPostUpdate(string id)
@@ -94,6 +134,13 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
                 StatusMessage = $"Error: Something went wrong retrieving Shortened Url Token {id}.";
                 return Page();
             }
+        }
+
+        public async Task<IActionResult> OnPostRegenerateToken()
+        {
+            LongUrl = ShortenedUrl.LongUrl;
+            Token = await _urlShortenerService.GetToken();
+            return RedirectToPage();
         }
     }
 }
