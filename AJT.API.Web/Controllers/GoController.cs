@@ -24,13 +24,13 @@ namespace AJT.API.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var shortenedUrl = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Id == id);
+            var shortenedUrl = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Token == id && x.Domain == "https://api.ajt.io/go/");
 
             if (shortenedUrl != null)
             {
                 var click = new ShortenedUrlClick()
                 {
-                    ShortenedUrlId = id,
+                    ShortenedUrlId = shortenedUrl.Id,
                     ClickDate = DateTime.Now,
                     Referrer = HttpContext.Request.Headers[HeaderNames.Referer].ToString().Truncate(500, false)
                 };

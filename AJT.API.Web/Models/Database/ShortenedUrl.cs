@@ -14,11 +14,17 @@ namespace AJT.API.Web.Models.Database
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(TypeName = "varchar(50)")]
-        [Display(Name = "Token")]
         [Required]
+        public int Id { get; set; }
+
+        [Required]
+        [Column(TypeName = "varchar(50)")]
         [RegularExpression("^[a-zA-Z0-9-_+]{2,50}$", ErrorMessage = "Tokens can only contain alphanumeric, dashes, underscores, or plus signs. Must be between 2 and 50 characters long.")]
-        public string Id { get; set; }
+        public string Token { get; set; }
+
+        [Required]
+        [Column(TypeName = "varchar(50)")]
+        public string Domain { get; set; }
 
         [Required]
         [Column(TypeName = "varchar(500)")]

@@ -1,4 +1,5 @@
 ﻿@page
+@using AJT.API.Web.Models.Database
 @model UrlShortenerModel
 @{
     ViewData["Title"] = "Manage Url Shoreners";
@@ -19,9 +20,9 @@
                     <span asp-validation-for="ShortenedUrl.LongUrl" class="text-danger"></span>
                 </div>
                 <div class="col-5">
-                    <input asp-for="ShortenedUrl.Id" class="form-control" />
+                    <input asp-for="ShortenedUrl.Token" class="form-control" />
                     <small id="tokenHelp" class="form-text text-muted">The token is what will be appended to the short url.</small>
-                    <span asp-validation-for="ShortenedUrl.Id" class="text-danger"></span>
+                    <span asp-validation-for="ShortenedUrl.Token" class="text-danger"></span>
                 </div>
                 <div class="col-1 text-center">
                     <button id="regenerate-shorten-token-button" type="submit" class="btn btn-dark" asp-page-handler="RegenerateToken"><i class="fa fa-recycle" title="Regenerate Token"></i></button>
@@ -29,6 +30,7 @@
                 <div class="col-1 text-center">
                     <input asp-for="ShortenedUrl.CreatedBy" type="hidden" />
                     <input asp-for="ShortenedUrl.ShortUrl" type="hidden" />
+                    <input asp-for="ShortenedUrl.Domain" type="hidden" />
                     <button id="add-shortened-url-button" type="submit" class="btn btn-dark"><i class="fa fa-save" title="Add Short Url"></i></button>
                 </div>
             </div>

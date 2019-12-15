@@ -20,6 +20,9 @@ namespace AJT.API.Web.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<ShortenedUrl>()
+                .HasIndex(p => new { p.Token, p.Domain }).IsUnique();
+
             builder.Entity<ApplicationUser>()
                 .HasMany(x => x.ApplicationUserServices)
                 .WithOne(x => x.ApplicationUser)

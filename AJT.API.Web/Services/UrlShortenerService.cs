@@ -43,15 +43,16 @@ namespace AJT.API.Web.Services
             return shortenedUrls;
         }
 
-        public async Task<ShortenedUrl> CreateByUserId(string userId, string longUrl)
+        public async Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string domain)
         {
             var token = await GetToken();
 
             var shortenUrl = new ShortenedUrl()
             {
-                Id = token,
+                Token = token,
                 LongUrl = longUrl,
                 ShortUrl = GetShortUrl(token),
+                Domain = domain,
                 CreatedBy = userId,
                 CreatedOn = DateTime.Now
             };
@@ -62,13 +63,14 @@ namespace AJT.API.Web.Services
             return shortenUrl;
         }
 
-        public async Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string token)
+        public async Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string token, string domain)
         {
             var shortenUrl = new ShortenedUrl()
             {
-                Id = token,
+                Token = token,
                 LongUrl = longUrl,
                 ShortUrl = GetShortUrl(token),
+                Domain = domain,
                 CreatedBy = userId,
                 CreatedOn = DateTime.Now
             };
@@ -79,7 +81,7 @@ namespace AJT.API.Web.Services
             return shortenUrl;
         }
 
-        public async Task<ShortenedUrl> UpdateById(string id, string longUrl)
+        public async Task<ShortenedUrl> UpdateById(int id, string longUrl)
         {
             var shortenedUrl = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Id == id);
             if (shortenedUrl == null)
@@ -95,7 +97,7 @@ namespace AJT.API.Web.Services
             return shortenedUrl;
         }
 
-        public async Task<ShortenedUrl> DeleteById(string id)
+        public async Task<ShortenedUrl> DeleteById(int id)
         {
             var shortenedUrl = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Id == id);
             if (shortenedUrl == null)
@@ -109,7 +111,7 @@ namespace AJT.API.Web.Services
             return shortenedUrl;
         }
 
-        public async Task<bool> CheckIfTokenIsAvailable(string token)
+        public async Task<bool> CheckIfTokenIsAvailable(string token, string domain)
         {
             if (token.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(token), "Token cannot be null or empty.");
@@ -118,7 +120,7 @@ namespace AJT.API.Web.Services
             if (!Regex.IsMatch(token, regexOnlyAlphaNumericWithSpecial))
                 throw new ArgumentException("Tokens can only contain alphanumeric, dashes, underscores, or plus signs. Must be between 2 and 50 characters long.");
 
-            var tokenTaken = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Id == token);
+            var tokenTaken = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Token == token && x.Domain == domain);
             return tokenTaken == null;
         }
 
@@ -138,7 +140,7 @@ namespace AJT.API.Web.Services
         /// <returns></returns>
         public async Task<string> GetToken()
         {
-            var currentTokens = await _context.ShortenedUrls.Select(x => x.Id).ToListAsync();
+            var currentTokens = await _context.ShortenedUrls.Select(x => x.Token).ToListAsync();
 
             while (!currentTokens.Exists(x => x == GenerateRandomToken()))
             {

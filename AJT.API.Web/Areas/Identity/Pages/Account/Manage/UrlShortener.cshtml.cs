@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AJT.API.Web.Models;
 using AJT.API.Web.Models.Database;
 using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -15,13 +17,15 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UrlShortenerModel> _logger;
         private readonly IUrlShortenerService _urlShortenerService;
+        private readonly AppSettings _appSettings;
 
         public UrlShortenerModel(UserManager<ApplicationUser> userManager, ILogger<UrlShortenerModel> logger,
-            IUrlShortenerService urlShortenerService)
+            IUrlShortenerService urlShortenerService, IOptionsMonitor<AppSettings> appSettings)
         {
             _userManager = userManager;
             _logger = logger;
             _urlShortenerService = urlShortenerService;
+            _appSettings = appSettings.CurrentValue;
         }
         [TempData]
         public string LongUrl { get; set; }
@@ -45,9 +49,10 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 
             ShortenedUrl = new ShortenedUrl()
             {
-                Id = Token,
+                Token = Token,
                 LongUrl = LongUrl,
                 ShortUrl = _urlShortenerService.GetShortUrl(Token),
+                Domain = _appSettings.BaseShortenedUrl,
                 CreatedBy = user.ApiAuthKey
             };
         }
@@ -72,14 +77,14 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Error: Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            if (Token != ShortenedUrl.Id)
+            if (Token != ShortenedUrl.Token)
             {
                 //user wants their own token
                 try
                 {
-                    var userTokenAvailable = await _urlShortenerService.CheckIfTokenIsAvailable(ShortenedUrl.Id);
+                    var userTokenAvailable = await _urlShortenerService.CheckIfTokenIsAvailable(ShortenedUrl.Token, _appSettings.BaseShortenedUrl);
                     if (userTokenAvailable)
-                        Token = ShortenedUrl.Id;
+                        Token = ShortenedUrl.Token;
                 }
                 catch (Exception ex)
                 {
@@ -104,7 +109,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             }
         }
 
-        public async Task<IActionResult> OnPostUpdate(string id)
+        public async Task<IActionResult> OnPostUpdate(int id)
         {
             try
             {
@@ -120,7 +125,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             }
         }
 
-        public async Task<IActionResult> OnPostDelete(string id)
+        public async Task<IActionResult> OnPostDelete(int id)
         {
             try
             {

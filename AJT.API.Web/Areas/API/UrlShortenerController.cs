@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AJT.API.Web.Data;
 using AJT.API.Web.Helpers.Filters;
+using AJT.API.Web.Models;
 using AJT.API.Web.Models.Database;
 using AJT.API.Web.Services.Interfaces;
 using BabouExtensions;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,12 +28,15 @@ namespace AJT.API.Web.Areas.API
         private readonly ApplicationDbContext _context;
         private readonly IUrlShortenerService _urlShortenerService;
         private readonly ILogger<UrlShortenerController> _logger;
+        private readonly AppSettings _appSettings;
 
-        public UrlShortenerController(ApplicationDbContext context, IUrlShortenerService urlShortenerService, ILogger<UrlShortenerController> logger)
+        public UrlShortenerController(ApplicationDbContext context, IUrlShortenerService urlShortenerService,
+            ILogger<UrlShortenerController> logger, IOptionsMonitor<AppSettings> appSettings)
         {
             _context = context;
             _urlShortenerService = urlShortenerService;
             _logger = logger;
+            _appSettings = appSettings.CurrentValue;
         }
 
         [ServiceFilter(typeof(AuthKeyFilter))]
@@ -47,7 +52,7 @@ namespace AJT.API.Web.Areas.API
             {
                 try
                 {
-                    tokenTaken = await _urlShortenerService.CheckIfTokenIsAvailable(token);
+                    tokenTaken = await _urlShortenerService.CheckIfTokenIsAvailable(token, _appSettings.BaseShortenedUrl);
                 }
                 catch (Exception ex)
                 {
@@ -57,8 +62,8 @@ namespace AJT.API.Web.Areas.API
             }
 
             var shortenedUrl = tokenTaken
-                ? await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl)
-                : await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, token);
+                ? await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, _appSettings.BaseShortenedUrl)
+                : await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, token, _appSettings.BaseShortenedUrl);
 
             _logger.LogInformation("UrlShortenerController: New Shortened Url Created for {LongUrl} as {ShortUrl}", shortenedUrl.LongUrl, shortenedUrl.ShortUrl);
 

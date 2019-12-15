@@ -11,8 +11,7 @@ namespace AJT.API.Web.Models.Database
         public int Id { get; set; }
 
         [Required]
-        [Column(TypeName = "varchar(50)")]
-        public string ShortenedUrlId { get; set; }
+        public int ShortenedUrlId { get; set; }
 
         [Required]
         public DateTime ClickDate { get; set; }

@@ -7,11 +7,11 @@ namespace AJT.API.Web.Services.Interfaces
     public interface IUrlShortenerService
     {
         Task<List<ShortenedUrl>> GetShortenedUrlsByUserId(string userId);
-        Task<ShortenedUrl> CreateByUserId(string userId, string longUrl);
-        Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string token);
-        Task<ShortenedUrl> UpdateById(string id, string longUrl);
-        Task<ShortenedUrl> DeleteById(string id);
-        Task<bool> CheckIfTokenIsAvailable(string token);
+        Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string domain);
+        Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string token, string domain);
+        Task<ShortenedUrl> UpdateById(int id, string longUrl);
+        Task<ShortenedUrl> DeleteById(int id);
+        Task<bool> CheckIfTokenIsAvailable(string token, string domain);
 
         /// <summary>
         /// Gets the Short Url from the token.

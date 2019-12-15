@@ -4,14 +4,16 @@ using AJT.API.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AJT.API.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191215213822_RedoUrlShortener")]
+    partial class RedoUrlShortener
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,10 +136,8 @@ namespace AJT.API.Web.Data.Migrations
 
             modelBuilder.Entity("AJT.API.Web.Models.Database.ShortenedUrl", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -165,37 +165,9 @@ namespace AJT.API.Web.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(50)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("Token", "Domain")
-                        .IsUnique();
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("ShortenedUrls");
-                });
-
-            modelBuilder.Entity("AJT.API.Web.Models.Database.ShortenedUrlClick", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("ClickDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Referrer")
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<int>("ShortenedUrlId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShortenedUrlId");
-
-                    b.ToTable("ShortenedUrlClicks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -347,19 +319,8 @@ namespace AJT.API.Web.Data.Migrations
             modelBuilder.Entity("AJT.API.Web.Models.Database.ShortenedUrl", b =>
                 {
                     b.HasOne("AJT.API.Web.Models.Database.ApplicationUser", "ApplicationUser")
-                        .WithMany("ShortenedUrls")
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AJT.API.Web.Models.Database.ShortenedUrlClick", b =>
-                {
-                    b.HasOne("AJT.API.Web.Models.Database.ShortenedUrl", "ShortenedUrl")
-                        .WithMany("ShortenedUrlClicks")
-                        .HasForeignKey("ShortenedUrlId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
