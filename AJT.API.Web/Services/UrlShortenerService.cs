@@ -45,13 +45,13 @@ namespace AJT.API.Web.Services
 
         public async Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string domain)
         {
-            var token = await GetToken();
+            var token = await GetToken(domain);
 
             var shortenUrl = new ShortenedUrl()
             {
                 Token = token,
                 LongUrl = longUrl,
-                ShortUrl = GetShortUrl(token),
+                ShortUrl = GetShortUrl(domain, token),
                 Domain = domain,
                 CreatedBy = userId,
                 CreatedOn = DateTime.Now
@@ -69,7 +69,7 @@ namespace AJT.API.Web.Services
             {
                 Token = token,
                 LongUrl = longUrl,
-                ShortUrl = GetShortUrl(token),
+                ShortUrl = GetShortUrl(domain, token),
                 Domain = domain,
                 CreatedBy = userId,
                 CreatedOn = DateTime.Now
@@ -127,20 +127,23 @@ namespace AJT.API.Web.Services
         /// <summary>
         /// Gets the Short Url from the token.
         /// </summary>
+        /// <param name="domain"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public string GetShortUrl(string token)
+        public string GetShortUrl(string domain, string token)
         {
-            return $"{_appSettings.BaseShortenedUrl}{token}";
+            return $"{domain}{token}";
         }
 
         /// <summary>
         /// Generates a new Token while checking the database that the token doesn't already exist.
         /// </summary>
         /// <returns></returns>
-        public async Task<string> GetToken()
+        public async Task<string> GetToken(string domain)
         {
-            var currentTokens = await _context.ShortenedUrls.Select(x => x.Token).ToListAsync();
+            var currentTokens = await _context.ShortenedUrls
+                .WhereIf(!string.IsNullOrEmpty(domain), x=>x.Domain == domain)
+                .Select(x => x.Token).ToListAsync();
 
             while (!currentTokens.Exists(x => x == GenerateRandomToken()))
             {

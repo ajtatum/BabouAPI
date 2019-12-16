@@ -41,10 +41,16 @@ namespace AJT.API.Web.Areas.API
 
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost]
-        public async Task<IActionResult> Post([Required][FromQuery] string longUrl, [Optional][FromQuery] string token)
+        public async Task<IActionResult> Post([Required][FromQuery] string longUrl, [Required][FromQuery] string domain, [Optional][FromQuery] string token)
         {
             var userAuthKey = Request.Headers["AuthKey"].ToString();
             var applicationUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.ApiAuthKey == userAuthKey);
+
+            var allowedDomains = _appSettings.BaseShortenedUrls.ToList();
+            if (!allowedDomains.Contains(domain))
+            {
+                return new BadRequestObjectResult($"Domain not available. Please choose from {string.Join(", ", allowedDomains)}.");
+            }
 
             var tokenTaken = true;
 
@@ -52,7 +58,7 @@ namespace AJT.API.Web.Areas.API
             {
                 try
                 {
-                    tokenTaken = await _urlShortenerService.CheckIfTokenIsAvailable(token, _appSettings.BaseShortenedUrl);
+                    tokenTaken = await _urlShortenerService.CheckIfTokenIsAvailable(token, domain);
                 }
                 catch (Exception ex)
                 {
@@ -62,8 +68,8 @@ namespace AJT.API.Web.Areas.API
             }
 
             var shortenedUrl = tokenTaken
-                ? await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, _appSettings.BaseShortenedUrl)
-                : await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, token, _appSettings.BaseShortenedUrl);
+                ? await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, domain)
+                : await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, token, domain);
 
             _logger.LogInformation("UrlShortenerController: New Shortened Url Created for {LongUrl} as {ShortUrl}", shortenedUrl.LongUrl, shortenedUrl.ShortUrl);
 

@@ -1,4 +1,6 @@
-﻿namespace AJT.API.Web.Models
+﻿using System.Collections.Generic;
+
+namespace AJT.API.Web.Models
 {
     public class AppSettings
     {
@@ -6,7 +8,8 @@
         public AzureSettings Azure { get; set; }
         public ApplicationInsightsSettings ApplicationInsights { get; set; }
         public AuthenticationSettings Authentication { get; set; }
-        public string BaseShortenedUrl { get; set; }
+        public string BaseShortenedDefaultUrl { get; set; }
+        public List<string> BaseShortenedUrls { get; set; }
         public string BuildNumber { get; set; }
         public EmailSenderSettings EmailSender { get; set; }
         public GoogleCustomSearchSettings GoogleCustomSearch { get; set; }

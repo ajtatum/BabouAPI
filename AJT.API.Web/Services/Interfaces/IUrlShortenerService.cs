@@ -16,14 +16,15 @@ namespace AJT.API.Web.Services.Interfaces
         /// <summary>
         /// Gets the Short Url from the token.
         /// </summary>
+        /// <param name="domain"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        string GetShortUrl(string token);
+        string GetShortUrl(string domain, string token);
 
         /// <summary>
         /// Generates a new Token while checking the database that the token doesn't already exist.
         /// </summary>
         /// <returns></returns>
-        Task<string> GetToken();
+        Task<string> GetToken(string domain);
     }
 }

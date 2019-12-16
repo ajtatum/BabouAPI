@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AJT.API.Web.Models;
 using AJT.API.Web.Models.Database;
@@ -7,6 +8,7 @@ using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -18,6 +20,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
         private readonly ILogger<UrlShortenerModel> _logger;
         private readonly IUrlShortenerService _urlShortenerService;
         private readonly AppSettings _appSettings;
+        private string _existingDomain;
 
         public UrlShortenerModel(UserManager<ApplicationUser> userManager, ILogger<UrlShortenerModel> logger,
             IUrlShortenerService urlShortenerService, IOptionsMonitor<AppSettings> appSettings)
@@ -28,9 +31,18 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             _appSettings = appSettings.CurrentValue;
         }
         [TempData]
-        public string LongUrl { get; set; }
+        public string ExistingLongUrl { get; set; }
+
+        [TempData]
+        public string ExistingDomain
+        {
+            get => !string.IsNullOrEmpty(_existingDomain) ? _existingDomain : _appSettings.BaseShortenedDefaultUrl;
+            set => _existingDomain = value;
+        }
 
         public string Token { get; set; }
+
+        public List<SelectListItem> DomainOptions { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -43,16 +55,23 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user)
         {
+            DomainOptions = _appSettings.BaseShortenedUrls.Select(x =>
+                new SelectListItem
+                {
+                    Value = x,
+                    Text = x
+                }).ToList();
+
             ShortenedUrls = await _urlShortenerService.GetShortenedUrlsByUserId(user.Id);
 
-            Token = await _urlShortenerService.GetToken();
+            Token = await _urlShortenerService.GetToken(ExistingDomain);
 
             ShortenedUrl = new ShortenedUrl()
             {
                 Token = Token,
-                LongUrl = LongUrl,
-                ShortUrl = _urlShortenerService.GetShortUrl(Token),
-                Domain = _appSettings.BaseShortenedUrl,
+                LongUrl = ExistingLongUrl,
+                ShortUrl = _urlShortenerService.GetShortUrl(ExistingDomain, Token),
+                Domain = ExistingDomain,
                 CreatedBy = user.ApiAuthKey
             };
         }
@@ -82,7 +101,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
                 //user wants their own token
                 try
                 {
-                    var userTokenAvailable = await _urlShortenerService.CheckIfTokenIsAvailable(ShortenedUrl.Token, _appSettings.BaseShortenedUrl);
+                    var userTokenAvailable = await _urlShortenerService.CheckIfTokenIsAvailable(ShortenedUrl.Token, ShortenedUrl.Domain);
                     if (userTokenAvailable)
                         Token = ShortenedUrl.Token;
                 }
@@ -96,7 +115,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 
             if (ModelState.IsValid)
             {
-                var shortenedUrl = await _urlShortenerService.CreateByUserId(user.Id, ShortenedUrl.LongUrl, Token);
+                var shortenedUrl = await _urlShortenerService.CreateByUserId(user.Id, ShortenedUrl.LongUrl, Token, ShortenedUrl.Domain);
                 _logger.LogInformation("UrlShortenerModel: New Shortened Url Created for {LongUrl} as {ShortUrl}", shortenedUrl.LongUrl, shortenedUrl.ShortUrl);
 
                 StatusMessage = $"The short url {shortenedUrl.ShortUrl} has been created!";
@@ -141,10 +160,10 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             }
         }
 
-        public async Task<IActionResult> OnPostRegenerateToken()
+        public IActionResult OnPostRegenerateToken()
         {
-            LongUrl = ShortenedUrl.LongUrl;
-            Token = await _urlShortenerService.GetToken();
+            ExistingLongUrl = ShortenedUrl.LongUrl;
+            ExistingDomain = ShortenedUrl.Domain;
             return RedirectToPage();
         }
     }
