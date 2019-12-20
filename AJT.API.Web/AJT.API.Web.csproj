@@ -3,6 +3,15 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <UserSecretsId>aspnet-AJT.API.Web-6CCD6096-37CC-4364-B8E8-D877EC0008B6</UserSecretsId>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <NoWarn>1701;1702;1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -42,7 +51,8 @@
 
 
     <ItemGroup>
-        <PackageReference Include="BabouExtensions" Version="1.2.29" />
+        <PackageReference Include="BabouExtensions" Version="1.2.30" />
+        <PackageReference Include="BabouExtensions.AspNetCore" Version="1.2.30" />
         <PackageReference Include="BabouMail.MailGun" Version="1.1.6" />
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
         <PackageReference Include="IpStack" Version="1.0.1" />

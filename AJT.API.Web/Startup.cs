@@ -1,7 +1,10 @@
 using System;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using AJT.API.Web.Helpers.ExtensionMethods;
 using AJT.API.Web.Helpers.Filters;
+using AJT.API.Web.Helpers.Swagger;
 using AJT.API.Web.Models;
 using AJT.API.Web.Models.Database;
 using AJT.API.Web.Services;
@@ -87,6 +90,7 @@ namespace AJT.API.Web
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "AJT API", Version = "v1"});
+                c.OperationFilter<RawTextRequestOperationFilter>();
                 c.AddSecurityDefinition("AuthKey", new OpenApiSecurityScheme()
                 {
                     Type = SecuritySchemeType.ApiKey,
@@ -104,6 +108,11 @@ namespace AJT.API.Web
                         new string[] { }
                     }
                 });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                c.IncludeXmlComments(xmlPath);
             });
 
             services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:InstrumentationKey"]);

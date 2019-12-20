@@ -32,7 +32,7 @@ namespace AJT.API.Web.Controllers
                 {
                     ShortenedUrlId = shortenedUrl.Id,
                     ClickDate = DateTime.Now,
-                    Referrer = HttpContext.Request.Headers[HeaderNames.Referer].ToString().Truncate(500, false)
+                    Referrer = HttpContext.Request.Headers[HeaderNames.Referer].ToString().WithMaxLength(500)
                 };
                 _context.Add(click);
                 await _context.SaveChangesAsync();

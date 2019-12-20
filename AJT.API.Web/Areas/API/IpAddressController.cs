@@ -26,7 +26,7 @@ namespace AJT.API.Web.Areas.API
 
         [HttpGet]
         [ServiceFilter(typeof(AuthKeyFilter))]
-        public IActionResult GetIpAddressDetails()
+        public IActionResult GetMyIpAddressDetails()
         {
             var ipAddress = _ipService.GetRemoteIp();
             var ipAddressDetails = _ipService.GetIpAddressDetails(ipAddress);

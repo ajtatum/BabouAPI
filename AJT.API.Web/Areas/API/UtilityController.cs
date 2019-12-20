@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AJT.API.Web.Helpers.Filters;
+using AJT.API.Web.Helpers.Swagger;
 using BabouExtensions;
+using BabouExtensions.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,10 +20,11 @@ namespace AJT.API.Web.Areas.API
         /// </summary>
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
-        [HttpGet("{surroundWithQuotes:bool=false}")]
+        [HttpPost("{surroundWithQuotes:bool=true}")]
         [Consumes("text/plain")]
         [Produces("text/plain")]
-        public async Task<IActionResult> ConvertToCsv([Optional] bool surroundWithQuotes)
+        [RawTextRequest]
+        public async Task<IActionResult> ConvertToCsv(bool surroundWithQuotes = true)
         {
             var requestBody = await Request.GetRawBodyStringAsync();
 
@@ -50,9 +52,10 @@ namespace AJT.API.Web.Areas.API
         /// </summary>
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
-        [HttpGet]
+        [HttpPost]
         [Consumes("text/plain")]
         [Produces("text/plain")]
+        [RawTextRequest]
         public async Task<IActionResult> ConvertToLines()
         {
             var requestBody = await Request.GetRawBodyStringAsync();
@@ -74,7 +77,7 @@ namespace AJT.API.Web.Areas.API
         /// <param name="encryptionKey">Your encryption key.</param>
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
-        [HttpGet]
+        [HttpPost]
         public IActionResult Encrypt([Required][FromHeader] string originalString, [Required][FromHeader] string encryptionKey)
         {
             return new OkObjectResult(originalString.Encrypt(encryptionKey));
@@ -87,7 +90,7 @@ namespace AJT.API.Web.Areas.API
         /// <param name="decryptionKey">Your key you use to decrypt the encrypted string..</param>
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
-        [HttpGet]
+        [HttpPost]
         public IActionResult Decrypt([Required][FromHeader]string encryptedString, [Required][FromHeader] string decryptionKey)
         {
             return new OkObjectResult(encryptedString.Decrypt(decryptionKey));
