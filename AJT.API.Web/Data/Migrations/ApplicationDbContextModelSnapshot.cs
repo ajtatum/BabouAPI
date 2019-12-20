@@ -19,7 +19,24 @@ namespace AJT.API.Web.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("AJT.API.Web.Models.ApplicationUser", b =>
+            modelBuilder.Entity("AJT.API.Web.Models.Database.ApplicationService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationServices");
+                });
+
+            modelBuilder.Entity("AJT.API.Web.Models.Database.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -86,6 +103,99 @@ namespace AJT.API.Web.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("AJT.API.Web.Models.Database.ApplicationUserService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ApplicationServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationSettings")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationServiceId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("ApplicationUserServices");
+                });
+
+            modelBuilder.Entity("AJT.API.Web.Models.Database.ShortenedUrl", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("LongUrl")
+                        .IsRequired()
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ShortUrl")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("Token", "Domain")
+                        .IsUnique();
+
+                    b.ToTable("ShortenedUrls");
+                });
+
+            modelBuilder.Entity("AJT.API.Web.Models.Database.ShortenedUrlClick", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ClickDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Referrer")
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<int>("ShortenedUrlId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShortenedUrlId");
+
+                    b.ToTable("ShortenedUrlClicks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -219,6 +329,39 @@ namespace AJT.API.Web.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("AJT.API.Web.Models.Database.ApplicationUserService", b =>
+                {
+                    b.HasOne("AJT.API.Web.Models.Database.ApplicationService", "ApplicationService")
+                        .WithMany("ApplicationUserServices")
+                        .HasForeignKey("ApplicationServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AJT.API.Web.Models.Database.ApplicationUser", "ApplicationUser")
+                        .WithMany("ApplicationUserServices")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AJT.API.Web.Models.Database.ShortenedUrl", b =>
+                {
+                    b.HasOne("AJT.API.Web.Models.Database.ApplicationUser", "ApplicationUser")
+                        .WithMany("ShortenedUrls")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AJT.API.Web.Models.Database.ShortenedUrlClick", b =>
+                {
+                    b.HasOne("AJT.API.Web.Models.Database.ShortenedUrl", "ShortenedUrl")
+                        .WithMany("ShortenedUrlClicks")
+                        .HasForeignKey("ShortenedUrlId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -230,7 +373,7 @@ namespace AJT.API.Web.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("AJT.API.Web.Models.ApplicationUser", null)
+                    b.HasOne("AJT.API.Web.Models.Database.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -239,7 +382,7 @@ namespace AJT.API.Web.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("AJT.API.Web.Models.ApplicationUser", null)
+                    b.HasOne("AJT.API.Web.Models.Database.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -254,7 +397,7 @@ namespace AJT.API.Web.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AJT.API.Web.Models.ApplicationUser", null)
+                    b.HasOne("AJT.API.Web.Models.Database.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -263,7 +406,7 @@ namespace AJT.API.Web.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("AJT.API.Web.Models.ApplicationUser", null)
+                    b.HasOne("AJT.API.Web.Models.Database.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

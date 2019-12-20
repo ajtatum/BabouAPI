@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AJT.API.Web.Helpers.ExtensionMethods;
 using AJT.API.Web.Helpers.Filters;
 using AJT.API.Web.Models;
+using AJT.API.Web.Models.Database;
 using AJT.API.Web.Services;
 using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -70,6 +71,10 @@ namespace AJT.API.Web
             services.AddScoped<ClientIpFilter>();
             services.AddScoped<AuthKeyFilter>();
             services.AddScoped<IIpService, IpService>();
+            services.AddScoped<ISendNewUserNotificationService, SendNewUserNotificationService>();
+            services.AddScoped<ICipherService, CipherService>();
+            services.AddScoped<IPushBulletAppService, PushBulletAppService>();
+            services.AddScoped<IUrlShortenerService, UrlShortenerService>();
             services.AddTransient<IEmailSender, EmailService>();
 
             services.AddSingleton<ISlackService, SlackService>();

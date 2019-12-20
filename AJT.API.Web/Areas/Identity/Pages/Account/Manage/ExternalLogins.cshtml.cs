@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AJT.API.Web.Models;
+using AJT.API.Web.Models.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 
 namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -14,13 +15,14 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ILogger<ExternalLoginsModel> _logger;
 
         public ExternalLoginsModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<ExternalLoginsModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         public IList<UserLoginInfo> CurrentLogins { get; set; }
@@ -59,12 +61,13 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
             if (!result.Succeeded)
             {
-                StatusMessage = "The external login was not removed.";
+                StatusMessage = "Error: The external login was not removed.";
                 return RedirectToPage();
             }
 
+            _logger.LogInformation("{UserId} - {UserName} removed {LoginProvider} from their account.", user.Id, user.UserName, loginProvider);
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "The external login was removed.";
+            StatusMessage = $"{loginProvider} was removed.";
             return RedirectToPage();
         }
 
@@ -84,7 +87,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Error: Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             var info = await _signInManager.GetExternalLoginInfoAsync(await _userManager.GetUserIdAsync(user));
@@ -96,14 +99,14 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             var result = await _userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {
-                StatusMessage = "The external login was not added. External logins can only be associated with one account.";
+                StatusMessage = "Error: The external login was not added. External logins can only be associated with one account.";
                 return RedirectToPage();
             }
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
-            StatusMessage = "The external login was added.";
+            _logger.LogInformation("{UserId} - {UserName} added {LoginProvider} to their account.", user.Id, user.UserName, info.LoginProvider);
+            StatusMessage = $"{info.LoginProvider} has been added to your account.";
             return RedirectToPage();
         }
     }

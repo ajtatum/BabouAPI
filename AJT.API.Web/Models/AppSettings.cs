@@ -1,4 +1,6 @@
-﻿namespace AJT.API.Web.Models
+﻿using System.Collections.Generic;
+
+namespace AJT.API.Web.Models
 {
     public class AppSettings
     {
@@ -6,11 +8,12 @@
         public AzureSettings Azure { get; set; }
         public ApplicationInsightsSettings ApplicationInsights { get; set; }
         public AuthenticationSettings Authentication { get; set; }
+        public string BaseShortenedDefaultUrl { get; set; }
+        public List<string> BaseShortenedUrls { get; set; }
         public string BuildNumber { get; set; }
         public EmailSenderSettings EmailSender { get; set; }
         public GoogleCustomSearchSettings GoogleCustomSearch { get; set; }
         public string IpStackApiKey { get; set; }
-        public PushBulletSettings PushBullet { get; set; }
         public SlackSettings Slack { get; set; }
     }
 
@@ -23,6 +26,7 @@
         {
             public string ClientId { get; set; }
             public string ClientSecret { get; set; }
+            public string DataProtectionSecret { get; set; }
             public string EncryptionKey { get; set; }
         }
 
@@ -42,7 +46,8 @@
     {
         public AuthFacebook Facebook { get; set; }
         public AuthGoogle Google { get; set; }
-        public MicrosoftAuth Microsoft { get; set; }
+        public AuthMicrosoft Microsoft { get; set; }
+        public AuthTwitter Twitter { get; set; }
 
         public class AuthFacebook
         {
@@ -56,11 +61,17 @@
             public string ClientSecret { get; set; }
         }
 
-        public class MicrosoftAuth
+        public class AuthMicrosoft
         {
             public string ClientId { get; set; }
             public string ClientSecret { get; set; }
         }
+        public class AuthTwitter
+        {
+            public string ConsumerApiKey { get; set; }
+            public string ConsumerSecret { get; set; }
+        }
+
     }
 
     public class EmailSenderSettings
@@ -69,6 +80,7 @@
         public string Domain { get; set; }
         public string FromSenderName { get; set; }
         public string FromUserName { get; set; }
+        public string ToEmail { get; set; }
     }
 
     public class GoogleCustomSearchSettings
@@ -76,12 +88,6 @@
         public string ApiKey { get; set; }
         public string DcComicsCx { get; set; }
         public string MarvelCx { get; set; }
-    }
-
-    public class PushBulletSettings
-    {
-        public string ApiKey { get; set; }
-        public string EncryptionKey { get; set; }
     }
 
     public class SlackSettings

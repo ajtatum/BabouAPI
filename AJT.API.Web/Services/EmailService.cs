@@ -1,9 +1,9 @@
-﻿using System.Net.Mail;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AJT.API.Web.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using BabouMail.Common;
 using BabouMail.MailGun;
 
 namespace AJT.API.Web.Services
@@ -21,31 +21,23 @@ namespace AJT.API.Web.Services
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            await SendViaMailGun(email, subject, htmlMessage);
-        }
+            var babouEmail = new BabouEmail()
+                .From(_appSettings.EmailSender.FromUserName, _appSettings.EmailSender.FromSenderName)
+                .To(email)
+                .Subject(subject)
+                .Body(htmlMessage, true);
 
-        private async Task SendViaMailGun(string email, string subject, string htmlMessage)
-        {
-            var babouMail = new MailGun(_appSettings.EmailSender.Domain, _appSettings.EmailSender.ApiKey);
+            babouEmail.Sender = new MailGunSender(_appSettings.EmailSender.Domain, _appSettings.EmailSender.ApiKey);
 
-            var babouEmail = new BabouMail.Common.Email()
-            {
-                FromMailAddress = new MailAddress(_appSettings.EmailSender.FromUserName, _appSettings.EmailSender.FromSenderName),
-                ToAddress = email,
-                Subject = subject,
-                Body = htmlMessage,
-                IsHtml = true
-            };
+            var response = await babouEmail.SendAsync();
 
-            var response = await babouMail.SendMailAsync(babouEmail);
-
-            if (response.IsSuccessful)
+            if (response.Successful)
             {
                 _logger.LogInformation("EmailService: Email sent to {ToEmail} with the subject {Subject}", email, subject);
             }
             else
             {
-                _logger.LogError("EmailService: Error sending email to {ToEmail} with the subject {Subject}. Here are the errors: {ErrorMessage}", email, subject, response.ErrorMessage);
+                _logger.LogError("EmailService: Error sending email to {ToEmail} with the subject {Subject}. Here are the errors: {@ErrorMessage}", email, subject, response.ErrorMessages);
             }
         }
     }

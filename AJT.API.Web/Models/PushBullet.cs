@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace AJT.API.Web.Models
 {
     public class PushBullet
     {
         [JsonProperty("devices", NullValueHandling = NullValueHandling.Include)]
-        public string Devices { get; set; }
+        public List<string> DeviceNickNames { get; set; }
         [JsonProperty("channel", NullValueHandling = NullValueHandling.Include)]
         public string Channel { get; set; }
         [JsonProperty("title", Required = Required.Always)]

@@ -6,7 +6,8 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AJT.API.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using AJT.API.Web.Models;
+using AJT.API.Web.Models.Database;
+using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -23,17 +24,16 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
+        private readonly ISendNewUserNotificationService _sendNewUserNotificationService;
 
-        public ExternalLoginModel(
-            SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager,
-            ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+        public ExternalLoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, 
+            ILogger<ExternalLoginModel> logger, IEmailSender emailSender, ISendNewUserNotificationService sendNewUserNotificationService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _emailSender = emailSender;
+            _sendNewUserNotificationService = sendNewUserNotificationService;
         }
 
         [BindProperty]
@@ -145,6 +145,8 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
 
                         await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                             $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                        await _sendNewUserNotificationService.SendMessage(user);
 
                         return LocalRedirect(returnUrl);
                     }

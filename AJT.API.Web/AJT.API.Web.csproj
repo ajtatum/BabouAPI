@@ -8,6 +8,24 @@
     <ItemGroup>
         <Compile Remove="Data\Migrations\20191201043127_ApiAuthKey.cs" />
         <Compile Remove="Data\Migrations\20191201043127_ApiAuthKey.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191213051931_AppUserServices2.cs" />
+        <Compile Remove="Data\Migrations\20191213051931_AppUserServices2.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191213052559_AppUserServices2.cs" />
+        <Compile Remove="Data\Migrations\20191213052559_AppUserServices2.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191214193715_ShortenedUrl.cs" />
+        <Compile Remove="Data\Migrations\20191214193715_ShortenedUrl.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191214194958_ShortenedUrls.cs" />
+        <Compile Remove="Data\Migrations\20191214194958_ShortenedUrls.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191214201621_ShortenedUrlsMisc.cs" />
+        <Compile Remove="Data\Migrations\20191214201621_ShortenedUrlsMisc.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191215035722_RidOfCascade.cs" />
+        <Compile Remove="Data\Migrations\20191215035722_RidOfCascade.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191215211430_ShortenUrlDomains.cs" />
+        <Compile Remove="Data\Migrations\20191215211430_ShortenUrlDomains.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191215211528_ShortenUrlDomains.cs" />
+        <Compile Remove="Data\Migrations\20191215211528_ShortenUrlDomains.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191215213147_RemoveUrlShortener.cs" />
+        <Compile Remove="Data\Migrations\20191215213147_RemoveUrlShortener.Designer.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,25 +37,23 @@
     </ItemGroup>
 
     <ItemGroup>
-        <DotNetCliToolReference Include="BundlerMinifier.Core" Version="3.2.435" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Include="bundleconfig.json" />
     </ItemGroup>
 
 
     <ItemGroup>
-        <PackageReference Include="BabouExtensions" Version="1.2.28" />
-        <PackageReference Include="BabouMail.MailGun" Version="1.1.4" />
+        <PackageReference Include="BabouExtensions" Version="1.2.29" />
+        <PackageReference Include="BabouMail.MailGun" Version="1.1.6" />
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
-        <PackageReference Include="BundlerMinifier.Core" Version="3.2.435" />
         <PackageReference Include="IpStack" Version="1.0.1" />
-        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.2" />
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.12.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="3.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="3.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.AzureKeyVault" Version="3.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.AzureStorage" Version="3.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.AzureKeyVault" Version="3.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.AzureStorage" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
@@ -46,14 +62,15 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
         <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.4" />
         <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.3.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.1">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.0.1" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
         <PackageReference Include="PushBulletSharp.Core" Version="1.0.4" />
