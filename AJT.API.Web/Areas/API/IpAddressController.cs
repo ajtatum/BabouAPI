@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AJT.API.Web.Areas.API
 {
-    [Route("api/[controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
     [AllowAnonymous]
     public class IpAddressController : ControllerBase
@@ -19,6 +20,7 @@ namespace AJT.API.Web.Areas.API
         }
 
         [HttpGet]
+        [Produces("text/plain")]
         public IActionResult WhatsMyIp()
         {
             return new OkObjectResult(_ipService.GetRemoteIp());
@@ -26,6 +28,7 @@ namespace AJT.API.Web.Areas.API
 
         [HttpGet]
         [ServiceFilter(typeof(AuthKeyFilter))]
+        [Produces("application/json")]
         public IActionResult GetMyIpAddressDetails()
         {
             var ipAddress = _ipService.GetRemoteIp();
@@ -36,6 +39,7 @@ namespace AJT.API.Web.Areas.API
 
         [HttpGet]
         [ServiceFilter(typeof(AuthKeyFilter))]
+        [Produces("application/json")]
         public IActionResult GetIpAddressDetails([Required] string ipAddress)
         {
             var ipAddressDetails = _ipService.GetIpAddressDetails(ipAddress);

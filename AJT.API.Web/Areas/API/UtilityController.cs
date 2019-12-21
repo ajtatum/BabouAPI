@@ -1,16 +1,21 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using AJT.API.Web.Helpers;
 using AJT.API.Web.Helpers.Filters;
 using AJT.API.Web.Helpers.Swagger;
+using AJT.API.Web.Models;
+using AJT.API.Web.SwaggerExamples.Requests;
 using BabouExtensions;
 using BabouExtensions.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace AJT.API.Web.Areas.API
 {
-    [Route("api/[controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
     [AllowAnonymous]
     public class UtilityController : ControllerBase
@@ -21,8 +26,9 @@ namespace AJT.API.Web.Areas.API
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost("{surroundWithQuotes:bool=true}")]
-        [Consumes("text/plain")]
-        [Produces("text/plain")]
+        [Consumes(Constants.ContentTypes.TextPlain)]
+        [Produces(Constants.ContentTypes.TextPlain)]
+        [SwaggerRequestExample(typeof(string), typeof(ConvertToCsvExample))]
         [RawTextRequest]
         public async Task<IActionResult> ConvertToCsv(bool surroundWithQuotes = true)
         {
@@ -48,13 +54,13 @@ namespace AJT.API.Web.Areas.API
         }
 
         /// <summary>
-        /// Takes a list of strings or integers and returns distinct values in new lines.
+        /// Takes a list of strings or integers separated by a comma and returns distinct values in new lines.
         /// </summary>
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost]
-        [Consumes("text/plain")]
-        [Produces("text/plain")]
+        [Consumes(Constants.ContentTypes.TextPlain)]
+        [Produces(Constants.ContentTypes.TextPlain)]
         [RawTextRequest]
         public async Task<IActionResult> ConvertToLines()
         {
@@ -78,9 +84,11 @@ namespace AJT.API.Web.Areas.API
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost]
+        [Consumes(Constants.ContentTypes.TextPlain)]
+        [Produces(Constants.ContentTypes.TextPlain)]
         public IActionResult Encrypt([Required][FromHeader] string originalString, [Required][FromHeader] string encryptionKey)
         {
-            return new OkObjectResult(originalString.Encrypt(encryptionKey));
+            return new OkObjectResult(originalString.EncryptUsingAes(encryptionKey));
         }
 
         /// <summary>
@@ -91,9 +99,11 @@ namespace AJT.API.Web.Areas.API
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost]
+        [Consumes(Constants.ContentTypes.TextPlain)]
+        [Produces(Constants.ContentTypes.TextPlain)]
         public IActionResult Decrypt([Required][FromHeader]string encryptedString, [Required][FromHeader] string decryptionKey)
         {
-            return new OkObjectResult(encryptedString.Decrypt(decryptionKey));
+            return new OkObjectResult(encryptedString.DecryptUsingAes(decryptionKey));
         }
     }
 }

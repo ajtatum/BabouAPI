@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AJT.API.Web.Data;
+using AJT.API.Web.Helpers;
 using AJT.API.Web.Models.Database;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using Microsoft.Net.Http.Headers;
 namespace AJT.API.Web.Controllers
 {
     [Route("[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [AllowAnonymous]
     public class GoController : Controller
     {
@@ -24,7 +26,7 @@ namespace AJT.API.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var shortenedUrl = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Token == id && x.Domain == "https://api.ajt.io/go/");
+            var shortenedUrl = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Token == id && x.Domain == Constants.ShortDomainUrls.ApiAjtGo);
 
             if (shortenedUrl != null)
             {

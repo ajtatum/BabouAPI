@@ -6,7 +6,8 @@ using Microsoft.Extensions.Options;
 
 namespace AJT.API.Web.Areas.API
 {
-    [Route("api/[controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
     [AllowAnonymous]
     [ApiExplorerSettings(IgnoreApi = true)]

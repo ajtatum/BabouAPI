@@ -2,7 +2,6 @@
 using AJT.API.Web.Helpers;
 using AJT.API.Web.Models;
 using AJT.API.Web.Services.Interfaces;
-using BabouExtensions;
 using BabouExtensions.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +10,8 @@ using Microsoft.Extensions.Options;
 
 namespace AJT.API.Web.Areas.API
 {
-    [Route("api/[controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
     [ApiExplorerSettings(IgnoreApi = true)]
     public class SlackController : ControllerBase

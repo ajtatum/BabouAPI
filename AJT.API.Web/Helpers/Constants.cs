@@ -12,5 +12,18 @@
         {
             public const int PushBullet = 1;
         }
+
+        public struct ContentTypes
+        {
+            public const string ApplicationJson = "application/json";
+            public const string TextPlain = "text/plain";
+        }
+
+        public struct ShortDomainUrls
+        {
+            public const string BabouIo = "https://babou.io/";
+            public const string MrvlCo = "https://mrvl.co/";
+            public const string ApiAjtGo = "https://api.ajt.io/go/";
+        }
     }
 }

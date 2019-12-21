@@ -63,7 +63,7 @@ namespace AJT.API.Web.Services
             return shortenUrl;
         }
 
-        public async Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string token, string domain)
+        public async Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string domain, string token)
         {
             var shortenUrl = new ShortenedUrl()
             {
@@ -121,7 +121,11 @@ namespace AJT.API.Web.Services
                 throw new ArgumentException("Tokens can only contain alphanumeric, dashes, underscores, or plus signs. Must be between 2 and 50 characters long.");
 
             var tokenTaken = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Token == token && x.Domain == domain);
-            return tokenTaken == null;
+
+            if(tokenTaken != null)
+                throw new DuplicateNameException($"The token {token} is already being used by domain {domain}.");
+
+            return true;
         }
 
         /// <summary>

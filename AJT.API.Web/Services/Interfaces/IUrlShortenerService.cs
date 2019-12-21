@@ -8,7 +8,7 @@ namespace AJT.API.Web.Services.Interfaces
     {
         Task<List<ShortenedUrl>> GetShortenedUrlsByUserId(string userId);
         Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string domain);
-        Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string token, string domain);
+        Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string domain, string token);
         Task<ShortenedUrl> UpdateById(int id, string longUrl);
         Task<ShortenedUrl> DeleteById(int id);
         Task<bool> CheckIfTokenIsAvailable(string token, string domain);

@@ -1,24 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using AJT.API.Web.Helpers;
 using AJT.API.Web.Helpers.ExtensionMethods;
 using AJT.API.Web.Helpers.Filters;
 using AJT.API.Web.Models;
 using AJT.API.Web.Models.Database;
 using AJT.API.Web.Services.Interfaces;
+using AJT.API.Web.SwaggerExamples.Requests;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PushBulletSharp.Core;
 using PushBulletSharp.Core.Models.Requests;
 using PushBulletSharp.Core.Models.Responses;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace AJT.API.Web.Areas.API
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [AllowAnonymous]
     public class PushBulletController : ControllerBase
@@ -36,7 +43,15 @@ namespace AJT.API.Web.Areas.API
 
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost]
-        [Produces("application/json")]
+        [Consumes(Constants.ContentTypes.ApplicationJson)]
+        [Produces(Constants.ContentTypes.ApplicationJson)]
+        [SwaggerOperation(
+            Summary = "Send messages via PushBullet.",
+            Description = "Requires user to enter their ApiKey and EncryptionKey in their user profile.",
+            OperationId = "SendPushBulletMessage")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type=typeof(List<PushResponse>), Description = "Successfully sent message to device(s) or channel.")]
+        [SwaggerResponse(StatusCodes.Status409Conflict, Description = "You cannot send to both devices and channel at the same time.")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "Could not find your ApiKey or EncryptionKey. Otherwise, see exception message.")]
         public async Task<IActionResult> Post([FromBody] PushBullet pushBulletModel)
         {
             var userAuthKey = Request.Headers["AuthKey"].ToString();
@@ -72,13 +87,13 @@ namespace AJT.API.Web.Areas.API
                     return new OkObjectResult(sendToDevices);
                 }
 
-                throw new NotSupportedException("Sending messages to devices and channels on the same request is not supported.");
+                return new ConflictObjectResult("Sending messages to devices and channels on the same request is not supported.");
 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unable to send PushBullet messages for {UserId}", user.Id);
-                return new BadRequestObjectResult(ex.Message);
+                _logger.LogError(ex, "Unable to send PushBullet messages for {UserId} using the PushBullet model {@PushBullet}", user.Id, pushBulletModel);
+                return new BadRequestObjectResult(ex);
             }
         }
 

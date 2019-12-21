@@ -115,7 +115,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 
             if (ModelState.IsValid)
             {
-                var shortenedUrl = await _urlShortenerService.CreateByUserId(user.Id, ShortenedUrl.LongUrl, Token, ShortenedUrl.Domain);
+                var shortenedUrl = await _urlShortenerService.CreateByUserId(user.Id, ShortenedUrl.LongUrl, ShortenedUrl.Domain, Token);
                 _logger.LogInformation("UrlShortenerModel: New Shortened Url Created for {LongUrl} as {ShortUrl}", shortenedUrl.LongUrl, shortenedUrl.ShortUrl);
 
                 StatusMessage = $"The short url {shortenedUrl.ShortUrl} has been created!";
