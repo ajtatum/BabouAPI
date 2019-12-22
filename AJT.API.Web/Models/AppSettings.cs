@@ -12,9 +12,7 @@ namespace AJT.API.Web.Models
         public List<string> BaseShortenedUrls { get; set; }
         public string BuildNumber { get; set; }
         public EmailSenderSettings EmailSender { get; set; }
-        public GoogleCustomSearchSettings GoogleCustomSearch { get; set; }
         public string IpStackApiKey { get; set; }
-        public SlackSettings Slack { get; set; }
     }
 
     public class AzureSettings
@@ -81,19 +79,5 @@ namespace AJT.API.Web.Models
         public string FromSenderName { get; set; }
         public string FromUserName { get; set; }
         public string ToEmail { get; set; }
-    }
-
-    public class GoogleCustomSearchSettings
-    {
-        public string ApiKey { get; set; }
-        public string DcComicsCx { get; set; }
-        public string MarvelCx { get; set; }
-    }
-
-    public class SlackSettings
-    {
-        public string ApiToken { get; set; }
-        public string SigningSecret { get; set; }
-        public string VerificationToken { get; set; }
     }
 }

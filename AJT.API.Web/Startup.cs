@@ -85,10 +85,6 @@ namespace AJT.API.Web
             services.AddScoped<IUrlShortenerService, UrlShortenerService>();
             services.AddTransient<IEmailSender, EmailService>();
 
-            services.AddSingleton<ISlackService, SlackService>();
-
-            services.AddHostedService<SlackBackgroundService>();
-
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
