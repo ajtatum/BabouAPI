@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using AJT.API.Web.Helpers;
 using AJT.API.Web.Helpers.Filters;
@@ -25,12 +26,28 @@ namespace AJT.API.Web.Areas.API
         /// </summary>
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
-        [HttpPost("{surroundWithQuotes:bool=true}")]
+        [HttpPost]
         [Consumes(Constants.ContentTypes.TextPlain)]
         [Produces(Constants.ContentTypes.TextPlain)]
         [SwaggerRequestExample(typeof(string), typeof(ConvertToCsvExample))]
         [RawTextRequest]
-        public async Task<IActionResult> ConvertToCsv(bool surroundWithQuotes = true)
+        public Task<IActionResult> ConvertToCsv()
+        {
+            return ConvertToCsv(null);
+        }
+
+        /// <summary>
+        /// Converts a string of integers into a CSV. Returns distinct values.
+        /// </summary>
+        /// <param name="surroundWithQuotes">If true, the strings are surrounded by quotes. If false, they are not.</param>
+        /// <returns></returns>
+        [ServiceFilter(typeof(AuthKeyFilter))]
+        [HttpPost("{surroundWithQuotes:bool?}")]
+        [Consumes(Constants.ContentTypes.TextPlain)]
+        [Produces(Constants.ContentTypes.TextPlain)]
+        [SwaggerRequestExample(typeof(string), typeof(ConvertToCsvExample))]
+        [RawTextRequest]
+        public async Task<IActionResult> ConvertToCsv([Required]bool? surroundWithQuotes)
         {
             var requestBody = await Request.GetRawBodyStringAsync();
 
@@ -38,19 +55,50 @@ namespace AJT.API.Web.Areas.API
             {
                 var returnValue = string.Empty;
 
-                if (surroundWithQuotes == false)
-                    returnValue = string.Join(',', cleanString);
+                if (surroundWithQuotes.HasValue)
+                {
+                    if (surroundWithQuotes == false)
+                        returnValue = string.Join(',', cleanString);
+                    else
+                    {
+                        cleanString.ForEach(x =>
+                        {
+                            if (x.IsNullOrWhiteSpace())
+                                return;
+
+                            returnValue += $"'{x}',";
+                        });
+                    }
+                }
                 else
                 {
-                    cleanString.ForEach(x => { returnValue += $"'{x}',"; });
+                    cleanString.ForEach(x =>
+                    {
+                        if (x.IsNullOrWhiteSpace())
+                            return;
 
-                    returnValue = returnValue.TrimEnd(',');
+                        if (IsDigitsOnly(x))
+                        {
+                            returnValue += $"{x},";
+                        }
+                        else
+                        {
+                            returnValue += $"'{x}',";
+                        }
+                    });
                 }
+
+                returnValue = returnValue.TrimEnd(',');
 
                 return new OkObjectResult($"{returnValue}");
             }
 
             return new BadRequestObjectResult($"{requestBody}");
+
+            static bool IsDigitsOnly(string str)
+            {
+                return !str.IsNullOrWhiteSpace() && str.All(c => c >= '0' && c <= '9');
+            }
         }
 
         /// <summary>
