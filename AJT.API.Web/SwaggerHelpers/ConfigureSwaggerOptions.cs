@@ -21,14 +21,21 @@ namespace AJT.API.Web.SwaggerHelpers
                     description.GroupName,
                     new OpenApiInfo()
                     {
-                        Title = $"AJT API {description.ApiVersion}",
+                        Title = "AJT API",
                         Version = description.ApiVersion.ToString(),
                         Contact = new OpenApiContact
                         {
                             Name = "AJ Tatum",
-                            Email = "aj@ajt.io",
+                            Email = null,
                             Url = new Uri("https://ajt.io")
                         },
+                        Description = "IP Address services, PushBullet service, Url Shortening service, utilities and more to come.",
+                        TermsOfService = new Uri("/TermsOfService", UriKind.Relative),
+                        License = new OpenApiLicense()
+                        {
+                            Name = "Apache License", 
+                            Url = new Uri("/License", UriKind.Relative)
+                        }
                     });
             }
         }

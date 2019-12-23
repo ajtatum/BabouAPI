@@ -21,7 +21,7 @@
 
         public struct ShortDomainUrls
         {
-            public const string BabouIo = "https://babou.io/";
+            public const string BabouIo = "https://s.babou.io/";
             public const string MrvlCo = "https://mrvl.co/";
             public const string ApiAjtGo = "https://api.ajt.io/go/";
         }

@@ -55,7 +55,7 @@ namespace AJT.API.Web.Areas.API
         [SwaggerResponseExample(StatusCodes.Status409Conflict, typeof(ConflictErrorResponseExample))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Either the request body is malformed or an exception was thrown.", typeof(string))]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestStringResponseExample))]
-        [SwaggerResponse(StatusCodes.Status406NotAcceptable, "AuthKey not found.", typeof(void))]
+        [SwaggerResponse(StatusCodes.Status406NotAcceptable, "AuthKey not found.", typeof(string))]
         [SwaggerResponseExample(StatusCodes.Status406NotAcceptable, typeof(AuthKeyNotFoundResponseExample))]
         public async Task<IActionResult> Post([FromBody] PushBullet pushBulletModel)
         {

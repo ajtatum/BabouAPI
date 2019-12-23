@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using AJT.API.Web.Helpers;
 using AJT.API.Web.Helpers.Filters;
 using AJT.API.Web.Services.Interfaces;
+using IpStack.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AJT.API.Web.Areas.API
 {
@@ -20,7 +23,10 @@ namespace AJT.API.Web.Areas.API
         }
 
         [HttpGet]
-        [Produces("text/plain")]
+        [Produces(Constants.ContentTypes.TextPlain)]
+        [SwaggerOperation(
+            Summary = "Gets your IP Address.",
+            OperationId = "WhatsMyIP")]
         public IActionResult WhatsMyIp()
         {
             return new OkObjectResult(_ipService.GetRemoteIp());
@@ -28,7 +34,11 @@ namespace AJT.API.Web.Areas.API
 
         [HttpGet]
         [ServiceFilter(typeof(AuthKeyFilter))]
-        [Produces("application/json")]
+        [Produces(Constants.ContentTypes.ApplicationJson, Type = typeof(IpAddressDetails))]
+        [SwaggerOperation(
+            Summary = "Returns your IP Address details",
+            Description = "Requires user to enter their ApiKey and EncryptionKey in their user profile.",
+            OperationId = "GetMyIpAddressDetails")]
         public IActionResult GetMyIpAddressDetails()
         {
             var ipAddress = _ipService.GetRemoteIp();
@@ -39,7 +49,11 @@ namespace AJT.API.Web.Areas.API
 
         [HttpGet]
         [ServiceFilter(typeof(AuthKeyFilter))]
-        [Produces("application/json")]
+        [Produces(Constants.ContentTypes.ApplicationJson, Type = typeof(IpAddressDetails))]
+        [SwaggerOperation(
+            Summary = "Returns an IP Address details.",
+            Description = "Requires user to enter their ApiKey and EncryptionKey in their user profile.",
+            OperationId = "GetIpAddressDetails")]
         public IActionResult GetIpAddressDetails([Required] string ipAddress)
         {
             var ipAddressDetails = _ipService.GetIpAddressDetails(ipAddress);
