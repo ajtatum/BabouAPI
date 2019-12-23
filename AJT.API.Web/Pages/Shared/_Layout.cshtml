@@ -36,9 +36,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-page="/Index">Home</a>
                         </li>
+                        <li class="nav-item">
+                            @* ReSharper disable once Html.PathError *@
+                            <a class="nav-link text-white" href="/swagger/">Swagger Docs</a>
+                        </li>
                         @*<li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>*@
+                                <a class="nav-link text-white" asp-area="" asp-page="/Privacy">Privacy</a>
+                            </li>*@
                     </ul>
                 </div>
             </div>
@@ -53,7 +57,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - AJT API - Build: @Configuration["BuildNumber"] @*- <a asp-area="" asp-page="/Privacy">Privacy</a>*@
+            &copy; 2019 - AJT API - Build: @Configuration["BuildNumber"] - <a asp-area="" asp-page="/TermsOfService">Terms of Service</a>
         </div>
     </footer>
 
@@ -66,6 +70,6 @@
         <script src="~/js/ajtapi.min.js"></script>
     </environment>
 
-@RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

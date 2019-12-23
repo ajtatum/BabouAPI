@@ -68,6 +68,7 @@
         <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.0.0" />
@@ -96,6 +97,8 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.0.0-rc5" />
         <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.0.0-rc8" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="5.0.0-rc5" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.0.0-rc5" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.0.0-rc5" />
         <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     </ItemGroup>
