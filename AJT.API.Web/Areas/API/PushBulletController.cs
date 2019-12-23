@@ -10,6 +10,7 @@ using AJT.API.Web.Models;
 using AJT.API.Web.Models.Database;
 using AJT.API.Web.Services.Interfaces;
 using AJT.API.Web.SwaggerExamples.Requests;
+using AJT.API.Web.SwaggerExamples.Responses;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -50,8 +51,12 @@ namespace AJT.API.Web.Areas.API
             Description = "Requires user to enter their ApiKey and EncryptionKey in their user profile.",
             OperationId = "SendPushBulletMessage")]
         [SwaggerResponse(StatusCodes.Status200OK, Type=typeof(List<PushResponse>), Description = "Successfully sent message to device(s) or channel.")]
-        [SwaggerResponse(StatusCodes.Status409Conflict, Description = "You cannot send to both devices and channel at the same time.")]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "Could not find your ApiKey or EncryptionKey. Otherwise, see exception message.")]
+        [SwaggerResponse(StatusCodes.Status409Conflict, "You cannot send to both devices and channel at the same time.", typeof(string))]
+        [SwaggerResponseExample(StatusCodes.Status409Conflict, typeof(ConflictErrorResponseExample))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Either the request body is malformed or an exception was thrown.", typeof(string))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestStringResponseExample))]
+        [SwaggerResponse(StatusCodes.Status406NotAcceptable, "AuthKey not found.", typeof(void))]
+        [SwaggerResponseExample(StatusCodes.Status406NotAcceptable, typeof(AuthKeyNotFoundResponseExample))]
         public async Task<IActionResult> Post([FromBody] PushBullet pushBulletModel)
         {
             var userAuthKey = Request.Headers["AuthKey"].ToString();

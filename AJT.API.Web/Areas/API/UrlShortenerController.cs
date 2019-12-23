@@ -20,8 +20,9 @@ namespace AJT.API.Web.Areas.API
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiController]
     [AllowAnonymous]
-    public class UrlShortenerController : Controller
+    public class UrlShortenerController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IUrlShortenerService _urlShortenerService;
@@ -46,7 +47,7 @@ namespace AJT.API.Web.Areas.API
         /// <returns></returns>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost]
-        [Produces("text/plain")]
+        [Produces(Constants.ContentTypes.TextPlain)]
         public async Task<IActionResult> Post([Required][FromQuery] string longUrl, [Optional][FromQuery] string domain, [Optional][FromQuery] string token)
         {
             var userAuthKey = Request.Headers["AuthKey"].ToString();

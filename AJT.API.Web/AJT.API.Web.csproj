@@ -51,8 +51,8 @@
 
 
     <ItemGroup>
-        <PackageReference Include="BabouExtensions" Version="1.2.35" />
-        <PackageReference Include="BabouExtensions.AspNetCore" Version="1.2.35" />
+        <PackageReference Include="BabouExtensions" Version="1.2.38" />
+        <PackageReference Include="BabouExtensions.AspNetCore" Version="1.2.40" />
         <PackageReference Include="BabouMail.MailGun" Version="1.1.7" />
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
         <PackageReference Include="IpStack" Version="1.0.1" />

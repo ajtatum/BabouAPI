@@ -1,9 +1,13 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace AJT.API.Web.SwaggerExamples.Requests
 {
-    public class ConvertToCsvExample : IExamplesProvider<string>
+    public class ConvertToCsvNullRequestExample : IExamplesProvider<string>
     {
         public string GetExamples()
         {
