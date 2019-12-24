@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using AJT.API.Web.Helpers.ExtensionMethods;
 using AJT.API.Web.Models.Database;
+using BabouExtensions;
+using Microsoft.Extensions.Logging;
 
 namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -13,16 +15,17 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+        public IndexModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+            ILogger<IndexModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
-        [TempData]
+        [ViewData]
         public string StatusMessage { get; set; }
 
         [BindProperty]
@@ -33,8 +36,11 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
             [Required]
             public string Username { get; set; }
 
+            [Display(Name="Your Name")]
+            public string FullName { get; set; }
+
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Phone Number")]
             public string PhoneNumber { get; set; }
             
             [Required]
@@ -45,12 +51,14 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
+            var fullName = await _userManager.GetFullNameAsync();
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var apiAuthKey = await _userManager.GetApiAuthKeyAsync();
 
             Input = new InputModel
             {
                 Username = userName,
+                FullName = fullName,
                 PhoneNumber = phoneNumber,
                 ApiKey = apiAuthKey
             };
@@ -64,50 +72,75 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            var statusMessage = Request.Query["statusMessage"].ToString();
+
+            if (!statusMessage.IsNullOrWhiteSpace())
+            {
+                StatusMessage = statusMessage;
+            }
+
             await LoadAsync(user);
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            try
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                await LoadAsync(user);
-                return Page();
-            }
-
-            var username = await _userManager.GetUserNameAsync(user);
-            if (Input.Username != username)
-            {
-                var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.Username);
-                if (!setUserNameResult.Succeeded)
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
                 {
-                    StatusMessage = "Error: That username has already been taken.";
-                    return RedirectToPage();
+                    return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
                 }
-            }
 
-
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                if (!ModelState.IsValid)
                 {
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
+                    await LoadAsync(user);
+                    return Page();
                 }
-            }
 
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
-            return RedirectToPage();
+                var username = await _userManager.GetUserNameAsync(user);
+                if (Input.Username != username)
+                {
+                    var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.Username);
+                    if (!setUserNameResult.Succeeded)
+                    {
+                        return RedirectToPage(new { statusMessage = "Error: That username has already been taken." });
+                    }
+                }
+
+                var fullName = await _userManager.GetFullNameAsync();
+                if (Input.FullName != fullName)
+                {
+                    var setFullName = await _userManager.SetFullNameAsync(Input.FullName);
+
+                    if (!setFullName)
+                    {
+                        var userId = await _userManager.GetUserIdAsync(user);
+                        throw new InvalidOperationException($"Unexpected error occurred setting Full Name for user with ID '{userId}'.");
+                    }
+                }
+
+
+                var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+                if (Input.PhoneNumber != phoneNumber)
+                {
+                    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+                    if (!setPhoneResult.Succeeded)
+                    {
+                        var userId = await _userManager.GetUserIdAsync(user);
+                        throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
+                    }
+                }
+
+                await _signInManager.RefreshSignInAsync(user);
+                return RedirectToPage(new { statusMessage = "Your profile has been updated." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Saving User Profile. {Message}", ex.Message);
+                return RedirectToPage(new { statusMessage = $"Error: {ex.Message}" });
+            }
         }
     }
 }

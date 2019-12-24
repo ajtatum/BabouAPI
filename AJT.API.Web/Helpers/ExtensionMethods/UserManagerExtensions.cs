@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AJT.API.Web.Data;
 using AJT.API.Web.Models.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace AJT.API.Web.Helpers.ExtensionMethods
@@ -12,11 +15,13 @@ namespace AJT.API.Web.Helpers.ExtensionMethods
     {
         private static IHttpContextAccessor _httpContextAccessor;
         private static ILogger _logger;
+        private static ApplicationDbContext _context;
 
-        public static void Configure(IHttpContextAccessor httpContextAccessor)
+        public static void Configure(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
             _logger = Log.ForContext(typeof(UserManagerExtensions));
+            _context = new ApplicationDbContext(configuration);
         }
 
         public static HttpContext Current => _httpContextAccessor.HttpContext;
@@ -45,6 +50,39 @@ namespace AJT.API.Web.Helpers.ExtensionMethods
             {
                 _logger.Error(ex, "UserManagerExtensions: Error retrieving user ApiAuthKey.");
                 return string.Empty;
+            }
+        }
+
+        public static async Task<string> GetFullNameAsync(this UserManager<ApplicationUser> um)
+        {
+            try
+            {
+                var user = await um.GetUserAsync(_httpContextAccessor.HttpContext.User);
+                return user.FullName ?? string.Empty;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "UserManagerExtensions: Error retrieving user FullName.");
+                return string.Empty;
+            }
+        }
+
+        public static async Task<bool> SetFullNameAsync(this UserManager<ApplicationUser> um, string fullName)
+        {
+            try
+            {
+                var user = await um.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
+                user.FullName = fullName;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "UserManagerExtensions: Error saving Full Name.");
+                return false;
             }
         }
 

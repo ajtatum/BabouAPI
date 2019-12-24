@@ -1,13 +1,22 @@
 ﻿using AJT.API.Web.Models.Database;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace AJT.API.Web.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        private readonly IConfiguration _configuration;
+
+        //public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        //{
+        //}
+
+        public ApplicationDbContext(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
@@ -48,6 +57,14 @@ namespace AJT.API.Web.Data
                 .HasMany(x => x.ShortenedUrlClicks)
                 .WithOne(x => x.ShortenedUrl)
                 .IsRequired();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+            }
         }
     }
 }

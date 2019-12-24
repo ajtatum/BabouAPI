@@ -171,7 +171,8 @@ namespace AJT.API.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, IApiVersionDescriptionProvider provider)
         {
-            UserManagerExtensions.Configure(app.ApplicationServices.GetRequiredService<IHttpContextAccessor>());
+            UserManagerExtensions.Configure(
+                app.ApplicationServices.GetRequiredService<IHttpContextAccessor>(), Configuration);
 
             if (env.IsDevelopment())
             {
