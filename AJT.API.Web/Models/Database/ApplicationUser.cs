@@ -17,6 +17,10 @@ namespace AJT.API.Web.Models.Database
         [StringLength(50)]
         public string ApiAuthKey { get; set; }
 
+        [Column(TypeName = "varchar(150)")]
+        [StringLength(150)]
+        public string FullName { get; set; }
+
         public List<ApplicationUserService> ApplicationUserServices { get; set; }
         public List<ShortenedUrl> ShortenedUrls { get; set; }
     }

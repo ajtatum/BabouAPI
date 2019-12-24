@@ -35,6 +35,8 @@
         <Compile Remove="Data\Migrations\20191215211528_ShortenUrlDomains.Designer.cs" />
         <Compile Remove="Data\Migrations\20191215213147_RemoveUrlShortener.cs" />
         <Compile Remove="Data\Migrations\20191215213147_RemoveUrlShortener.Designer.cs" />
+        <Compile Remove="Data\Migrations\20191224165528_AddApplicationUserName.cs" />
+        <Compile Remove="Data\Migrations\20191224165528_AddApplicationUserName.Designer.cs" />
     </ItemGroup>
 
     <ItemGroup>
