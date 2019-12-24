@@ -209,26 +209,44 @@ namespace AJT.API.Web
                 }
             });
 
-            string nonce = Guid.NewGuid().ToString("N");
+            var nonce = Guid.NewGuid().ToString("N");
             app.Use(async (ctx, next) =>
             {
                 ctx.Items["csp-nonce"] = nonce;
                 await next();
             });
 
-            app.UseContentSecurityPolicy(new CspDirectiveList
+            if (env.IsProduction())
             {
-                DefaultSrc = CspDirective.Self.AddHttpsScheme(),
-                StyleSrc = StyleCspDirective.Self.AddUnsafeInline().AddHttpsScheme(),
-                ScriptSrc = ScriptCspDirective.Self.AddNonce(nonce).AddHttpsScheme()
-                    .AddSource("https://az416426.vo.msecnd.net"),
-                ImgSrc = CspDirective.Self.AddDataScheme().AddHttpsScheme(),
-                FontSrc = CspDirective.Self.AddHttpsScheme(),
-                ConnectSrc = CspDirective.Self.AddHttpsScheme()
-                    .AddSource(new Uri("https://dc.services.visualstudio.com/")),
-            });
-
-            var reportingEndpoints = new List<ReportingEndpoint>() { new ReportingEndpoint("https://ajtio.report-uri.com/a/d/g") };
+                app.UseContentSecurityPolicy(new CspDirectiveList
+                {
+                    DefaultSrc = CspDirective.Self.AddHttpsScheme(),
+                    StyleSrc = StyleCspDirective.Self.AddUnsafeInline().AddHttpsScheme(),
+                    ScriptSrc = ScriptCspDirective.Self.AddNonce(nonce).AddHttpsScheme()
+                        .AddSource("https://az416426.vo.msecnd.net"),
+                    ImgSrc = CspDirective.Self.AddDataScheme().AddHttpsScheme(),
+                    FontSrc = CspDirective.Self.AddHttpsScheme(),
+                    ConnectSrc = CspDirective.Self.AddHttpsScheme()
+                        .AddSource(new Uri("https://dc.services.visualstudio.com/"))
+                });
+            }
+            else
+            {
+                app.UseContentSecurityPolicy(new CspDirectiveList
+                {
+                    DefaultSrc = CspDirective.Self.AddHttpsScheme(),
+                    StyleSrc = StyleCspDirective.Self.AddUnsafeInline().AddHttpsScheme(),
+                    ScriptSrc = ScriptCspDirective.Self.AddNonce(nonce).AddHttpsScheme()
+                        .AddSource("https://az416426.vo.msecnd.net")
+                        .AddSource("https://localhost:*"),
+                    ImgSrc = CspDirective.Self.AddDataScheme().AddHttpsScheme(),
+                    FontSrc = CspDirective.Self.AddHttpsScheme(),
+                    ConnectSrc = CspDirective.Self.AddHttpsScheme()
+                        .AddSource(new Uri("https://dc.services.visualstudio.com/"))
+                        .AddSource("wss://localhost:*")
+                        .AddSource("https://localhost:*")
+                });
+            }
 
             app.AddCustomHeaders("Report-To", "{\"group\":\"default\",\"max_age\":31536000,\"endpoints\":[{\"url\":\"https://ajtio.report-uri.com/a/d/g\"}],\"include_subdomains\":true}");
 
