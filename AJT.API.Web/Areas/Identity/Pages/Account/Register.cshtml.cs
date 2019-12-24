@@ -63,6 +63,9 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to our Terms of Service before registering.")]
+            public bool AgreeToTerms { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)

@@ -10,8 +10,6 @@
 
 <p class="text-info">
     You've successfully authenticated with <strong>@Model.LoginProvider</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
 </p>
 
 <div class="row">
@@ -20,10 +18,15 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
+                <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-autocomplete="both" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-dark">Register</button>
+            <div class="form-group">
+                By registering, you agree to our <a asp-area="" asp-page="/TermsOfService" target="_blank">Terms of Service</a> .
+            </div>
+            <div class="form-group pad-top-10">
+                <button type="submit" class="btn btn-dark">Register</button>
+            </div>
         </form>
     </div>
 </div>

@@ -14,20 +14,26 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
+                <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-autocomplete="both" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-autocomplete="both" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Input.ConfirmPassword"></label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" />
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-autocomplete="both" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-dark">Register</button>
+            <div class="form-check">
+                <input asp-for="Input.AgreeToTerms" class="form-check-input" /> <label asp-for="Input.AgreeToTerms" class="form-check-label">I agree to our <a asp-area="" asp-page="/TermsOfService" target="_blank">Terms of Service</a> .</label>
+                <span asp-validation-for="Input.AgreeToTerms" class="text-danger"></span>
+            </div>
+            <div class="form-group pad-top-10">
+                <button type="submit" class="btn btn-dark">Register</button>
+            </div>
         </form>
     </div>
     <div class="col-md-6 col-md-offset-2">
