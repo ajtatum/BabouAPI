@@ -2,17 +2,16 @@
 using AJT.API.Web.Models;
 using AJT.API.Web.Models.Database;
 using AJT.API.Web.Services.Interfaces;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 
 namespace AJT.API.Web.Services
 {
     public class SendNewUserNotificationService : ISendNewUserNotificationService
     {
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailSender;
         private readonly AppSettings _appSettings;
 
-        public SendNewUserNotificationService(IEmailSender emailSender, IOptionsMonitor<AppSettings> appSettings)
+        public SendNewUserNotificationService(IEmailService emailSender, IOptionsMonitor<AppSettings> appSettings)
         {
             _emailSender = emailSender;
             _appSettings = appSettings.CurrentValue;

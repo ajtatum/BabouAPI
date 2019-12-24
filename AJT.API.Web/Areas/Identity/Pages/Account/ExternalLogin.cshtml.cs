@@ -22,17 +22,17 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailService;
         private readonly ILogger<ExternalLoginModel> _logger;
         private readonly ISendNewUserNotificationService _sendNewUserNotificationService;
 
         public ExternalLoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, 
-            ILogger<ExternalLoginModel> logger, IEmailSender emailSender, ISendNewUserNotificationService sendNewUserNotificationService)
+            ILogger<ExternalLoginModel> logger, IEmailService emailService, ISendNewUserNotificationService sendNewUserNotificationService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
-            _emailSender = emailSender;
+            _emailService = emailService;
             _sendNewUserNotificationService = sendNewUserNotificationService;
         }
 
@@ -143,7 +143,7 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
                             values: new { area = "Identity", userId = userId, code = code },
                             protocol: Request.Scheme);
 
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                        await _emailService.SendEmailAsync(Input.Email, "Confirm your email",
                             $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                         await _sendNewUserNotificationService.SendMessage(user);
