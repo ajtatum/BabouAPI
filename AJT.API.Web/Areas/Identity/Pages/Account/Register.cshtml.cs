@@ -48,6 +48,9 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required(ErrorMessage = "Please enter a username.")]
+            public string UserName { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -63,9 +66,6 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-
-            [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to our Terms of Service before registering.")]
-            public bool AgreeToTerms { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -81,13 +81,13 @@ namespace AJT.API.Web.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var apiAuthKey = Guid.NewGuid().ToString().Replace("-", string.Empty);
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, ApiAuthKey = apiAuthKey};
+                var user = new ApplicationUser { UserName = Input.UserName, Email = Input.Email, ApiAuthKey = apiAuthKey};
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, Constants.Roles.Member);
 
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("User {UserName} created a new account with password.", Input.UserName);
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
