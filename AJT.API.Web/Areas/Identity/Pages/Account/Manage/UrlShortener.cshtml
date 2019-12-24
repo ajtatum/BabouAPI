@@ -115,7 +115,7 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial"/>
 
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="@HttpContext.Items["csp-nonce"]">
         $(".btn-view-stats").click(function() {
             var btnId = this.id;
 

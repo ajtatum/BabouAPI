@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -9,6 +10,16 @@ using AJT.API.Web.Models;
 using AJT.API.Web.Services;
 using AJT.API.Web.Services.Interfaces;
 using AJT.API.Web.SwaggerHelpers;
+using Babou.AspNetCore.SecurityExtensions.ContentSecurityPolicy;
+using Babou.AspNetCore.SecurityExtensions.CustomHeaders;
+using Babou.AspNetCore.SecurityExtensions.ExpectCT;
+using Babou.AspNetCore.SecurityExtensions.FeaturePolicy;
+using Babou.AspNetCore.SecurityExtensions.FrameOptions;
+using Babou.AspNetCore.SecurityExtensions.ReferrerPolicy;
+using Babou.AspNetCore.SecurityExtensions.ReportTo;
+using Babou.AspNetCore.SecurityExtensions.SubresourceIntegrity;
+using Babou.AspNetCore.SecurityExtensions.XContentTypeOptions;
+using Babou.AspNetCore.SecurityExtensions.XRobotsTag;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -81,7 +92,7 @@ namespace AJT.API.Web
                 })
                 .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
                 .AddRazorRuntimeCompilation();
-            
+
             services.Configure<AppSettings>(Configuration);
 
             services.AddScoped<ClientIpFilter>();
@@ -96,6 +107,7 @@ namespace AJT.API.Web
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
+            services.AddSingleton<ApplicationInsightsJsHelper>();
 
             services.AddApiVersioning(
                 options =>
@@ -147,6 +159,8 @@ namespace AJT.API.Web
 
             services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:InstrumentationKey"]);
 
+            services.AddSubresourceIntegrity();
+
             services.AddHsts(options =>
             {
                 options.Preload = true;
@@ -194,6 +208,46 @@ namespace AJT.API.Web
                     c.DefaultModelsExpandDepth(-1);
                 }
             });
+
+            string nonce = Guid.NewGuid().ToString("N");
+            app.Use(async (ctx, next) =>
+            {
+                ctx.Items["csp-nonce"] = nonce;
+                await next();
+            });
+
+            app.UseContentSecurityPolicy(new CspDirectiveList
+            {
+                DefaultSrc = CspDirective.Self.AddHttpsScheme(),
+                StyleSrc = StyleCspDirective.Self.AddUnsafeInline().AddHttpsScheme(),
+                ScriptSrc = ScriptCspDirective.Self.AddNonce(nonce).AddHttpsScheme()
+                    .AddSource("https://az416426.vo.msecnd.net"),
+                ImgSrc = CspDirective.Self.AddDataScheme().AddHttpsScheme(),
+                FontSrc = CspDirective.Self.AddHttpsScheme(),
+                ConnectSrc = CspDirective.Self.AddHttpsScheme()
+                    .AddSource(new Uri("https://dc.services.visualstudio.com/")),
+            });
+
+            var reportingEndpoints = new List<ReportingEndpoint>() { new ReportingEndpoint("https://ajtio.report-uri.com/a/d/g") };
+
+            app.AddCustomHeaders("Report-To", "{\"group\":\"default\",\"max_age\":31536000,\"endpoints\":[{\"url\":\"https://ajtio.report-uri.com/a/d/g\"}],\"include_subdomains\":true}");
+
+            app.UseFeaturePolicy(
+                new FeatureDirectiveList()
+                    .AddNone(PolicyFeature.Microphone)
+                    .AddNone(PolicyFeature.Camera)
+                    .AddSelf(PolicyFeature.FullScreen)
+            );
+
+            app.UseFrameOptions(FrameOptionsPolicy.Deny);
+
+            app.UseXContentTypeOptions(XContentTypeOptions.NoSniff);
+
+            app.UseReferrerPolicy(ReferrerPolicy.Origin);
+
+            app.UseXRobotsTag(false, false);
+
+            app.UseExpectCT(true, new TimeSpan(7, 0, 0, 0), new Uri("https://ajtio.report-uri.com/r/d/ct/enforce"));
 
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();

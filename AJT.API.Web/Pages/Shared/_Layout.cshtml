@@ -1,5 +1,5 @@
 ﻿@using Microsoft.Extensions.Configuration
-@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@inject AJT.API.Web.Services.ApplicationInsightsJsHelper AiJsHelper
 @inject IConfiguration Configuration
 
 <!DOCTYPE html>
@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
     @RenderSection("CSS", required: false)
-    @Html.Raw(JavaScriptSnippet.FullScript)
+    @Html.Raw(AiJsHelper.Script)
 </head>
 <body>
     <header>

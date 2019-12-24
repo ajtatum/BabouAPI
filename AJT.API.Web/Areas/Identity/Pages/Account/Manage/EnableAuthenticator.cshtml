@@ -55,7 +55,7 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
     <script type="text/javascript" src="~/js/qrcode.min.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="@HttpContext.Items["csp-nonce"]">
         new QRCode(document.getElementById("qrCode"),
             {
                 text: "@Html.Raw(Model.AuthenticatorUri)",
