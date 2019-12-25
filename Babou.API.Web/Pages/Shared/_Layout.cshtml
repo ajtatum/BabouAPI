@@ -11,27 +11,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Babou API - @ViewData["Title"]</title>
+    <partial name="_Favicons" />
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" asp-add-nonce="true" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" asp-add-nonce="true" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" asp-add-nonce="true" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-add-nonce="true" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" asp-add-nonce="true" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" asp-add-nonce="true" />
     </environment>
     @RenderSection("CSS", required: false)
-    @Html.Raw(AiJsHelper.Script)
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-46787872-2" nonce="@_httpContext.HttpContext.Items["csp-nonce"]"></script>
-    <script nonce="@_httpContext.HttpContext.Items["csp-nonce"]">
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
+    <environment exclude="Development">
+        @Html.Raw(AiJsHelper.Script)
 
-        gtag('config', 'UA-46787872-2');
-    </script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-46787872-2" asp-add-nonce="true"></script>
+        <script asp-add-nonce="true">
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() { dataLayer.push(arguments); }
+
+            gtag('js', new Date());
+
+            gtag('config', 'UA-46787872-2');
+        </script>
+    </environment>
 </head>
 <body>
     <header>
@@ -74,12 +80,12 @@
     </footer>
 
     <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-        <script src="~/js/site.js"></script>
+        <script src="~/lib/jquery/dist/jquery.js" asp-add-nonce="true"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js" asp-add-nonce="true"></script>
+        <script src="~/js/site.js" asp-add-nonce="true"></script>
     </environment>
     <environment exclude="Development">
-        <script src="~/js/babouapi.min.js"></script>
+        <script src="~/js/babouapi.min.js" asp-add-nonce="true"></script>
     </environment>
 
     @RenderSection("Scripts", required: false)
