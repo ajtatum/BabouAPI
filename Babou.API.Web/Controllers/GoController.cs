@@ -5,8 +5,10 @@ using Babou.API.Web.Helpers;
 using Babou.API.Web.Models.Database;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
 namespace Babou.API.Web.Controllers
@@ -17,10 +19,12 @@ namespace Babou.API.Web.Controllers
     public class GoController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<GoController> _logger;
 
-        public GoController(ApplicationDbContext context)
+        public GoController(ApplicationDbContext context, ILogger<GoController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet("{id}")]
@@ -30,11 +34,34 @@ namespace Babou.API.Web.Controllers
 
             if (shortenedUrl != null)
             {
+                var referer = Request.Headers["Referer"].ToString();
+
+                try
+                {
+                    if (referer.IsNullOrEmpty())
+                    {
+                        var header = Request.GetTypedHeaders();
+                        var uriReferer = header.Referer;
+
+                        if (uriReferer != null)
+                            referer = uriReferer.AbsoluteUri;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Attempt to retrieve header referer.");
+                }
+
+                if (referer.IsNullOrEmpty())
+                    referer = null;
+
+                referer = referer.WithMaxLength(500);
+
                 var click = new ShortenedUrlClick()
                 {
                     ShortenedUrlId = shortenedUrl.Id,
                     ClickDate = DateTime.Now,
-                    Referrer = HttpContext.Request.Headers[HeaderNames.Referer].ToString().WithMaxLength(500)
+                    Referrer = referer
                 };
                 _context.Add(click);
                 await _context.SaveChangesAsync();
