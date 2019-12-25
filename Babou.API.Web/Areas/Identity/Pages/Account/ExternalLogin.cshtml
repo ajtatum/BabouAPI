@@ -1,0 +1,36 @@
+﻿@page
+@model ExternalLoginModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4>Associate your @Model.LoginProvider account.</h4>
+<hr />
+
+<p class="text-info">
+    You've successfully authenticated with <strong>@Model.LoginProvider</strong>.
+</p>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-autocomplete="both" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                By registering, you agree to our <a asp-area="" asp-page="/TermsOfService" target="_blank">Terms of Service</a> .
+            </div>
+            <div class="form-group pad-top-10">
+                <button type="submit" class="btn btn-dark">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

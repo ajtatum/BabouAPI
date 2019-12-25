@@ -1,0 +1,40 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Babou API</h1>
+    <img src="~/images/Babou-250x250.png" alt="Babou loves to play, so here's his API!" title="Babou loves to play, so here's his API!" class="pad-top-10 img-fluid" nonce="@HttpContext.Items["csp-nonce"]" />
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Request.Query["Message"]))
+{
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @Request.Query["Message"].ToString()
+    </div>
+}
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-7">
+        <div class="pad-top-10" nonce="@HttpContext.Items["csp-nonce"]">
+            <h4>Somethings you can do when you register:</h4>
+            <ul>
+                <li>
+                    Use our URL Shortening Service
+                    <ul>
+                        <li>https://s.babou.io/</li>
+                        <li>https://mrvl.co/</li>
+                    </ul>
+                </li>
+                <li>If you use PushBullet, you can use our PushBullet API</li>
+                <li>Utility classes to make tough things easier</li>
+                <li>More to come...</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-2"></div>
+</div>
