@@ -83,28 +83,11 @@ namespace Babou.API.Web
                 options.Level = CompressionLevel.Fastest;
             });
 
-            //services.AddResponseCaching();
-
-            //services.AddHealthChecks()
-            //    .AddSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
                 options.Secure = CookieSecurePolicy.Always;
-                //options.HttpOnly = HttpOnlyPolicy.Always;
-                //options.ConsentCookie = new CookieBuilder()
-                //{
-                //    Domain = "babou.io",
-                //    Name = "BabouApiConsentCookie",
-                //    HttpOnly = true,
-                //    Expiration = TimeSpan.FromDays(30),
-                //    MaxAge = TimeSpan.FromDays(30),
-                //    SameSite = SameSiteMode.Strict,
-                //    SecurePolicy = CookieSecurePolicy.Always,
-                //    IsEssential = false
-                //};
             });
 
             services.AddMvc()
@@ -301,7 +284,6 @@ namespace Babou.API.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseResponseCompression();
-            //app.UseResponseCaching();
             app.UseCookiePolicy();
             app.UseRouting();
             app.UseCors();
@@ -311,7 +293,6 @@ namespace Babou.API.Web
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapHealthChecks("/health").RequireAuthorization();
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });

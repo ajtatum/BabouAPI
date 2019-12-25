@@ -58,7 +58,7 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(ApplicationUser user, bool userIsAdmin)
         {
             DomainOptions = _appSettings.BaseShortenedUrls
-                .WhereIf(userIsAdmin, x => x != Helpers.Constants.ShortDomainUrls.AjtGo)
+                .WhereIf(!userIsAdmin, x => x != Helpers.Constants.ShortDomainUrls.AjtGo)
                 .OrderBy(x => x)
                 .Select(x =>
                     new SelectListItem
