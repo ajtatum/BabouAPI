@@ -42,7 +42,7 @@ namespace Babou.API.Web
                     {
                         configApp.AddUserSecrets<Program>();
                     }
-                    if (hostContext.HostingEnvironment.IsProduction())
+                    if (hostContext.HostingEnvironment.IsProduction() || hostContext.HostingEnvironment.IsStaging())
                     {
                         var azureServiceTokenProvider = new AzureServiceTokenProvider();
                         var keyVaultClient = new KeyVaultClient(

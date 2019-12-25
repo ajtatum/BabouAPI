@@ -91,19 +91,20 @@ namespace Babou.API.Web
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.Strict;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
                 options.Secure = CookieSecurePolicy.Always;
-                options.HttpOnly = HttpOnlyPolicy.Always;
-                options.ConsentCookie = new CookieBuilder()
-                {
-                    Domain = "babou.io",
-                    Name = "BabouApiConsentCookie",
-                    HttpOnly = true,
-                    Expiration = TimeSpan.FromDays(30),
-                    MaxAge = TimeSpan.FromDays(30),
-                    SameSite = SameSiteMode.Strict,
-                    SecurePolicy = CookieSecurePolicy.Always
-                };
+                //options.HttpOnly = HttpOnlyPolicy.Always;
+                //options.ConsentCookie = new CookieBuilder()
+                //{
+                //    Domain = "babou.io",
+                //    Name = "BabouApiConsentCookie",
+                //    HttpOnly = true,
+                //    Expiration = TimeSpan.FromDays(30),
+                //    MaxAge = TimeSpan.FromDays(30),
+                //    SameSite = SameSiteMode.Strict,
+                //    SecurePolicy = CookieSecurePolicy.Always,
+                //    IsEssential = false
+                //};
             });
 
             services.AddMvc()

@@ -50,14 +50,22 @@ namespace Babou.API.Web.Areas.Identity
                 services.AddAuthentication()
                     .AddCookie(options =>
                     {
+                        options.Cookie.Name = "BabouApiAuthCookie";
                         options.Cookie.Domain = "babou.io";
                         options.Cookie.HttpOnly = true;
-                        options.Cookie.SameSite = SameSiteMode.Strict;
                         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                        options.Cookie.Name = "BabouApiAuthCookie";
                         options.Cookie.Expiration = TimeSpan.FromDays(7);
                         options.Cookie.MaxAge = TimeSpan.FromDays(7);
                         options.ExpireTimeSpan = TimeSpan.FromDays(7);
+
+                        //options.Cookie.Domain = "babou.io";
+                        //options.Cookie.HttpOnly = true;
+                        //options.Cookie.SameSite = SameSiteMode.Strict;
+                        //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                        //options.Cookie.Name = "BabouApiAuthCookie";
+                        //options.Cookie.Expiration = TimeSpan.FromDays(7);
+                        //options.Cookie.MaxAge = TimeSpan.FromDays(7);
+                        //options.ExpireTimeSpan = TimeSpan.FromDays(7);
 
                         options.LoginPath = $"/Identity/Account/Login";
                         options.LogoutPath = $"/Identity/Account/Logout";
