@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using AJT.API.Web.Helpers;
-using AJT.API.Web.Helpers.ExtensionMethods;
-using AJT.API.Web.Helpers.Filters;
-using AJT.API.Web.Helpers.Swagger;
-using AJT.API.Web.SwaggerExamples.Requests;
-using AJT.API.Web.SwaggerExamples.Responses;
+using Babou.API.Web.Helpers;
+using Babou.API.Web.Helpers.Filters;
+using Babou.API.Web.Helpers.Swagger;
+using Babou.API.Web.SwaggerExamples.Requests;
+using Babou.API.Web.SwaggerExamples.Responses;
 using BabouExtensions;
 using BabouExtensions.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +17,7 @@ using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace AJT.API.Web.Areas.API
+namespace Babou.API.Web.Areas.API
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]/[action]")]

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AJT.API.Web.Helpers.Swagger
+namespace Babou.API.Web.Helpers.Swagger
 {
     public class RawTextRequestAttribute : Attribute
     {

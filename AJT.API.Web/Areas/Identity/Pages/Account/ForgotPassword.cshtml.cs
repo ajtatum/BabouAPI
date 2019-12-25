@@ -1,17 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Babou.API.Web.Models.Database;
+using Babou.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using AJT.API.Web.Models.Database;
-using AJT.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace AJT.API.Web.Areas.Identity.Pages.Account
+namespace Babou.API.Web.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ForgotPasswordModel : PageModel

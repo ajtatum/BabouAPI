@@ -1,11 +1,11 @@
 ﻿using System.Linq;
-using AJT.API.Web.Services.Interfaces;
+using Babou.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace AJT.API.Web.Helpers.Filters
+namespace Babou.API.Web.Helpers.Filters
 {
     public class ClientIpFilter : ActionFilterAttribute
     {

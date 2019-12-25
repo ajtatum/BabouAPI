@@ -1,8 +1,8 @@
-﻿using AJT.API.Web.Models.Database;
+﻿using Babou.API.Web.Models.Database;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AJT.API.Web.Data
+namespace Babou.API.Web.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

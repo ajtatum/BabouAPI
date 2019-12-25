@@ -1,6 +1,7 @@
 ﻿using System;
-using AJT.API.Web.Data;
-using AJT.API.Web.Models.Database;
+using Babou.API.Web.Areas.Identity;
+using Babou.API.Web.Data;
+using Babou.API.Web.Models.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: HostingStartup(typeof(AJT.API.Web.Areas.Identity.IdentityHostingStartup))]
-namespace AJT.API.Web.Areas.Identity
+[assembly: HostingStartup(typeof(IdentityHostingStartup))]
+namespace Babou.API.Web.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {
@@ -51,7 +52,7 @@ namespace AJT.API.Web.Areas.Identity
                     {
                         options.Cookie.HttpOnly = true;
                         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                        options.Cookie.Name = "AjtApiApplication";
+                        options.Cookie.Name = "BabouApiApplication";
                         options.ExpireTimeSpan = TimeSpan.FromDays(7);
 
                         options.LoginPath = $"/Identity/Account/Login";

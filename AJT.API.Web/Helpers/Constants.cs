@@ -1,4 +1,4 @@
-﻿namespace AJT.API.Web.Helpers
+﻿namespace Babou.API.Web.Helpers
 {
     public struct Constants
     {

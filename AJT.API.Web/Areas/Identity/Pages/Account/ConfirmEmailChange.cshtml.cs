@@ -1,13 +1,13 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
+using Babou.API.Web.Models.Database;
 using Microsoft.AspNetCore.Authorization;
-using AJT.API.Web.Models.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace AJT.API.Web.Areas.Identity.Pages.Account
+namespace Babou.API.Web.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ConfirmEmailChangeModel : PageModel

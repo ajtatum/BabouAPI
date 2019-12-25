@@ -1,6 +1,6 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 
-namespace AJT.API.Web.SwaggerExamples.Responses
+namespace Babou.API.Web.SwaggerExamples.Responses
 {
     public class ConflictErrorResponseExample : IExamplesProvider<string>
     {

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using AJT.API.Web.Models.Database;
-using AJT.API.Web.Models.Services;
+using Babou.API.Web.Models.Database;
+using Babou.API.Web.Models.Services;
 
-namespace AJT.API.Web.Services.Interfaces
+namespace Babou.API.Web.Services.Interfaces
 {
     public interface IPushBulletAppService
     {

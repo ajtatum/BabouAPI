@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AJT.API.Web.Models.Database;
+using Babou.API.Web.Models.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
 
-namespace AJT.API.Web.Helpers.ExtensionMethods
+namespace Babou.API.Web.Helpers.ExtensionMethods
 {
     public static class UserManagerExtensions
     {

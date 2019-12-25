@@ -1,15 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using AJT.API.Web.Models.Database;
-using AJT.API.Web.Models.Services;
-using AJT.API.Web.Services.Interfaces;
+using Babou.API.Web.Models.Database;
+using Babou.API.Web.Models.Services;
+using Babou.API.Web.Services.Interfaces;
 using BabouExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 
-namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
+namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
 {
     public class PushBulletModel : PageModel
     {

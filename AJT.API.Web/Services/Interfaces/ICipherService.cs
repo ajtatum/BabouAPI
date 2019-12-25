@@ -1,4 +1,4 @@
-﻿namespace AJT.API.Web.Services.Interfaces
+﻿namespace Babou.API.Web.Services.Interfaces
 {
     public interface ICipherService
     {

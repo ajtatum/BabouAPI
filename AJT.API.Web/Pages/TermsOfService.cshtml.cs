@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AJT.API.Web.Pages
+namespace Babou.API.Web.Pages
 {
     public class TermsOfServiceModel : PageModel
     {

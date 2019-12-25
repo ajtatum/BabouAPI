@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace AJT.API.Web.SwaggerExamples.Responses
+namespace Babou.API.Web.SwaggerExamples.Responses
 {
     public class ConvertToCsvResponseExample : IExamplesProvider<List<string>>
     {

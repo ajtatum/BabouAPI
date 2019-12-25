@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
+namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
 {
     public class ShowRecoveryCodesModel : PageModel
     {

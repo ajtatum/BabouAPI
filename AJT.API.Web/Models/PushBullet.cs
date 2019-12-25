@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace AJT.API.Web.Models
+namespace Babou.API.Web.Models
 {
     public class PushBullet
     {

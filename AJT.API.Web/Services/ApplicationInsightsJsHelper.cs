@@ -1,7 +1,7 @@
 ﻿using Microsoft.ApplicationInsights.AspNetCore;
 using Microsoft.AspNetCore.Http;
 
-namespace AJT.API.Web.Services
+namespace Babou.API.Web.Services
 {
     public class ApplicationInsightsJsHelper
     {

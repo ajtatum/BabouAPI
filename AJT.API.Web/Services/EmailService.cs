@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using AJT.API.Web.Models;
-using AJT.API.Web.Services.Interfaces;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Babou.API.Web.Models;
+using Babou.API.Web.Services.Interfaces;
 using BabouMail.Common;
 using BabouMail.MailGun;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
-namespace AJT.API.Web.Services
+namespace Babou.API.Web.Services
 {
     public class EmailService : IEmailService
     {
@@ -22,7 +22,7 @@ namespace AJT.API.Web.Services
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             var babouEmail = new BabouEmail()
-                .From(_appSettings.EmailSender.FromUserName, _appSettings.EmailSender.FromSenderName)
+                .From(_appSettings.EmailSender.FromEmail, _appSettings.EmailSender.FromName)
                 .To(email)
                 .Subject(subject)
                 .Body(htmlMessage, true);
@@ -44,7 +44,7 @@ namespace AJT.API.Web.Services
         public async Task SendContactMessage(string fromEmail, string fromName, string subject, string htmlMessage)
         {
             var babouEmail = new BabouEmail()
-                .From(_appSettings.EmailSender.FromUserName, fromName)
+                .From(_appSettings.EmailSender.FromEmail, fromName)
                 .To(_appSettings.EmailSender.ToEmail)
                 .ReplyTo(fromEmail, fromName)
                 .Subject(subject)

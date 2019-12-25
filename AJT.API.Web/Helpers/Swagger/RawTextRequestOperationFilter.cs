@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace AJT.API.Web.Helpers.Swagger
+namespace Babou.API.Web.Helpers.Swagger
 {
     public class RawTextRequestOperationFilter : IOperationFilter
     {

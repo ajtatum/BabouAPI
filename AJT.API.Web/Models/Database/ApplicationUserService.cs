@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AJT.API.Web.Models.Database
+namespace Babou.API.Web.Models.Database
 {
     [Table("ApplicationUserServices")]
     public class ApplicationUserService

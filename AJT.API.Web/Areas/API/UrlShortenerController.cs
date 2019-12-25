@@ -5,12 +5,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using AJT.API.Web.Data;
-using AJT.API.Web.Helpers;
-using AJT.API.Web.Helpers.Filters;
-using AJT.API.Web.Models;
-using AJT.API.Web.Services.Interfaces;
-using AJT.API.Web.SwaggerExamples.Responses;
+using Babou.API.Web.Data;
+using Babou.API.Web.Helpers;
+using Babou.API.Web.Helpers.Filters;
+using Babou.API.Web.Models;
+using Babou.API.Web.Services.Interfaces;
+using Babou.API.Web.SwaggerExamples.Responses;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +22,7 @@ using Microsoft.OpenApi.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace AJT.API.Web.Areas.API
+namespace Babou.API.Web.Areas.API
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]

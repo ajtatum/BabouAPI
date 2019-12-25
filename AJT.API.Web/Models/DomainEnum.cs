@@ -1,9 +1,7 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
-namespace AJT.API.Web.Models
+namespace Babou.API.Web.Models
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Domains

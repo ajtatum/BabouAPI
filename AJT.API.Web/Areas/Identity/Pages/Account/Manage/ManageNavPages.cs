@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
+namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
 {
     public static class ManageNavPages
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace AJT.API.Web.Data.Migrations
+namespace Babou.API.Web.Data.Migrations
 {
     public partial class AddShortUrl : Migration
     {

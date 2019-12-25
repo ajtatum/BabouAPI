@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AJT.API.Web.Data;
-using AJT.API.Web.Helpers;
-using AJT.API.Web.Models.Database;
+using Babou.API.Web.Data;
+using Babou.API.Web.Helpers;
+using Babou.API.Web.Models.Database;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 
-namespace AJT.API.Web.Controllers
+namespace Babou.API.Web.Controllers
 {
     [Route("[controller]")]
     [ApiExplorerSettings(IgnoreApi = true)]

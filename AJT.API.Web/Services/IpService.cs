@@ -1,11 +1,11 @@
-﻿using AJT.API.Web.Models;
-using AJT.API.Web.Services.Interfaces;
+﻿using Babou.API.Web.Models;
+using Babou.API.Web.Services.Interfaces;
 using IpStack;
 using IpStack.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
-namespace AJT.API.Web.Services
+namespace Babou.API.Web.Services
 {
     public class IpService : IIpService
     {

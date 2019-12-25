@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AJT.API.Web.Models;
-using AJT.API.Web.Models.Database;
-using AJT.API.Web.Services.Interfaces;
+using Babou.API.Web.Models;
+using Babou.API.Web.Models.Database;
+using Babou.API.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
+namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
 {
     public class UrlShortenerModel : PageModel
     {

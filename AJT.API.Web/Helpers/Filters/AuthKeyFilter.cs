@@ -1,11 +1,11 @@
 ﻿using System.Linq;
-using AJT.API.Web.Data;
+using Babou.API.Web.Data;
 using BabouExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
-namespace AJT.API.Web.Helpers.Filters
+namespace Babou.API.Web.Helpers.Filters
 {
     public class AuthKeyFilter : ActionFilterAttribute
     {

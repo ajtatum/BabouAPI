@@ -1,4 +1,4 @@
-﻿namespace AJT.API.Web.Models.Services
+﻿namespace Babou.API.Web.Models.Services
 {
     public class PushBulletSettings
     {

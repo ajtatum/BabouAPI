@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using AJT.API.Web.Models.Database;
+using Babou.API.Web.Models.Database;
 
-namespace AJT.API.Web.Services.Interfaces
+namespace Babou.API.Web.Services.Interfaces
 {
     public interface ISendNewUserNotificationService
     {

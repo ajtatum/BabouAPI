@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using BabouExtensions;
 
-namespace AJT.API.Web.Helpers.Attributes
+namespace Babou.API.Web.Helpers.Attributes
 
 {
     /// <summary>

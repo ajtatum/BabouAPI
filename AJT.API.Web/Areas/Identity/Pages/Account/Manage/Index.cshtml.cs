@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Babou.API.Web.Helpers.ExtensionMethods;
+using Babou.API.Web.Models.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using AJT.API.Web.Helpers.ExtensionMethods;
-using AJT.API.Web.Models.Database;
 
-namespace AJT.API.Web.Areas.Identity.Pages.Account.Manage
+namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {

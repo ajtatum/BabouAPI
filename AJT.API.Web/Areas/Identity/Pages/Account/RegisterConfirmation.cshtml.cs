@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
-using AJT.API.Web.Models.Database;
-using AJT.API.Web.Services.Interfaces;
+using Babou.API.Web.Models.Database;
+using Babou.API.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace AJT.API.Web.Areas.Identity.Pages.Account
+namespace Babou.API.Web.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterConfirmationModel : PageModel

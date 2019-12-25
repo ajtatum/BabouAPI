@@ -1,15 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using AJT.API.Web.Helpers.Attributes;
-using AJT.API.Web.Helpers.ExtensionMethods;
-using AJT.API.Web.Models.Database;
-using AJT.API.Web.Services.Interfaces;
+using Babou.API.Web.Helpers.Attributes;
+using Babou.API.Web.Helpers.ExtensionMethods;
+using Babou.API.Web.Models.Database;
+using Babou.API.Web.Services.Interfaces;
 using BabouExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AJT.API.Web.Pages
+namespace Babou.API.Web.Pages
 {
     public class ContactModel : PageModel
     {

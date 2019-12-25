@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AJT.API.Web.Models
+namespace Babou.API.Web.Models
 {
     public class AppSettings
     {
@@ -76,8 +76,9 @@ namespace AJT.API.Web.Models
     {
         public string ApiKey { get; set; }
         public string Domain { get; set; }
-        public string FromSenderName { get; set; }
-        public string FromUserName { get; set; }
+        public string FromName { get; set; }
+        public string FromEmail { get; set; }
         public string ToEmail { get; set; }
+        public string ToName { get; set; }
     }
 }

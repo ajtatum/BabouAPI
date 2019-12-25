@@ -1,10 +1,10 @@
-﻿using AJT.API.Web.Helpers.Filters;
-using AJT.API.Web.Models;
+﻿using Babou.API.Web.Helpers.Filters;
+using Babou.API.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace AJT.API.Web.Areas.API
+namespace Babou.API.Web.Areas.API
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]/[action]")]

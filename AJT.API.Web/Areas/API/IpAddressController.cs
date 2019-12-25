@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AJT.API.Web.Helpers;
-using AJT.API.Web.Helpers.Filters;
-using AJT.API.Web.Services.Interfaces;
+using Babou.API.Web.Helpers;
+using Babou.API.Web.Helpers.Filters;
+using Babou.API.Web.Services.Interfaces;
 using IpStack.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace AJT.API.Web.Areas.API
+namespace Babou.API.Web.Areas.API
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]/[action]")]

@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using AJT.API.Web.Helpers.ExtensionMethods;
-using AJT.API.Web.Helpers.Filters;
-using AJT.API.Web.Helpers.Swagger;
-using AJT.API.Web.Models;
-using AJT.API.Web.Services;
-using AJT.API.Web.Services.Interfaces;
-using AJT.API.Web.SwaggerHelpers;
+using Babou.API.Web.Helpers.ExtensionMethods;
+using Babou.API.Web.Helpers.Filters;
+using Babou.API.Web.Helpers.Swagger;
+using Babou.API.Web.Models;
+using Babou.API.Web.Services;
+using Babou.API.Web.Services.Interfaces;
+using Babou.API.Web.SwaggerHelpers;
 using Babou.AspNetCore.SecurityExtensions.ContentSecurityPolicy;
 using Babou.AspNetCore.SecurityExtensions.CustomHeaders;
 using Babou.AspNetCore.SecurityExtensions.ExpectCT;
@@ -25,10 +26,10 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
 using Microsoft.Extensions.Configuration;
@@ -43,8 +44,7 @@ using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-
-namespace AJT.API.Web
+namespace Babou.API.Web
 {
     public class Startup
     {
@@ -68,6 +68,27 @@ namespace AJT.API.Web
                 .SetApplicationName("AJT API Web App")
                 .PersistKeysToAzureBlobStorage(container, $"{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}/dataprotectionkeys.xml")
                 .ProtectKeysWithAzureKeyVault(Configuration["Azure:KeyVault:EncryptionKey"], Configuration["Azure:KeyVault:ClientId"], Configuration["Azure:KeyVault:ClientSecret"]);
+
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<BrotliCompressionProvider>();
+                options.Providers.Add<GzipCompressionProvider>();
+            });
+
+            services.Configure<BrotliCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
+
+            services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
+
+            services.AddResponseCaching();
+
+            services.AddHealthChecks()
+                .AddSqlServer(Configuration.GetConnectionString("DefaultConnection"));
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -159,8 +180,6 @@ namespace AJT.API.Web
 
             services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:InstrumentationKey"]);
 
-            services.AddSubresourceIntegrity();
-
             services.AddHsts(options =>
             {
                 options.Preload = true;
@@ -209,7 +228,7 @@ namespace AJT.API.Web
                 }
             });
 
-            string nonce = Guid.NewGuid().ToString("N");
+            var nonce = Guid.NewGuid().ToString("N");
             app.Use(async (ctx, next) =>
             {
                 ctx.Items["csp-nonce"] = nonce;
@@ -252,14 +271,18 @@ namespace AJT.API.Web
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
+            app.UseResponseCompression();
+            app.UseResponseCaching();
             app.UseCookiePolicy();
+            app.UseRouting();
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health").RequireAuthorization();
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });

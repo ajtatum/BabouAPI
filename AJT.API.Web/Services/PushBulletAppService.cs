@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using AJT.API.Web.Data;
-using AJT.API.Web.Helpers;
-using AJT.API.Web.Models.Database;
-using AJT.API.Web.Models.Services;
-using AJT.API.Web.Services.Interfaces;
+using Babou.API.Web.Data;
+using Babou.API.Web.Helpers;
+using Babou.API.Web.Models.Database;
+using Babou.API.Web.Models.Services;
+using Babou.API.Web.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace AJT.API.Web.Services
+namespace Babou.API.Web.Services
 {
     public class PushBulletAppService : IPushBulletAppService
     {

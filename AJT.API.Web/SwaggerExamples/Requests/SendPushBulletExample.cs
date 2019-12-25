@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using AJT.API.Web.Models;
+using Babou.API.Web.Models;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace AJT.API.Web.SwaggerExamples.Requests
+namespace Babou.API.Web.SwaggerExamples.Requests
 {
     public class SendPushBulletExample : IExamplesProvider<PushBullet>
     {
