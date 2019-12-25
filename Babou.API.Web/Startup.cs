@@ -19,6 +19,7 @@ using Babou.AspNetCore.SecurityExtensions.ReferrerPolicy;
 using Babou.AspNetCore.SecurityExtensions.XContentTypeOptions;
 using Babou.AspNetCore.SecurityExtensions.XRobotsTag;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -90,8 +91,19 @@ namespace Babou.API.Web
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.MinimumSameSitePolicy = SameSiteMode.Strict;
                 options.Secure = CookieSecurePolicy.Always;
+                options.HttpOnly = HttpOnlyPolicy.Always;
+                options.ConsentCookie = new CookieBuilder()
+                {
+                    Domain = "babou.io",
+                    Name = "BabouApiConsentCookie",
+                    HttpOnly = true,
+                    Expiration = TimeSpan.FromDays(30),
+                    MaxAge = TimeSpan.FromDays(30),
+                    SameSite = SameSiteMode.Strict,
+                    SecurePolicy = CookieSecurePolicy.Always
+                };
             });
 
             services.AddMvc()
