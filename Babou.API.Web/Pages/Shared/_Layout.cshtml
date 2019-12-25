@@ -1,7 +1,9 @@
 ﻿@using Babou.API.Web.Services
+@using Microsoft.AspNetCore.Http
 @using Microsoft.Extensions.Configuration
 @inject ApplicationInsightsJsHelper AiJsHelper
 @inject IConfiguration Configuration
+@inject IHttpContextAccessor _httpContext
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,6 +23,15 @@
     </environment>
     @RenderSection("CSS", required: false)
     @Html.Raw(AiJsHelper.Script)
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-46787872-2" nonce="@_httpContext.HttpContext.Items["csp-nonce"]"></script>
+    <script nonce="@_httpContext.HttpContext.Items["csp-nonce"]">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-46787872-2');
+    </script>
 </head>
 <body>
     <header>

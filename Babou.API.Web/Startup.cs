@@ -236,7 +236,8 @@ namespace Babou.API.Web
                     DefaultSrc = CspDirective.Self.AddHttpsScheme(),
                     StyleSrc = StyleCspDirective.Self.AddUnsafeInline().AddHttpsScheme(),
                     ScriptSrc = ScriptCspDirective.Self.AddNonce(nonce).AddHttpsScheme()
-                        .AddSource("https://az416426.vo.msecnd.net"),
+                        .AddSource("https://az416426.vo.msecnd.net")
+                        .AddSource("https://www.googletagmanager.com"),
                     ImgSrc = CspDirective.Self.AddDataScheme().AddHttpsScheme(),
                     FontSrc = CspDirective.Self.AddHttpsScheme(),
                     ConnectSrc = CspDirective.Self.AddHttpsScheme()
@@ -251,6 +252,7 @@ namespace Babou.API.Web
                     StyleSrc = StyleCspDirective.Self.AddUnsafeInline().AddHttpsScheme(),
                     ScriptSrc = ScriptCspDirective.Self.AddNonce(nonce).AddHttpsScheme()
                         .AddSource("https://az416426.vo.msecnd.net")
+                        .AddSource("https://www.googletagmanager.com")
                         .AddSource("https://localhost:*"),
                     ImgSrc = CspDirective.Self.AddDataScheme().AddHttpsScheme(),
                     FontSrc = CspDirective.Self.AddHttpsScheme(),
