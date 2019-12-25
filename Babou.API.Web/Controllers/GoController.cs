@@ -44,5 +44,11 @@ namespace Babou.API.Web.Controllers
             else
                 return new BadRequestObjectResult($"Unable to match ShortUrl.");
         }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return new RedirectToPageResult("/Index");
+        }
     }
 }
