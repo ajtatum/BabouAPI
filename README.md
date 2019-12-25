@@ -1,6 +1,25 @@
-# Babou API
+![alt text](https://github.com/ajtatum/BabouAPI/blob/master/Babou.API.Web/wwwroot/images/Babou-150x150.png "Babou loves to play, so here's his API!") <!-- markdownlint-disable -->
+
+# **Babou API**
 
 [![Build Status](https://dev.azure.com/ajtatum/ajtapi/_apis/build/status/AJT%20API%20Core%20Build?branchName=master)](https://dev.azure.com/ajtatum/ajtapi/_build/latest?definitionId=19&branchName=master) ![Azure DevOps releases](https://img.shields.io/azure-devops/release/ajtatum/74a95687-061a-4ed9-b531-5d76ab8d8ef2/3/3)
+
+Babou API is developed in .NET Core 3.0.
+
+## **Somethings you can do when you register**
+
+- Use our URL Shortening Service
+  - https://s.babou.io/
+  - https://babou.io/go/
+  - https://mrvl.co/
+  - More to come!
+- If you use PushBullet, you can use our PushBullet API
+- Utility classes to make tough things easier
+- More to come...
+
+Check out our [Swagger Documentation](https://babou.io/swagger/) to test some things out. But you'll need to register first.
+
+---
 
 #### Developed by AJ Tatum
 
