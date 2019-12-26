@@ -47,10 +47,15 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required(ErrorMessage = "Please enter your name.")]
+            [Display(Name = "Your Name")]
+            public string FullName { get; set; }
+
             [Required(ErrorMessage = "Please enter a username.")]
+            [Display(Name = "User Name")]
             public string UserName { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Please enter your email.")]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -80,7 +85,14 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var apiAuthKey = Guid.NewGuid().ToString().Replace("-", string.Empty);
-                var user = new ApplicationUser { UserName = Input.UserName, Email = Input.Email, ApiAuthKey = apiAuthKey};
+                var user = new ApplicationUser
+                {
+                    FullName = Input.FullName,
+                    UserName = Input.UserName,
+                    Email = Input.Email,
+                    ApiAuthKey = apiAuthKey
+                };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

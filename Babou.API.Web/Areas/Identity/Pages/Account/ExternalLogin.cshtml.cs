@@ -47,6 +47,10 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required(ErrorMessage = "Please enter your name.")]
+            [Display(Name = "Your Name")]
+            public string FullName { get; set; }
+
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -96,12 +100,21 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account
                 // If the user does not have an account, then ask the user to create an account.
                 ReturnUrl = returnUrl;
                 LoginProvider = info.LoginProvider;
+
+                Input = new InputModel();
+
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
-                    Input = new InputModel
-                    {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
+                    Input.Email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                }
+
+                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Name))
+                {
+                    Input.FullName = info.Principal.FindFirstValue(ClaimTypes.Name);
+                }
+                else if (info.Principal.HasClaim(c => c.Type == ClaimTypes.GivenName) && info.Principal.HasClaim(c => c.Type == ClaimTypes.Surname))
+                {
+                    Input.FullName = $"{info.Principal.FindFirstValue(ClaimTypes.GivenName)} {info.Principal.FindFirstValue(ClaimTypes.Surname)}";
                 }
                 return Page();
             }
@@ -121,7 +134,13 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var apiAuthKey = Guid.NewGuid().ToString().Replace("-", string.Empty);
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, ApiAuthKey = apiAuthKey};
+                var user = new ApplicationUser 
+                { 
+                    FullName = Input.FullName,
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    ApiAuthKey = apiAuthKey
+                };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

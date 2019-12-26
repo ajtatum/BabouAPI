@@ -4,11 +4,7 @@
   "libraries": [
     {
       "library": "font-awesome@5.11.2",
-      "destination": "wwwroot/lib/font-awesome/",
-      "files": [
-        "css/all.min.css",
-        "css/all.css"
-      ]
+      "destination": "wwwroot/lib/font-awesome/"
     }
   ]
 }

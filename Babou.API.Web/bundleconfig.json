@@ -16,7 +16,8 @@
         "inputFiles": [
             "wwwroot/js/site.min.js",
             "wwwroot/lib/jquery/dist/jquery.min.js",
-            "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+            "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+            "wwwroot/lib/font-awesome/js/all.min.js"
         ],
         "minify": {
             "enabled": true,

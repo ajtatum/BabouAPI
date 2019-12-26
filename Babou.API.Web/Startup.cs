@@ -85,6 +85,7 @@ namespace Babou.API.Web
 
             services.Configure<CookiePolicyOptions>(options =>
             {
+                options.ConsentCookie.Name = "BabouApiConsent";
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
                 options.Secure = CookieSecurePolicy.Always;
