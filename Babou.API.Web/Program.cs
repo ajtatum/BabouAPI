@@ -28,6 +28,7 @@ namespace Babou.API.Web
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseKestrel(options => options.AddServerHeader = false);
                     webBuilder.UseStartup<Startup>();
                 })
                 .ConfigureAppConfiguration((hostContext, configApp) =>
