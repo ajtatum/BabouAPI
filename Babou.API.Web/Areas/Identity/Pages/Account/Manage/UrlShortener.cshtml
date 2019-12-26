@@ -90,7 +90,7 @@
                                     .Select(x => new
                                     {
                                         Referrer = x.Key,
-                                        TotalClicks = x.Key.Count()
+                                        TotalClicks = x.Count()
                                     })
                                     .OrderByDescending(x => x.TotalClicks)
                                     .ToList();
