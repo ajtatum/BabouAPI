@@ -236,7 +236,9 @@ namespace Babou.API.Web
                 ScriptSrc = ScriptCspDirective.Self.AddNonce(nonce).AddHttpsScheme()
                     .AddSource("https://az416426.vo.msecnd.net")
                     .AddSource("https://www.googletagmanager.com")
-                    .AddSource("https://www.google-analytics.com"),
+                    .AddSource("https://www.google-analytics.com")
+                    .AddSource("https://connect.facebook.net")
+                    .AddSource("https://www.facebook.com/"),
                 ImgSrc = CspDirective.Self.AddDataScheme().AddHttpsScheme(),
                 FontSrc = CspDirective.Self.AddHttpsScheme(),
                 ConnectSrc = CspDirective.Self.AddHttpsScheme()
