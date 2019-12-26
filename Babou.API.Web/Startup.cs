@@ -229,39 +229,19 @@ namespace Babou.API.Web
                 await next();
             });
 
-            if (env.IsProduction())
+            app.UseContentSecurityPolicy(new CspDirectiveList
             {
-                app.UseContentSecurityPolicy(new CspDirectiveList
-                {
-                    DefaultSrc = CspDirective.Self.AddHttpsScheme(),
-                    StyleSrc = StyleCspDirective.Self.AddUnsafeInline().AddHttpsScheme(),
-                    ScriptSrc = ScriptCspDirective.Self.AddNonce(nonce).AddHttpsScheme()
-                        .AddSource("https://az416426.vo.msecnd.net")
-                        .AddSource("https://www.googletagmanager.com"),
-                    ImgSrc = CspDirective.Self.AddDataScheme().AddHttpsScheme(),
-                    FontSrc = CspDirective.Self.AddHttpsScheme(),
-                    ConnectSrc = CspDirective.Self.AddHttpsScheme()
-                        .AddSource(new Uri("https://dc.services.visualstudio.com/"))
-                });
-            }
-            else
-            {
-                app.UseContentSecurityPolicy(new CspDirectiveList
-                {
-                    DefaultSrc = CspDirective.Self.AddHttpsScheme(),
-                    StyleSrc = StyleCspDirective.Self.AddUnsafeInline().AddHttpsScheme(),
-                    ScriptSrc = ScriptCspDirective.Self.AddNonce(nonce).AddHttpsScheme()
-                        .AddSource("https://az416426.vo.msecnd.net")
-                        .AddSource("https://www.googletagmanager.com")
-                        .AddSource("https://localhost:*"),
-                    ImgSrc = CspDirective.Self.AddDataScheme().AddHttpsScheme(),
-                    FontSrc = CspDirective.Self.AddHttpsScheme(),
-                    ConnectSrc = CspDirective.Self.AddHttpsScheme()
-                        .AddSource(new Uri("https://dc.services.visualstudio.com/"))
-                        .AddSource("wss://localhost:*")
-                        .AddSource("https://localhost:*")
-                });
-            }
+                DefaultSrc = CspDirective.Self.AddHttpsScheme(),
+                StyleSrc = StyleCspDirective.Self.AddUnsafeInline().AddHttpsScheme(),
+                ScriptSrc = ScriptCspDirective.Self.AddNonce(nonce).AddHttpsScheme()
+                    .AddSource("https://az416426.vo.msecnd.net")
+                    .AddSource("https://www.googletagmanager.com")
+                    .AddSource("https://www.google-analytics.com"),
+                ImgSrc = CspDirective.Self.AddDataScheme().AddHttpsScheme(),
+                FontSrc = CspDirective.Self.AddHttpsScheme(),
+                ConnectSrc = CspDirective.Self.AddHttpsScheme()
+                    .AddSource("https://dc.services.visualstudio.com/")
+            });
 
             app.AddCustomHeaders("Report-To", "{\"group\":\"default\",\"max_age\":31536000,\"endpoints\":[{\"url\":\"https://ajtio.report-uri.com/a/d/g\"}],\"include_subdomains\":true}");
 
