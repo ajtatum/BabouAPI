@@ -33,10 +33,11 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage = "Please provide a username.")]
             public string Username { get; set; }
 
             [Display(Name="Your Name")]
+            [Required(ErrorMessage = "Please provide your name.")]
             public string FullName { get; set; }
 
             [Phone]

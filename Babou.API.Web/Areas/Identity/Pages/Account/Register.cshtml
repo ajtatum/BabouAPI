@@ -41,7 +41,7 @@
                 By registering, you agree to our <a asp-area="" asp-page="/TermsOfService" target="_blank">Terms of Service</a> .
             </div>
             <div class="form-group pad-top-10">
-                <button type="submit" class="btn btn-dark">Register</button>
+                <button type="submit" class="btn btn-success">Register</button>
             </div>
         </form>
     </div>
@@ -66,7 +66,16 @@
                             <p>
                                 @foreach (var provider in Model.ExternalLogins)
                                 {
-                                    <button type="submit" class="btn btn-dark" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    var fontAwesome = provider.DisplayName switch
+                                    {
+                                        "Google" => "fab fa-google",
+                                        "Facebook" => "fab fa-facebook-f",
+                                        "Microsoft" => "fab fa-microsoft",
+                                        "Twitter" => "fab fa-twitter",
+                                        _ => string.Empty
+                                    };
+
+                                <button type="submit" class="btn btn-success" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="@fontAwesome"></i> @provider.DisplayName</button>
                                 }
                             </p>
                         </div>
