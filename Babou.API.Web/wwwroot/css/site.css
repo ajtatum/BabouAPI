@@ -80,3 +80,12 @@ label[for] {
 .pad-top-10 {
     padding-top: 10px;
 }
+.text-lightblue {
+    color: #0992D5;
+}
+.text-brand-facebook {
+    color: #4267B2;
+}
+.text-brand-twitter {
+    color: #1A91DA;
+}
