@@ -27,7 +27,7 @@ namespace Babou.API.Web.SwaggerHelpers
                         {
                             Name = "AJ Tatum",
                             Email = null,
-                            Url = new Uri("https://ajt.io")
+                            Url = new Uri("https://s.babou.io/aj")
                         },
                         Description = "IP Address services, PushBullet service, Url Shortening service, utilities and more to come.",
                         TermsOfService = new Uri("/TermsOfService", UriKind.Relative),

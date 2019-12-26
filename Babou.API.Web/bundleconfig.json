@@ -1,28 +1,40 @@
 [
-    {
-        "outputFileName": "wwwroot/css/site.min.css",
-        "inputFiles": [
-            "wwwroot/css/site.css"
-        ]
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/site.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/babouapi.min.js",
+    "inputFiles": [
+      "wwwroot/js/site.min.js",
+      "wwwroot/lib/jquery/dist/jquery.min.js",
+      "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+      "wwwroot/lib/font-awesome/js/all.min.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
     },
-    {
-        "outputFileName": "wwwroot/js/site.min.js",
-        "inputFiles": [
-            "wwwroot/js/site.js"
-        ]
-    },
-    {
-        "outputFileName": "wwwroot/js/babouapi.min.js",
-        "inputFiles": [
-            "wwwroot/js/site.min.js",
-            "wwwroot/lib/jquery/dist/jquery.min.js",
-            "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
-            "wwwroot/lib/font-awesome/js/all.min.js"
-        ],
-        "minify": {
-            "enabled": true,
-            "renameLocals": true
-        },
-        "sourceMap": true
-    }
+    "sourceMap": true
+  },
+  {
+    "outputFileName": "wwwroot/css/swagger-ui.min.css",
+    "inputFiles": [
+      "wwwroot/css/swagger-ui.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/swagger.min.js",
+    "inputFiles": [
+      "wwwroot/js/swagger.js"
+    ]
+  }
 ]

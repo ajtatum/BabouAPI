@@ -217,10 +217,11 @@ namespace Babou.API.Web
                     c.SwaggerEndpoint(
                         $"/swagger/{description.GroupName}/swagger.json",
                         description.GroupName.ToUpperInvariant());
-
-                    c.DefaultModelRendering(ModelRendering.Example);
-                    c.DefaultModelsExpandDepth(-1);
                 }
+                c.DefaultModelRendering(ModelRendering.Example);
+                c.DefaultModelsExpandDepth(-1);
+                c.InjectStylesheet("/css/swagger-ui.min.css");
+                c.InjectJavascript("/js/swagger.min.js");
             });
 
             var nonce = Guid.NewGuid().ToString("N");
