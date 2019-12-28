@@ -23,11 +23,11 @@ Check out our [Swagger Documentation](https://babou.io/swagger/) to test some th
 
 #### Developed by AJ Tatum
 
-[![ajt.io](https://img.icons8.com/clouds/50/000000/domain.png "ajt.io")](https://s.babou.io/aj)
-[![Facebook @ajtatum](https://img.icons8.com/clouds/50/000000/facebook-new.png "Facebook @ajtatum")](https://s.babou.io/fbaj)
-[![Twitter @ajtatum](https://img.icons8.com/clouds/50/000000/twitter.png "Twitter @ajtatum")](https://s.babou.io/twitteraj)
-[![LinkedIn @ajtatum](https://img.icons8.com/clouds/50/000000/linkedin.png "LinkedIn @ajtatum")](https://s.babou.io/linkedinaj)
-[![Spotify @ajtatum17](https://img.icons8.com/clouds/50/000000/spotify.png "Spotify @ajtatum17")](https://s.babou.io/spotifyaj)
-[![GitHub @ajtatum](https://img.icons8.com/clouds/50/000000/github.png "GitHub @ajtatum")](https://s.babou.io/githubaj)
+[![ajt.io](https://img.icons8.com/clouds/50/000000/domain.png "ajt.io")](https://s.babou.io/aj?src=https://github.com/ajtatum/BabouAPI)
+[![Facebook @ajtatum](https://img.icons8.com/clouds/50/000000/facebook-new.png "Facebook @ajtatum")](https://s.babou.io/fbaj?src=https://github.com/ajtatum/BabouAPI)
+[![Twitter @ajtatum](https://img.icons8.com/clouds/50/000000/twitter.png "Twitter @ajtatum")](https://s.babou.io/twitteraj?src=https://github.com/ajtatum/BabouAPI)
+[![LinkedIn @ajtatum](https://img.icons8.com/clouds/50/000000/linkedin.png "LinkedIn @ajtatum")](https://s.babou.io/linkedinaj?src=https://github.com/ajtatum/BabouAPI)
+[![Spotify @ajtatum17](https://img.icons8.com/clouds/50/000000/spotify.png "Spotify @ajtatum17")](https://s.babou.io/spotifyaj?src=https://github.com/ajtatum/BabouAPI)
+[![GitHub @ajtatum](https://img.icons8.com/clouds/50/000000/github.png "GitHub @ajtatum")](https://s.babou.io/githubaj?src=https://github.com/ajtatum/BabouAPI)
 
 [Icons by Icons8](https://icons8.com/)
