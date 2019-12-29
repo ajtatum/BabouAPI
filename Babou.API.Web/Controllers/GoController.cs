@@ -42,17 +42,37 @@ namespace Babou.API.Web.Controllers
 
             if (shortenedUrl != null)
             {
-                var referer = Request.Headers["Referer"].ToString();
+                #region GetReferrer
+                var referrerUrl = string.Empty;
 
                 try
                 {
-                    if (referer.IsNullOrEmpty())
+                    if (!Request.Query["src"].ToString().IsNullOrWhiteSpace())
+                    {
+                        var srcReferrer = Request.Query["src"].ToString();
+                        if (srcReferrer.TryGetUrl(out var url))
+                        {
+                            referrerUrl = url;
+                        }
+                    }
+                }
+                catch (ArgumentNullException argumentNullException)
+                {
+                    _logger.LogError(argumentNullException, "Error trying to recieve query string src.");
+                }
+
+                if (referrerUrl.IsNullOrWhiteSpace())
+                    referrerUrl = Request.Headers["Referer"].ToString();
+
+                try
+                {
+                    if (referrerUrl.IsNullOrEmpty())
                     {
                         var header = Request.GetTypedHeaders();
                         var uriReferer = header.Referer;
 
                         if (uriReferer != null)
-                            referer = uriReferer.AbsoluteUri;
+                            referrerUrl = uriReferer.AbsoluteUri;
                     }
                 }
                 catch (Exception ex)
@@ -60,29 +80,47 @@ namespace Babou.API.Web.Controllers
                     _logger.LogError(ex, "Attempt to retrieve header referer.");
                 }
 
-                if (referer.IsNullOrEmpty())
-                    referer = null;
+                if (referrerUrl.IsNullOrEmpty())
+                    referrerUrl = null;
 
-                referer = referer.WithMaxLength(500);
+                referrerUrl = referrerUrl.WithMaxLength(500);
+                #endregion
 
+                #region GetIPAddress
                 var ipAddress = _ipService.GetRemoteIp();
 #if DEBUG
                 ipAddress = "44.21.199.18";
 #endif
-                var ipAddressDetails = _ipService.GetIpAddressDetails(ipAddress);
+                string city = null;
+                string state = null;
+                string country = null;
+                Point locationPoint = null;
 
-                var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
-                var coordinate = new Coordinate(ipAddressDetails.Longitude, ipAddressDetails.Latitude);
-                var locationPoint = geometryFactory.CreatePoint(coordinate);
+                try
+                {
+                    var ipAddressDetails = _ipService.GetIpAddressDetails(ipAddress);
+                    city = ipAddressDetails.City;
+                    state = ipAddressDetails.RegionCode;
+                    country = ipAddressDetails.CountryCode;
+
+                    var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+                    var coordinate = new Coordinate(ipAddressDetails.Longitude, ipAddressDetails.Latitude);
+                    locationPoint = geometryFactory.CreatePoint(coordinate);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error receiving IP Address Details from IP Stack.");
+                }
+                #endregion
 
                 var click = new ShortenedUrlClick()
                 {
                     ShortenedUrlId = shortenedUrl.Id,
                     ClickDate = DateTime.Now,
-                    Referrer = referer,
-                    City = ipAddressDetails.City,
-                    State = ipAddressDetails.RegionCode,
-                    Country = ipAddressDetails.CountryCode,
+                    Referrer = referrerUrl,
+                    City = city,
+                    State = state,
+                    Country = country,
                     Geography = locationPoint
                 };
 
