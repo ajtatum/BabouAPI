@@ -81,8 +81,8 @@ namespace Babou.API.Web.Controllers
                     ClickDate = DateTime.Now,
                     Referrer = referer,
                     City = ipAddressDetails.City,
-                    State = ipAddressDetails.RegionName,
-                    Country = ipAddressDetails.CountryName,
+                    State = ipAddressDetails.RegionCode,
+                    Country = ipAddressDetails.CountryCode,
                     Geography = locationPoint
                 };
 
