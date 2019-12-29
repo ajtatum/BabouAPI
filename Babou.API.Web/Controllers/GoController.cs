@@ -2,14 +2,18 @@
 using System.Threading.Tasks;
 using Babou.API.Web.Data;
 using Babou.API.Web.Helpers;
+using Babou.API.Web.Models;
 using Babou.API.Web.Models.Database;
+using Babou.API.Web.Services.Interfaces;
 using BabouExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
+using Microsoft.Extensions.Options;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace Babou.API.Web.Controllers
 {
@@ -20,11 +24,15 @@ namespace Babou.API.Web.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<GoController> _logger;
+        private readonly AppSettings _appSettings;
+        private readonly IIpService _ipService;
 
-        public GoController(ApplicationDbContext context, ILogger<GoController> logger)
+        public GoController(ApplicationDbContext context, ILogger<GoController> logger, IOptionsMonitor<AppSettings> appSettings, IIpService ipService)
         {
             _context = context;
             _logger = logger;
+            _appSettings = appSettings.CurrentValue;
+            _ipService = ipService;
         }
 
         [HttpGet("{id}")]
@@ -57,12 +65,27 @@ namespace Babou.API.Web.Controllers
 
                 referer = referer.WithMaxLength(500);
 
+                var ipAddress = _ipService.GetRemoteIp();
+#if DEBUG
+                ipAddress = "44.21.199.18";
+#endif
+                var ipAddressDetails = _ipService.GetIpAddressDetails(ipAddress);
+
+                var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+                var coordinate = new Coordinate(ipAddressDetails.Longitude, ipAddressDetails.Latitude);
+                var locationPoint = geometryFactory.CreatePoint(coordinate);
+
                 var click = new ShortenedUrlClick()
                 {
                     ShortenedUrlId = shortenedUrl.Id,
                     ClickDate = DateTime.Now,
-                    Referrer = referer
+                    Referrer = referer,
+                    City = ipAddressDetails.City,
+                    State = ipAddressDetails.RegionName,
+                    Country = ipAddressDetails.CountryName,
+                    Geography = locationPoint
                 };
+
                 _context.Add(click);
                 await _context.SaveChangesAsync();
 

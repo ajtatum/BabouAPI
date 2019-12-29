@@ -62,7 +62,7 @@ namespace Babou.API.Web.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+                optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"), x => x.UseNetTopologySuite());
             }
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Spatial;
+using NetTopologySuite.Geometries;
 
 namespace Babou.API.Web.Models.Database
 {
@@ -18,6 +20,17 @@ namespace Babou.API.Web.Models.Database
 
         [Column(TypeName = "varchar(500)")]
         public string Referrer { get; set; }
+
+        [Column(TypeName = "varchar(50)")]
+        public string City { get; set; }
+        
+        [Column(TypeName = "varchar(50)")]
+        public string State { get; set; }
+        
+        [Column(TypeName = "varchar(50)")]
+        public string Country { get; set; }
+
+        public Point Geography { get; set; }
 
         public ShortenedUrl ShortenedUrl { get; set; }
     }

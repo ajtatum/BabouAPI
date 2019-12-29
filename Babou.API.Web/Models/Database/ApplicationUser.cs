@@ -19,7 +19,6 @@ namespace Babou.API.Web.Models.Database
 
         [Column(TypeName = "varchar(150)")]
         [StringLength(150)]
-        [PersonalData]
         public string FullName { get; set; }
 
         public List<ApplicationUserService> ApplicationUserServices { get; set; }
