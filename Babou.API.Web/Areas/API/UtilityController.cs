@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Babou.API.Web.Helpers;
 using Babou.API.Web.Helpers.Filters;
@@ -13,6 +14,7 @@ using BabouExtensions.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
@@ -38,7 +40,7 @@ namespace Babou.API.Web.Areas.API
         [Consumes(Constants.ContentTypes.TextPlain)]
         [Produces(Constants.ContentTypes.TextPlain)]
         [SwaggerOperation(
-            Summary = "Converts strings or integers into CSV and returns distinct values.",
+            Summary = "Converts strings or integers into CSV.",
             Description = "Looks at the raw request body. Request body can contain tab and line breaks.",
             OperationId = "ConvertToCsvNull")]
         [SwaggerRequestExample(typeof(string), typeof(ConvertToCsvNullRequestExample))]
@@ -50,12 +52,13 @@ namespace Babou.API.Web.Areas.API
         [SwaggerResponseExample(StatusCodes.Status406NotAcceptable, typeof(AuthKeyNotFoundResponseExample))]
         public Task<IActionResult> ConvertToCsv()
         {
-            return ConvertToCsv(null);
+            return ConvertToCsv(null, true);
         }
 
         /// <param name="surroundWithQuotes">If true, the strings are surrounded by quotes. If false, they are not.</param>
+        /// <param name="onlyDistinctValues">Determines if you want to return distinct values or not.</param>
         [ServiceFilter(typeof(AuthKeyFilter))]
-        [HttpPost("{surroundWithQuotes:bool?}")]
+        [HttpPost("{surroundWithQuotes:bool?}/{onlyDistinctValues:bool}")]
         [RawTextRequest]
         [Consumes(Constants.ContentTypes.TextPlain)]
         [Produces(Constants.ContentTypes.TextPlain)]
@@ -70,66 +73,27 @@ namespace Babou.API.Web.Areas.API
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestStringResponseExample))]
         [SwaggerResponse(StatusCodes.Status406NotAcceptable, "AuthKey not found.", typeof(string))]
         [SwaggerResponseExample(StatusCodes.Status406NotAcceptable, typeof(AuthKeyNotFoundResponseExample))]
-        public async Task<IActionResult> ConvertToCsv([Required]bool? surroundWithQuotes)
+        public async Task<IActionResult> ConvertToCsv([Required] bool? surroundWithQuotes, [Required] bool onlyDistinctValues)
         {
+            var requestBody = await Request.GetRawBodyStringAsync();
+
+            if (!requestBody.Contains(','))
+            {
+                requestBody = requestBody.Replace('\r', ',');
+                requestBody = requestBody.Replace('\n', ',');
+                requestBody = requestBody.Trim(',');
+            }
+
             try
             {
-                var requestBody = await Request.GetRawBodyStringAsync();
+                var returnValue = requestBody.ConvertToCsv(',', ',', surroundWithQuotes, true, " ", onlyDistinctValues);
 
-                if (requestBody.TryGetList(',', out var cleanString))
-                {
-                    var returnValue = string.Empty;
-
-                    if (surroundWithQuotes.HasValue)
-                    {
-                        if (surroundWithQuotes == false)
-                            returnValue = string.Join(',', cleanString);
-                        else
-                        {
-                            cleanString.ForEach(x =>
-                            {
-                                //if (x.IsNullOrWhiteSpace())
-                                //    return;
-
-                                returnValue += $"'{x}',";
-                            });
-                        }
-                    }
-                    else
-                    {
-                        cleanString.ForEach(x =>
-                        {
-                            //if (x.IsNullOrWhiteSpace())
-                            //    return;
-
-                            if (IsDigitsOnly(x))
-                            {
-                                returnValue += $"{x},";
-                            }
-                            else
-                            {
-                                returnValue += $"'{x}',";
-                            }
-                        });
-                    }
-
-                    returnValue = returnValue.TrimEnd(',');
-
-                    return new OkObjectResult($"{returnValue}");
-                }
-
-                return new BadRequestObjectResult($"Error: Bad request body: {requestBody}");
+                return new OkObjectResult(returnValue);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in ConvertToCsv with surroundWithQuotes being {Bool}", surroundWithQuotes);
-
-                return new BadRequestObjectResult($"Exception thrown: {ex.Message}.");
-            }
-
-            static bool IsDigitsOnly(string str)
-            {
-                return !str.IsNullOrWhiteSpace() && str.All(c => c >= '0' && c <= '9');
+                _logger.LogError(ex, "Error in ConvertToCsv with surroundWithQuotes being {SurroundWithQuotes} and onlyDistinctValues bring {OnlyDistinctValues}", surroundWithQuotes, onlyDistinctValues);
+                return new BadRequestObjectResult($"Error: {ex.Message}");
             }
         }
 
