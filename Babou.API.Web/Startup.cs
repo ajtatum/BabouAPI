@@ -124,6 +124,7 @@ namespace Babou.API.Web
 
             services.AddSingleton<ApplicationInsightsJsHelper>();
 
+            #region Swagger
             services.AddApiVersioning(
                 options =>
                 {
@@ -173,6 +174,7 @@ namespace Babou.API.Web
             services.AddSwaggerExamplesFromAssemblyOf<Startup>();
 
             services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:InstrumentationKey"]);
+            #endregion
 
             services.AddHsts(options =>
             {
