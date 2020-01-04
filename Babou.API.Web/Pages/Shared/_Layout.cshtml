@@ -96,14 +96,16 @@
     <div class="container">
         <partial name="_CookieConsentPartial" />
     </div>
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted line-height-30">
         <div class="container">
             &copy; @DateTime.Now.Year - Babou API - Build: @Configuration["BuildNumber"] - <a class="text-lightblue" asp-area="" asp-page="/TermsOfService">Terms of Service</a> - <a class="text-lightblue" asp-area="" asp-page="/Privacy">Privacy Policy</a> - <a class="text-lightblue" asp-area="" asp-page="/Contact">Contact</a>
             <div class="float-right">
                 <a href="https://facebook.com/BabouAPI"><i class="fab fa-2x fa-facebook-square text-brand-facebook"></i></a> <a href="https://twitter.com/BabouAPI"><i class="fab fa-2x fa-twitter-square text-brand-twitter"></i></a>
             </div>
         </div>
-
+        <div class="container">
+            Developed by <a class="text-lightblue" href="http://s.babou.io/aj?src=https://babou.io" target="_blank">AJ Tatum</a>
+        </div>
     </footer>
 
     <environment include="Development">

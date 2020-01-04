@@ -89,3 +89,6 @@ label[for] {
 .text-brand-twitter {
     color: #1A91DA;
 }
+.line-height-30 {
+    line-height: 30px !important;
+}
