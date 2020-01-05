@@ -13,7 +13,6 @@ namespace Babou.API.Web.Models
         public string BuildNumber { get; set; }
         public EmailSenderSettings EmailSender { get; set; }
         public string IpStackApiKey { get; set; }
-        public string MaxMindDb { get; set; }
     }
 
     public class AzureSettings
