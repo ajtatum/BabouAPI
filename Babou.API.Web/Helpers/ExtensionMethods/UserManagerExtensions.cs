@@ -5,6 +5,7 @@ using Babou.API.Web.Data;
 using Babou.API.Web.Models.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 
@@ -96,6 +97,25 @@ namespace Babou.API.Web.Helpers.ExtensionMethods
             {
                 _logger.Error(ex, "UserManagerExtensions: Error getting current user.");
                 return null;
+            }
+        }
+
+        public static async Task<bool> SetEmailConfirmedAsync(this UserManager<ApplicationUser> um, string userId)
+        {
+            try
+            {
+                var user = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Id == userId);
+
+                user.EmailConfirmed = true;
+                user.LockoutEnabled = false;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "UserManagerExtensions: Error setting EmailConfirmed and LockoutEnabled.");
+                return false;
             }
         }
     }
