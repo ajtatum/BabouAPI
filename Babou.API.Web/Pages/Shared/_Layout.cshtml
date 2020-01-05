@@ -41,27 +41,32 @@
     </environment>
 </head>
 <body>
-    <script asp-add-nonce="true">
-        window.fbAsyncInit = function () {
-            FB.init({
-                appId: '504246783635071',
-                cookie: true,
-                xfbml: true,
-                version: 'v5.0'
-            });
+    <environment exclude="Development">
+        <script asp-add-nonce="true">
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: '504246783635071',
+                    cookie: true,
+                    xfbml: true,
+                    version: 'v5.0'
+                });
 
-            FB.AppEvents.logPageView();
+                FB.AppEvents.logPageView();
 
-        };
+            };
 
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) { return; }
-            js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    </script>
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {
+                    return;
+                }
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "https://connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        </script>
+    </environment>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
