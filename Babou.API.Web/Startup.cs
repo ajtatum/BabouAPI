@@ -113,10 +113,10 @@ namespace Babou.API.Web
             services.AddScoped<ClientIpFilter>();
             services.AddScoped<AuthKeyFilter>();
             services.AddScoped<IIpService, IpService>();
-            services.AddScoped<ISendNewUserNotificationService, SendNewUserNotificationService>();
             services.AddScoped<ICipherService, CipherService>();
             services.AddScoped<IPushBulletAppService, PushBulletAppService>();
             services.AddScoped<IUrlShortenerService, UrlShortenerService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddTransient<IEmailService, EmailService>();
 
             services.AddHttpContextAccessor();

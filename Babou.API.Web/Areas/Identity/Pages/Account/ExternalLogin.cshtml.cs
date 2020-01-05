@@ -23,16 +23,14 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
         private readonly ILogger<ExternalLoginModel> _logger;
-        private readonly ISendNewUserNotificationService _sendNewUserNotificationService;
 
         public ExternalLoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, 
-            ILogger<ExternalLoginModel> logger, IEmailService emailService, ISendNewUserNotificationService sendNewUserNotificationService)
+            ILogger<ExternalLoginModel> logger, IEmailService emailService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _emailService = emailService;
-            _sendNewUserNotificationService = sendNewUserNotificationService;
         }
 
         [BindProperty]
@@ -164,7 +162,7 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account
                         await _emailService.SendEmailAsync(Input.Email, "Confirm your email",
                             $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                        await _sendNewUserNotificationService.SendMessage(user);
+                        await _emailService.SendNewUserMessage(user);
 
                         return LocalRedirect(returnUrl);
                     }

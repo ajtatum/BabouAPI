@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Babou.API.Web.Models;
+using Babou.API.Web.Models.Database;
 using Babou.API.Web.Services.Interfaces;
 using BabouMail.Common;
 using BabouMail.MailGun;
@@ -62,6 +63,16 @@ namespace Babou.API.Web.Services
             {
                 _logger.LogError("EmailService: Error sending email to {ToEmail} from {FromEmail} with the subject {Subject}. Here are the errors: {@ErrorMessage}", _appSettings.EmailSender.ToEmail, fromEmail, subject, response.ErrorMessages);
             }
+        }
+
+        public async Task SendNewUserMessage(ApplicationUser applicationUser)
+        {
+            var to = _appSettings.EmailSender.ToEmail;
+            var subject = $"New User Registered: {applicationUser.UserName}";
+
+            var body = $"<html><body><b>New User Registered:</b> {applicationUser.Email}.<br /><br /><a href='https://babou.io' target='_blank'>Go to API.</a></body></html>";
+
+            await SendEmailAsync(to, subject, body);
         }
     }
 }

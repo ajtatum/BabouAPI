@@ -25,17 +25,15 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailService _emailService;
-        private readonly ISendNewUserNotificationService _sendNewUserNotificationService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, 
-            ILogger<RegisterModel> logger, IEmailService emailService, ISendNewUserNotificationService sendNewUserNotificationService)
+            ILogger<RegisterModel> logger, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailService = emailService;
-            _sendNewUserNotificationService = sendNewUserNotificationService;
         }
 
         [BindProperty]
@@ -84,7 +82,7 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var apiAuthKey = Guid.NewGuid().ToString().Replace("-", string.Empty);
+                var apiAuthKey = Guid.NewGuid().ToString("N");
                 var user = new ApplicationUser
                 {
                     FullName = Input.FullName,
@@ -111,7 +109,7 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account
                     await _emailService.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    await _sendNewUserNotificationService.SendMessage(user);
+                    await _emailService.SendNewUserMessage(user);
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
