@@ -149,6 +149,12 @@ namespace Babou.API.Web.Services
                 .WhereIf(!string.IsNullOrEmpty(domain), x=>x.Domain == domain)
                 .Select(x => x.Token).ToListAsync();
 
+            if (!currentTokens.Any())
+            {
+                currentTokens = await _context.ShortenedUrls
+                    .Select(x => x.Token).ToListAsync();
+            }
+
             while (!currentTokens.Exists(x => x == GenerateRandomToken()))
             {
                 return Token;
