@@ -141,7 +141,7 @@ namespace Babou.API.Web.Areas.API
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost("marvel")] 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IActionResult> CreateMarvelShortUrl([Required] [FromHeader] string longUrl, [Required] [FromHeader][EmailAddress] string emailAddress)
+        public async Task<IActionResult> CreateMarvelShortUrl([Required] [FromHeader][Url] string longUrl, [Required] [FromHeader][EmailAddress] string emailAddress)
         {
             var userAuthKey = Request.Headers["AuthKey"].ToString();
 
@@ -150,7 +150,7 @@ namespace Babou.API.Web.Areas.API
                 var authKeyUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.ApiAuthKey == userAuthKey);
 
                 var applicationUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == emailAddress) 
-                                      ?? await _userService.QuickCreateUser(emailAddress, null, null, null);
+                                      ?? await _userService.QuickCreateUser(emailAddress, null, emailAddress, null);
 
                 if(applicationUser == null)
                     return new BadRequestObjectResult($"Error finding or creating user with email address {emailAddress}");
