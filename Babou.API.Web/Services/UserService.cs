@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Babou.API.Web.Helpers;
 using Babou.API.Web.Helpers.ExtensionMethods;
@@ -10,20 +7,12 @@ using Babou.API.Web.Models.Database;
 using Babou.API.Web.Services.Interfaces;
 using BabouExtensions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
 namespace Babou.API.Web.Services
 {
     public class UserService : IUserService
     {
-        private static readonly Random Random = new Random();
-        private const string BigAlphas = "ABCDEFGHIJKLMNOPQRSTUVWXY";
-        private const string SmallAlphas = "abcdefghjlkmnopqrstuvwxyz";
-        private const string Numbers = "0123456789";
-        private const string NonAlphas = "!@#$%^&*()_+";
-        private static readonly string Pool = $"{BigAlphas}{SmallAlphas}{Numbers}{NonAlphas}";
-
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UserService> _logger;
         private readonly IEmailService _emailService;
@@ -41,15 +30,15 @@ namespace Babou.API.Web.Services
         /// </summary>
         /// <param name="email">Email address of the user</param>
         /// <param name="password">Password for the user. If null or empty, a password is automatically generated.</param>
-        /// <param name="username">Username of the user.</param>
+        /// <param name="userName">Username of the user.</param>
         /// <param name="fullName">Full Name of the user.</param>
         /// <returns>Will either return an <see cref="ApplicationUser"/> or null.</returns>
-        public async Task<ApplicationUser> QuickCreateUser(string email, string password, string username, string fullName)
+        public async Task<ApplicationUser> QuickCreateUser(string email, string password, string userName, string fullName)
         {
             var user = new ApplicationUser
             {
                 Email = email,
-                UserName = !username.IsNullOrWhiteSpace() ? username : email,
+                UserName = !userName.IsNullOrWhiteSpace() ? userName : email,
                 FullName = !fullName.IsNullOrWhiteSpace() ? fullName : "Unknown",
                 ApiAuthKey = Guid.NewGuid().ToString("N")
             };
@@ -65,34 +54,31 @@ namespace Babou.API.Web.Services
             {
                 await _userManager.AddToRoleAsync(user, Constants.Roles.Member);
                 await _userManager.SetEmailConfirmedAsync(user.Id);
+                await _emailService.SendNewUserMessage(user);
 
-                _logger.LogInformation("TryCreateUser: User {UserName} created a new account with password.", username);
+                _logger.LogInformation("TryCreateUser: User {UserName} created a new account with password.", userName);
 
                 return user;
             }
             else
             {
-                _logger.LogInformation("Unable to create user {UserName}. Errors: {@Errors}", username, result.Errors);
+                _logger.LogInformation("Unable to create user {UserName}. Errors: {@Errors}", userName, result.Errors);
                 return null;
             }
         }
-
-        private static readonly object ThreadLock = new object();
 
         /// <summary>
         /// Generates a random password
         /// </summary>
         /// <returns>A random string</returns>
-        private string GenerateRandomPassword()
+        private static string GenerateRandomPassword()
         {
-            string pool;
-            Random rand;
-
-            lock (ThreadLock)
-            {
-                pool = Pool;
-                rand = Random;
-            }
+            var rand = new Random();
+            const string bigAlphas = "ABCDEFGHIJKLMNOPQRSTUVWXY";
+            const string smallAlphas = "abcdefghjlkmnopqrstuvwxyz";
+            const string numbers = "0123456789";
+            const string symbols = "!@#$%^&*()_+";
+            var pool = $"{bigAlphas}{smallAlphas}{numbers}{symbols}";
 
             var poolBuilder = new StringBuilder(pool);
 
