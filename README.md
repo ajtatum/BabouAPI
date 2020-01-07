@@ -11,6 +11,7 @@ Babou API is developed in .NET Core 3.0.
 - Use our URL Shortening Service
   - https://s.babou.io/
   - https://mrvl.co/
+  - https://xmen.to/
   - More to come!
 - If you use PushBullet, you can use our PushBullet API
   - Usage example: If you use a service like AppVeyor and want to receive notifications via PushBullet, use our endpoint and set the body to our PushBullet model.

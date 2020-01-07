@@ -30,13 +30,13 @@
             /// </summary>
             public const string MrvlCo = "https://mrvl.co/";
             /// <summary>
-            /// https://babou.io/go/
-            /// </summary>
-            public const string BabouIoGo = "https://babou.io/go/";
-            /// <summary>
             /// https://ajt.io/go/
             /// </summary>
             public const string AjtGo = "https://ajt.io/go/";
+            /// <summary>
+            /// https://xmen.to/
+            /// </summary>
+            public const string XMenTo = "https://xmen.to/";
         }
     }
 }

@@ -16,18 +16,15 @@ namespace Babou.API.Web.Models
         [Display(Name = "https://s.babou.io/")]
         BabouIo,
         /// <summary>
-        /// https://babou.io/go/
-        /// </summary>
-        [EnumMember(Value = "https://babou.io/go/")]
-        [Description("https://babou.io/go/")]
-        [Display(Name = "https://babou.io/go/")]
-        BabouIoGo,
-        /// <summary>
         /// https://mrvl.co/
         /// </summary>
         [EnumMember(Value = "https://mrvl.co/")]
         [Description("https://mrvl.co/")]
         [Display(Name = "https://mrvl.co/")]
-        MrvlCo
+        MrvlCo,
+        [EnumMember(Value = "https://xmen.to/")]
+        [Description("https://xmen.to/")]
+        [Display(Name = "https://xmen.to/")]
+        XMenTo
     }
 }

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Azure.Storage.Shared.Protocol;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -59,7 +58,6 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
         {
             DomainOptions = _appSettings.BaseShortenedUrls
                 .WhereIf(!userIsAdmin, x => x != Helpers.Constants.ShortDomainUrls.AjtGo)
-                .OrderBy(x => x)
                 .Select(x =>
                     new SelectListItem
                     {

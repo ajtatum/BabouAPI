@@ -47,7 +47,7 @@ namespace Babou.API.Web.Areas.API
         }
 
         /// <param name="longUrl">The URL you wish to shorten</param>
-        /// <param name="domain">The domain to use. BabouIo links to https://s.babou.io/, BabouIoGo links to https://babou.io/go/ MrvlCo links to https://mrvl.co/. Default is BabouIo</param>
+        /// <param name="domain">The domain to use. BabouIo links to https://s.babou.io/, MrvlCo links to https://mrvl.co/, and XMenTo links to https://xmen.to. Default is BabouIo</param>
         /// <param name="token">What gets appended to your short url. Use your own or let the app generate a random one.</param>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost]
