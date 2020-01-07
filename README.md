@@ -1,4 +1,4 @@
-![alt text](https://github.com/ajtatum/BabouAPI/blob/master/Babou.API.Web/wwwroot/images/Babou-150x150.png "Babou loves to play, so here's his API!") <!-- markdownlint-disable -->
+![alt text](https://github.com/ajtatum/BabouAPI/raw/master/Babou.API.Web/wwwroot/images/Babou-150x150.png "Babou loves to play, so here's his API!") <!-- markdownlint-disable -->
 
 # **Babou API**
 
@@ -10,10 +10,10 @@ Babou API is developed in .NET Core 3.0.
 
 - Use our URL Shortening Service
   - https://s.babou.io/
-  - https://babou.io/go/
   - https://mrvl.co/
   - More to come!
 - If you use PushBullet, you can use our PushBullet API
+  - Usage example: If you use a service like AppVeyor and want to receive notifications via PushBullet, use our endpoint and set the body to our PushBullet model.
 - Utility classes to make tough things easier
 - More to come...
 
