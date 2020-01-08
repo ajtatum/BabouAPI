@@ -25,9 +25,9 @@ namespace Babou.API.Web.SwaggerHelpers
                         Version = description.ApiVersion.ToString(),
                         Contact = new OpenApiContact
                         {
-                            Name = "AJ Tatum",
+                            Name = "Babou API",
                             Email = null,
-                            Url = new Uri("https://s.babou.io/aj")
+                            Url = new Uri("/", UriKind.Relative)
                         },
                         Description = "IP Address services, PushBullet service, Url Shortening service, utilities and more to come.",
                         TermsOfService = new Uri("/TermsOfService", UriKind.Relative),

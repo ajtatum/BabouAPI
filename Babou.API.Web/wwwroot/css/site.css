@@ -9,7 +9,7 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-    color: #0366d6;
+    color: #138496;
 }
 
 .btn-primary {
@@ -20,8 +20,8 @@ a {
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: #138496;
+    border-color: #138496;
 }
 
 /* Sticky footer styles
@@ -91,4 +91,15 @@ label[for] {
 }
 .line-height-30 {
     line-height: 30px !important;
+}
+.dropdown-item:hover, .dropdown-item:focus {
+    color: #16181b;
+    text-decoration: none;
+    background-color: #138496;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    color: #fff;
+    text-decoration: none;
+    background-color: #138496;
 }
