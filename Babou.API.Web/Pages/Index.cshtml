@@ -1,6 +1,7 @@
 ﻿@page
 @using Babou.API.Web.Helpers
 @using Babou.API.Web.Models
+@using BabouExtensions.Helpers
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -29,7 +30,7 @@
                     Use our URL Shortening Service
                     <ul>
                         @{
-                            var domains = Enum<Domains>.GetListByDescription();
+                            var domains = BabouEnum<Domains>.GetListByDescriptionAttr();
 
                             @foreach (var domain in domains)
                             {

@@ -57,7 +57,7 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user, bool userIsAdmin)
         {
-            DomainOptions = Enum<Domains>.GetSelectListItem();
+            DomainOptions = SelectEnum<Domains>.GetSelectListItem();
 
             if (userIsAdmin)
             {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Babou.API.Web.Helpers
 {
-    public class Enum<T> where T : struct, IConvertible
+    public class SelectEnum<T> where T : struct, IConvertible
     {
         /// <summary>
         /// Uses the <see cref="DisplayAttribute"/> as the text for an item and the <see cref="DescriptionAttribute"/> for the value.
@@ -47,35 +47,6 @@ namespace Babou.API.Web.Helpers
                     }
 
                     items.Add(item);
-                }
-            }
-            return items;
-        }
-
-        public static List<string> GetListByDescription()
-        {
-            var items = new List<string>();
-
-            var type = typeof(T);
-
-            if (type.IsEnum)
-            {
-                var values = Enum.GetValues(type);
-
-                foreach (int val in values)
-                {
-                    var memInfo = type.GetMember(type.GetEnumName(val));
-
-                    var descriptionAttributes = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-                    var enumString = val.ToString();
-
-                    if (descriptionAttributes.Length > 0)
-                    {
-                        enumString = ((DescriptionAttribute)descriptionAttributes[0]).Description;
-                    }
-
-                    items.Add(enumString);
                 }
             }
             return items;
