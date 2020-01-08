@@ -5,8 +5,15 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a  class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+    <li class="nav-item nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Hello @User.Identity.Name!
+        </a>
+        <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item text-white" asp-area="Identity" asp-page="/Account/Manage/Index">Manage Account</a>
+            <a class="dropdown-item text-white" asp-area="Identity" asp-page="/Account/Manage/PushBullet">PushBullet</a>
+            <a class="dropdown-item text-white" asp-area="Identity" asp-page="/Account/Manage/UrlShortener">URL Shortener</a>
+        </div>
     </li>
     <li class="nav-item">
         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post" >
