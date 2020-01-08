@@ -1,4 +1,6 @@
 ﻿@page
+@using Babou.API.Web.Helpers
+@using Babou.API.Web.Models
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -26,11 +28,16 @@
                 <li>
                     Use our URL Shortening Service
                     <ul>
-                        <li>https://s.babou.io/</li>
-                        <li>https://mrvl.co/</li>
-                        <li>https://xmen.to/</li>
+                        @{
+                            var domains = Enum<Domains>.GetListByDescription();
+
+                            @foreach (var domain in domains)
+                            {
+                                <li>@domain</li>
+                            }
+                        }
                     </ul>
-                </li>
+                    </li>
                 <li>If you use PushBullet, you can use our PushBullet API</li>
                 <li>Utility classes to make tough things easier</li>
                 <li>More to come...</li>

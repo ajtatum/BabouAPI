@@ -22,6 +22,9 @@ namespace Babou.API.Web.Models
         [Description("https://mrvl.co/")]
         [Display(Name = "https://mrvl.co/")]
         MrvlCo,
+        /// <summary>
+        /// https://xmen.to/
+        /// </summary>
         [EnumMember(Value = "https://xmen.to/")]
         [Description("https://xmen.to/")]
         [Display(Name = "https://xmen.to/")]

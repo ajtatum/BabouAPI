@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
@@ -18,7 +19,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -80,12 +80,9 @@ namespace Babou.API.Web.Areas.API
                     domain = Domains.BabouIo;
                 }
 
-                var domainString = domain.Value.GetAttributeOfType<EnumMemberAttribute>().Value;
+                var domainString = domain.Value.GetAttributeOfType<DescriptionAttribute>().Description;
 
-                var allowedDomains = _appSettings.BaseShortenedUrls
-                    .Where(x => x != Constants.ShortDomainUrls.AjtGo)
-                    .OrderBy(x => x)
-                    .ToList();
+                var allowedDomains = Enum<Domains>.GetListByDescription();
 
                 if (!allowedDomains.Contains(domainString))
                 {

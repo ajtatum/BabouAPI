@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Babou.API.Web.Helpers;
 using Babou.API.Web.Models;
 using Babou.API.Web.Models.Database;
 using Babou.API.Web.Services.Interfaces;
@@ -56,14 +57,12 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user, bool userIsAdmin)
         {
-            DomainOptions = _appSettings.BaseShortenedUrls
-                .WhereIf(!userIsAdmin, x => x != Helpers.Constants.ShortDomainUrls.AjtGo)
-                .Select(x =>
-                    new SelectListItem
-                    {
-                        Value = x,
-                        Text = x
-                    }).ToList();
+            DomainOptions = Enum<Domains>.GetSelectListItem();
+
+            if (userIsAdmin)
+            {
+                DomainOptions.Insert(0, new SelectListItem("https://ajt.io/go/", "https://ajt.io/go/"));
+            }
 
             ShortenedUrls = await _urlShortenerService.GetShortenedUrlsByUserId(user.Id);
 
@@ -75,7 +74,7 @@ namespace Babou.API.Web.Areas.Identity.Pages.Account.Manage
                 LongUrl = ExistingLongUrl,
                 ShortUrl = _urlShortenerService.GetShortUrl(ExistingDomain, Token),
                 Domain = ExistingDomain,
-                CreatedBy = user.ApiAuthKey
+                CreatedBy = user.Id
             };
         }
 

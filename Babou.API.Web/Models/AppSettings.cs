@@ -9,7 +9,6 @@ namespace Babou.API.Web.Models
         public ApplicationInsightsSettings ApplicationInsights { get; set; }
         public AuthenticationSettings Authentication { get; set; }
         public string BaseShortenedDefaultUrl { get; set; }
-        public List<string> BaseShortenedUrls { get; set; }
         public string BuildNumber { get; set; }
         public EmailSenderSettings EmailSender { get; set; }
         public string IpStackApiKey { get; set; }
