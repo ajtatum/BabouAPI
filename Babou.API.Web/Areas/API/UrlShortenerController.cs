@@ -13,6 +13,7 @@ using Babou.API.Web.Models;
 using Babou.API.Web.Services.Interfaces;
 using Babou.API.Web.SwaggerExamples.Responses;
 using BabouExtensions;
+using BabouExtensions.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -82,20 +83,20 @@ namespace Babou.API.Web.Areas.API
 
                 var domainString = domain.Value.GetAttributeOfType<DescriptionAttribute>().Description;
 
-                var allowedDomains = Enum<Domains>.GetListByDescription();
+                var allowedDomains = BabouEnum<Domains>.GetListByDescriptionAttr();
 
                 if (!allowedDomains.Contains(domainString))
                 {
                     return new BadRequestObjectResult($"Domain not available. Please choose from {string.Join(", ", allowedDomains)}.");
                 }
 
-                var tokenTaken = true;
+                var tokenAvailable = false;
 
                 if (!token.IsNullOrWhiteSpace())
                 {
                     try
                     {
-                        tokenTaken = await _urlShortenerService.CheckIfTokenIsAvailable(token, domainString);
+                        tokenAvailable = await _urlShortenerService.CheckIfTokenIsAvailable(token, domainString);
                     }
                     catch (DuplicateNameException dne)
                     {
@@ -109,9 +110,10 @@ namespace Babou.API.Web.Areas.API
                     }
                 }
 
-                var shortenedUrl = tokenTaken
-                    ? await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, domainString)
-                    : await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, domainString, token);
+                var shortenedUrl = tokenAvailable
+                    ? await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, domainString, token)
+                    : await _urlShortenerService.CreateByUserId(applicationUser.Id, longUrl, domainString);
+                    
 
                 _logger.LogInformation("UrlShortenerController: New Shortened Url Created for {LongUrl} as {ShortUrl}. Requested by {UserId}.", shortenedUrl.LongUrl, shortenedUrl.ShortUrl, applicationUser.Id);
 

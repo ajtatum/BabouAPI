@@ -55,7 +55,7 @@
     <ItemGroup>
         <PackageReference Include="AJT.Defaults.Serilog" Version="1.0.1" />
         <PackageReference Include="Babou.AspNetCore.SecurityExtensions" Version="1.0.4" />
-        <PackageReference Include="BabouExtensions" Version="1.2.41" />
+        <PackageReference Include="BabouExtensions" Version="1.2.43" />
         <PackageReference Include="BabouExtensions.AspNetCore" Version="1.2.41" />
         <PackageReference Include="BabouMail.MailGun" Version="1.1.7" />
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
