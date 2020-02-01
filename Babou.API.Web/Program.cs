@@ -56,7 +56,14 @@ namespace Babou.API.Web
                 })
                 .UseSerilog((hostingContext, loggerConfiguration) =>
                 {
-                    loggerConfiguration.LoadDefaultConfig(hostingContext, "Babou API Web App", true, true, true, true);
+                    if (hostingContext.HostingEnvironment.IsDevelopment())
+                    {
+                        loggerConfiguration.LoadDefaultConfig(hostingContext, "Babou API Web App", true, true, true, false);
+                    }
+                    else
+                    {
+                        loggerConfiguration.LoadDefaultConfig(hostingContext, "Babou API Web App", true, true, false, true);
+                    }
                 });
         }
 
