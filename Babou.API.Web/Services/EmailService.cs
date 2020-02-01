@@ -1,22 +1,30 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Policy;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Babou.API.Web.Models;
 using Babou.API.Web.Models.Database;
 using Babou.API.Web.Services.Interfaces;
 using BabouMail.Common;
 using BabouMail.MailGun;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Babou.API.Web.Services
 {
     public class EmailService : IEmailService
     {
         private readonly ILogger<EmailService> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppSettings _appSettings;
 
-        public EmailService(ILogger<EmailService> logger, IOptionsMonitor<AppSettings> appSettings)
+        public EmailService(ILogger<EmailService> logger, UserManager<ApplicationUser> userManager, IOptionsMonitor<AppSettings> appSettings)
         {
             _logger = logger;
+            _userManager = userManager;
             _appSettings = appSettings.CurrentValue;
         }
 
@@ -63,6 +71,21 @@ namespace Babou.API.Web.Services
             {
                 _logger.LogError("EmailService: Error sending email to {ToEmail} from {FromEmail} with the subject {Subject}. Here are the errors: {@ErrorMessage}", _appSettings.EmailSender.ToEmail, fromEmail, subject, response.ErrorMessages);
             }
+        }
+
+        public async Task SendQuickWelcomeMessage(ApplicationUser applicationUser)
+        {
+            var to = applicationUser.Email;
+            var subject = "Welcome to Babou.io";
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(applicationUser);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = $"https://babou.io/Identity/Account/ResetPassword?code={code}";
+
+            var body = $"Welcome to babou.io! To get started, you'll need to set your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>. " +
+                       $"Once logged in, you'll be able to view your Short Urls and do other nerdy stuff by checking out the API Docs. If you have any questions, please contact us.";
+
+            await SendEmailAsync(to, subject, body);
         }
 
         public async Task SendNewUserMessage(ApplicationUser applicationUser)

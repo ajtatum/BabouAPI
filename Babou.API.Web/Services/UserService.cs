@@ -54,6 +54,7 @@ namespace Babou.API.Web.Services
             {
                 await _userManager.AddToRoleAsync(user, Constants.Roles.Member);
                 await _userManager.SetEmailConfirmedAsync(user.Id);
+                await _emailService.SendQuickWelcomeMessage(user);
                 await _emailService.SendNewUserMessage(user);
 
                 _logger.LogInformation("TryCreateUser: User {UserName} created a new account with password.", userName);

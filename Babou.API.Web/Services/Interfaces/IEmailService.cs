@@ -8,5 +8,6 @@ namespace Babou.API.Web.Services.Interfaces
         Task SendEmailAsync(string email, string subject, string htmlMessage);
         Task SendContactMessage(string fromEmail, string fromName, string subject, string htmlMessage);
         Task SendNewUserMessage(ApplicationUser applicationUser);
+        Task SendQuickWelcomeMessage(ApplicationUser applicationUser);
     }
 }
