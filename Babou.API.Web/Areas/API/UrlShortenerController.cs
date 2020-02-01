@@ -10,6 +10,7 @@ using Babou.API.Web.Data;
 using Babou.API.Web.Helpers;
 using Babou.API.Web.Helpers.Filters;
 using Babou.API.Web.Models;
+using Babou.API.Web.Models.Database;
 using Babou.API.Web.Services.Interfaces;
 using Babou.API.Web.SwaggerExamples.Responses;
 using BabouExtensions;
@@ -49,7 +50,8 @@ namespace Babou.API.Web.Areas.API
 
         /// <param name="longUrl">The URL you wish to shorten</param>
         /// <param name="domain">The domain to use. BabouIo links to https://s.babou.io/, MrvlCo links to https://mrvl.co/, and XMenTo links to https://xmen.to. Default is BabouIo</param>
-        /// <param name="token">What gets appended to your short url. Use your own or let the app generate a random one.</param>
+        /// <param name="token">Optional. What gets appended to your short url. Use your own or let the app generate a random one.</param>
+        /// <param name="emailAddress">Optional. An email address to create the short url under.</param>
         [ServiceFilter(typeof(AuthKeyFilter))]
         [HttpPost]
         [Produces(Constants.ContentTypes.TextPlain)]
@@ -62,13 +64,23 @@ namespace Babou.API.Web.Areas.API
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(BadRequestStringResponseExample))]
         [SwaggerResponse(StatusCodes.Status406NotAcceptable, "AuthKey not found.", typeof(string))]
         [SwaggerResponseExample(StatusCodes.Status406NotAcceptable, typeof(AuthKeyNotFoundResponseExample))]
-        public async Task<IActionResult> Post([Required][FromHeader] string longUrl, [Optional][FromHeader] Domains? domain, [Optional][FromHeader] string token)
+        public async Task<IActionResult> Post([Required][FromHeader] string longUrl, [Optional][FromHeader] Domains? domain, [Optional][FromHeader] string token, [Optional][FromHeader] string emailAddress)
         {
             var userAuthKey = Request.Headers["AuthKey"].ToString();
 
             try
             {
-                var applicationUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.ApiAuthKey == userAuthKey);
+                ApplicationUser applicationUser;
+
+                if (emailAddress.IsNullOrWhiteSpace())
+                {
+                    applicationUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.ApiAuthKey == userAuthKey);
+                }
+                else
+                {
+                    applicationUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == emailAddress)
+                                      ?? await _userService.QuickCreateUser(emailAddress, null, emailAddress, null);
+                }
 
                 if (applicationUser == null)
                 {
