@@ -99,24 +99,5 @@ namespace Babou.API.Web.Helpers.ExtensionMethods
                 return null;
             }
         }
-
-        public static async Task<bool> SetEmailConfirmedAsync(this UserManager<ApplicationUser> um, string userId)
-        {
-            try
-            {
-                var user = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Id == userId);
-
-                user.EmailConfirmed = true;
-                user.LockoutEnabled = false;
-                _context.Update(user);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "UserManagerExtensions: Error setting EmailConfirmed and LockoutEnabled.");
-                return false;
-            }
-        }
     }
 }

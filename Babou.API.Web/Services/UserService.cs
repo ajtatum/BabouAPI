@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Babou.API.Web.Data;
 using Babou.API.Web.Helpers;
-using Babou.API.Web.Helpers.ExtensionMethods;
 using Babou.API.Web.Models.Database;
 using Babou.API.Web.Services.Interfaces;
 using BabouExtensions;
@@ -16,13 +16,15 @@ namespace Babou.API.Web.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UserService> _logger;
         private readonly IEmailService _emailService;
+        private readonly ApplicationDbContext _context;
 
         public UserService(UserManager<ApplicationUser> userManager, ILogger<UserService> logger, 
-                           IEmailService emailService)
+                           IEmailService emailService, ApplicationDbContext context)
         {
             _userManager = userManager;
             _logger = logger;
             _emailService = emailService;
+            _context = context;
         }
 
         /// <summary>
@@ -53,7 +55,15 @@ namespace Babou.API.Web.Services
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, Constants.Roles.Member);
-                await _userManager.SetEmailConfirmedAsync(user.Id);
+                await SetEmailConfirmedAsync(user);
+
+                /*
+                 * TODO: Message Queuing Service
+                 * Each message takes up to 800ms, thus being the major delay when a new user signs up through this method.
+                 * Slack wants replies to be under 5s, so with these methods being called it's going to be hard to accomplish.
+                 * Need to investigate message queuing service to handle this after fulfilling request.
+                 * For now, the Slack user still gets the short URL, but they receive a confusing error from Slack.
+                */
                 await _emailService.SendQuickWelcomeMessage(user);
                 await _emailService.SendNewUserMessage(user);
 
@@ -63,8 +73,23 @@ namespace Babou.API.Web.Services
             }
             else
             {
-                _logger.LogInformation("Unable to create user {UserName}. Errors: {@Errors}", userName, result.Errors);
+                _logger.LogInformation("TryCreateUser: Unable to create user {UserName}. Errors: {@Errors}", userName, result.Errors);
                 return null;
+            }
+        }
+
+        public async Task SetEmailConfirmedAsync(ApplicationUser user)
+        {
+            try
+            {
+                user.EmailConfirmed = true;
+                user.LockoutEnabled = false;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "UserService: Error setting EmailConfirmed and LockoutEnabled.");
             }
         }
 
