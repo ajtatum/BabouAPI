@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net.Sockets;
 using Babou.API.Web.Data;
 using BabouExtensions;
 using Microsoft.AspNetCore.Mvc;
@@ -20,26 +21,33 @@ namespace Babou.API.Web.Helpers.Filters
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var remoteIp = context.HttpContext.Connection.RemoteIpAddress.ToString();
+            var remoteIp = string.Empty;
+            try
+            {
+                remoteIp = context.HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+            catch (SocketException socketException)
+            {
+                _logger.LogError("AuthKeyFilter: Error retrieving IP Address. Error: {@Exception}", socketException);
+            }
 
             var authKeyQueryString = context.HttpContext.Request.Query["AuthKey"];
             var authKeyHeader = context.HttpContext.Request.Headers["AuthKey"];
 
-            var authKey = !authKeyQueryString.IsEmpty() ? authKeyQueryString.ToString() : authKeyHeader.ToString();
-            var authKeys = _context.Users.Select(x => x.ApiAuthKey).ToList();
+            var authKey = (!authKeyHeader.IsEmpty() ? authKeyHeader.ToString() : authKeyQueryString.ToString()) ?? string.Empty;
 
-            if (!authKeys.Contains(authKey))
+            var authKeyValid = _context.Users.Any(x => x.ApiAuthKey == authKey);
+
+            if (!authKeyValid)
             {
-                _logger.LogWarning("AuthKeyFilter: Attempt to access {Path} denied by {IPAddress}. Tried using AuthKey: {AuthKey}", 
+                _logger.LogWarning("AuthKeyFilter: Attempt to access {Path} denied by {IPAddress}. Tried using AuthKey: {AuthKey}",
                     context.HttpContext.Request.Path, remoteIp, authKey);
                 context.Result = new UnauthorizedResult();
                 return;
             }
 
-            var authKeyUser = _context.Users.FirstOrDefault(x => x.ApiAuthKey == authKey)?.UserName;
-
-            _logger.LogInformation("AuthKeyFilter: {Path} is being accessed by {IpAddress}. Using AuthKey: {AuthKey} by {AuthKeyUser}", 
-                context.HttpContext.Request.Path, remoteIp, authKey, authKeyUser);
+            _logger.LogInformation("AuthKeyFilter: {Path} is being accessed by {IpAddress}. Using AuthKey: {AuthKey}",
+                context.HttpContext.Request.Path, remoteIp, authKey.Substring(0, 10));
 
             base.OnActionExecuting(context);
         }
