@@ -58,7 +58,7 @@ namespace Babou.API.Web
                 {
                     if (hostingContext.HostingEnvironment.IsDevelopment())
                     {
-                        loggerConfiguration.LoadDefaultConfig(hostingContext, "Babou API Web App", true, true, true, false);
+                        loggerConfiguration.LoadDefaultConfig(hostingContext, "Babou API Web App", true, true, true, true);
                     }
                     else
                     {
