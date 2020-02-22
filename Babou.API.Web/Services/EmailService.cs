@@ -1,5 +1,4 @@
-﻿using System.Security.Policy;
-using System.Text;
+﻿using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Babou.API.Web.Models;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Babou.API.Web.Services
 {

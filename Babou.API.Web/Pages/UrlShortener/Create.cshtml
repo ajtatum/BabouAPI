@@ -1,0 +1,65 @@
+﻿@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Create Short URL";
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<div class="row">
+    <div class="col-md-12">
+        <form id="shortenurl-form" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ShortenedUrl.LongUrl"></label>
+                <input asp-for="ShortenedUrl.LongUrl" class="form-control" placeholder="Long Url" />
+                <span asp-validation-for="ShortenedUrl.LongUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShortenedUrl.Domain"></label>
+                <select asp-for="ShortenedUrl.Domain" asp-items="Model.DomainOptions" class="form-control">
+                    <option value="">Choose a domain</option>
+                </select>
+                <span asp-validation-for="ShortenedUrl.Domain" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShortenedUrl.Token"></label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="shortened-domain">https://domain.com/</span>
+                    </div>
+                    <input asp-for="ShortenedUrl.Token" class="form-control" />
+                    <div class="input-group-append">
+                        <button id="regenerate-shorten-token-button" type="submit" class="btn btn-dark" asp-page-handler="RegenerateToken"><i class="fa fa-recycle" title="Regenerate Token"></i></button>
+                    </div>
+                </div>
+                <small id="tokenHelp" class="form-text text-muted">The token is what will be appended to the short url.</small>
+                <span asp-validation-for="ShortenedUrl.Token" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="ShortenedUrl.CreatedBy" type="hidden" />
+                <input asp-for="ShortenedUrl.ShortUrl" type="hidden" />
+                <button id="add-shortened-url-button" type="submit" class="btn btn-success"><i class="fa fa-plus" title="Add Short Url"></i> Add Short Url</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+   <script type="text/javascript" nonce="@HttpContext.Items["csp-nonce"]">
+        $("#ShortenedUrl_Domain").change(function () {
+            var domain = $("#ShortenedUrl_Domain").val();
+            $("#shortened-domain").text(domain);
+        });
+
+        $(document).ready(function () {
+            var domain = $("#ShortenedUrl_Domain").val();
+            if (domain !== "") {
+                $("#shortened-domain").text(domain);
+            }
+        });
+    </script>
+}

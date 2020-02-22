@@ -1,0 +1,135 @@
+﻿@page
+@model ManageModel
+@{
+    ViewData["Title"] = "Manage Your URLs";
+}
+
+@section CSS {
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/datatables.css" asp-add-nonce="true" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/datatables.min.css" asp-add-nonce="true" />
+    </environment>
+}
+
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<div class="row">
+    <div class="col-md-12">
+        @if (Model.ShortenedUrls.Any())
+        {
+            <div>
+                <a class="dropdown-toggle" href="#" id="totalClicksInRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Clicks from past @(Model.ClickTimeFrame * -1) days:
+                </a>
+                <div class="dropdown-menu bg-dark" aria-labelledby="totalClicksInRange">
+                    <a class="dropdown-item text-white" asp-page="Manage" asp-route-clickTimeFrame="-30">30 days</a>
+                    <a class="dropdown-item text-white" asp-page="Manage" asp-route-clickTimeFrame="-60">60 days</a>
+                    <a class="dropdown-item text-white" asp-page="Manage" asp-route-clickTimeFrame="-90">90 days</a>
+                </div>
+            </div>
+            <br />
+            <table id="tblUrlRedirects" class="table table-hover table-bordered nowrap" style="width: 100%" data-order='[[ 2, "desc" ]]' data-page-length='25'>
+                <thead>
+                    <tr>
+                        <th data-orderable="false">Long Url</th>
+                        <th>Short Url</th>
+                        <th>Clicks</th>
+                        <th data-orderable="false"></th>
+                        <th data-orderable="false"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var shortenedUrl in Model.ShortenedUrls)
+                    {
+                        var shortenedUrlClicks = shortenedUrl.ShortenedUrlClicks
+                            .Where(x => x.ClickDate >= DateTime.Now.AddDays(Model.ClickTimeFrame))
+                            .ToList();
+                        <tr>
+                            <td data-search="@shortenedUrl.LongUrl">
+                                <form id="update-form-@shortenedUrl.Id" method="post" asp-route-id="@shortenedUrl.Id">
+                                    <div class="input-group">
+                                        <input asp-for="@shortenedUrl.LongUrl" class="form-control" />
+                                        <div class="input-group-append">
+                                            <button id="save-shorten-url-button-@shortenedUrl.Id" type="submit" class="btn btn-success" asp-page-handler="Update" asp-route-id="@shortenedUrl.Id"><i class="fa fa-save" title="Save"></i></button>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="@shortenedUrl.LongUrl" class="text-danger"></span>
+                                </form>
+                            </td>
+                            <td>
+                                @shortenedUrl.ShortUrl
+                            </td>
+                            <td>
+                                @shortenedUrlClicks.Count
+                            </td>
+                            <td>
+                                <button type="button" data-toggle="modal" data-target="#div-shorten-url-stats-for-@shortenedUrl.Id" class="btn btn-primary"><i class="fa fa-table" title="View Stats"></i></button>
+
+                                <div class="modal" id="div-shorten-url-stats-for-@shortenedUrl.Id">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Referrer's</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                @{
+                                                    var topReferrers = shortenedUrlClicks
+                                                        .GroupBy(x => x.Referrer)
+                                                        .Select(x => new
+                                                        {
+                                                            Referrer = x.Key ?? "Unknown",
+                                                            TotalClicks = x.Count()
+                                                        })
+                                                        .OrderByDescending(x => x.TotalClicks)
+                                                        .ToList();
+                                                }
+
+                                                @foreach (var topReferrer in topReferrers)
+                                                {
+                                                    <ul>
+                                                        <li>@topReferrer.Referrer (Clicks: @topReferrer.TotalClicks)</li>
+                                                    </ul>
+                                                }
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <form asp-page-handler="Delete" asp-route-id="@shortenedUrl.Id" method="post">
+                                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash" title="Delete"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <environment include="Development">
+        <script src="~/js/datatables.js" asp-add-nonce="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/datatables.min.js" asp-add-nonce="true"></script>
+    </environment>
+
+    <script type="text/javascript" nonce="@HttpContext.Items["csp-nonce"]">
+        $(document).ready(function () {
+            $('#tblUrlRedirects').DataTable({});
+        });
+    </script>
+}

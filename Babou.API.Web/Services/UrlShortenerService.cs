@@ -43,6 +43,13 @@ namespace Babou.API.Web.Services
             return shortenedUrls;
         }
 
+        public async Task<ShortenedUrl> GetShortenedUrlById(int id)
+        {
+            var shortenedUrls = await _context.ShortenedUrls.FirstOrDefaultAsync(x => x.Id == id);
+
+            return shortenedUrls;
+        }
+
         public async Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string domain)
         {
             var token = await GetToken(domain);

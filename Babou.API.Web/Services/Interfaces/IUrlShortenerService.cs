@@ -7,6 +7,7 @@ namespace Babou.API.Web.Services.Interfaces
     public interface IUrlShortenerService
     {
         Task<List<ShortenedUrl>> GetShortenedUrlsByUserId(string userId);
+        Task<ShortenedUrl> GetShortenedUrlById(int id);
         Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string domain);
         Task<ShortenedUrl> CreateByUserId(string userId, string longUrl, string domain, string token);
         Task<ShortenedUrl> UpdateById(int id, string longUrl);

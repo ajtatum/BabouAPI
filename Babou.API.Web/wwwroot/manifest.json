@@ -1,6 +1,6 @@
 {
-    "name": "Babou API",
-    "short_name": "Babou API",
+    "name": "Babou IO",
+    "short_name": "Babou IO",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -13,8 +13,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#343a40",
-    "background_color": "#343a40",
-    "start_url": "https://babou.io",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
     "display": "standalone"
 }

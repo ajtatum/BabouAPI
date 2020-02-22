@@ -1,16 +1,18 @@
-﻿@using Babou.API.Web.Services
+﻿@using Babou.API.Web.Models.Database
+@using Babou.API.Web.Services
 @using Microsoft.AspNetCore.Http
 @using Microsoft.Extensions.Configuration
 @inject ApplicationInsightsJsHelper AiJsHelper
 @inject IConfiguration Configuration
 @inject IHttpContextAccessor _httpContext
+@inject SignInManager<ApplicationUser> SignInManager
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Babou API - @ViewData["Title"]</title>
+    <title>Babou IO - @ViewData["Title"]</title>
     <partial name="_SocialMetatags" />
     <partial name="_Favicons" />
     <environment include="Development">
@@ -70,7 +72,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Babou API</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">Babou IO</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -81,13 +83,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-page="/Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-page="/Contact">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            @* ReSharper disable once Html.PathError *@
-                            <a class="nav-link text-white" href="/swagger/">API Docs</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            @*<li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-page="/UrlShorteners">Url Shorteners</a>
+                            </li>*@
+                            <li class="nav-item nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarUrlShortener" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    URL Shortening
+                                </a>
+                                <div class="dropdown-menu bg-dark" aria-labelledby="navbarUrlShortener">
+                                    <a class="dropdown-item text-white" asp-area="" asp-page="/UrlShortener/Create">Create Short URL</a>
+                                    <a class="dropdown-item text-white" asp-area="" asp-page="/UrlShortener/Manage">Manage Your URLs</a>
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -103,9 +113,9 @@
     </div>
     <footer class="border-top footer text-muted line-height-30">
         <div class="container">
-            &copy; @DateTime.Now.Year - Babou API - Build: @Configuration["BuildNumber"] - <a class="text-lightblue" asp-area="" asp-page="/TermsOfService">Terms of Service</a> - <a class="text-lightblue" asp-area="" asp-page="/Privacy">Privacy Policy</a> - <a class="text-lightblue" asp-area="" asp-page="/Contact">Contact</a>
+            &copy; @DateTime.Now.Year - Babou IO - Build: @Configuration["BuildNumber"] - <a class="text-lightblue" href="/swagger/">API Docs</a> - <a class="text-lightblue" asp-area="" asp-page="/TermsOfService">Terms of Service</a> - <a class="text-lightblue" asp-area="" asp-page="/Privacy">Privacy Policy</a> - <a class="text-lightblue" asp-area="" asp-page="/Contact">Contact</a>
             <div class="float-right">
-                <a href="https://facebook.com/BabouAPI"><i class="fab fa-2x fa-facebook-square text-brand-facebook"></i></a> <a href="https://twitter.com/BabouAPI"><i class="fab fa-2x fa-twitter-square text-brand-twitter"></i></a>
+                <a href="https://facebook.com/BabouIO"><i class="fab fa-2x fa-facebook-square text-brand-facebook"></i></a>
             </div>
         </div>
         <div class="container">
